@@ -4,7 +4,7 @@
 
 A web application that displays sensors, places and locations on maps and calculates optimal route to relief centres in case of emergency.
 
-- For live version visit page: https://myapp-mapmysensor.firebaseapp.com/
+- For live version visit page: https://mapmysensor.firebaseapp.com
 
 ## [ Prerequisities ]
 
