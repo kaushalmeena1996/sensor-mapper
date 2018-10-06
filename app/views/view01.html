@@ -1,0 +1,34 @@
+<div class="container bg-lightGray p-4" ng-if="visible">
+  <div class="row">
+    <div class="cell-md-4 mb-4">
+      <img ng-src="{{centreDetail.photo}}" onerror="this.src='assets/img/default_image.png'" alt="centre-img" class="img-thumbnail mx-auto">
+    </div>
+    <div class="cell-md-8">
+      <h2 ng-bind="centreDetail.name"></h2>
+      <h5 ng-bind="centreDetail.type"></h5>
+      <div class="mt-2">
+        <span class="fas fa-map-marker-alt"></span>
+        <span ng-bind="centreDetail.address"></span>
+      </div>
+      <div class="mt-2">
+        <span class="h2"><span ng-bind="centreDetail.rating"></span>/5</span>
+      </div>
+    </div>
+  </div>
+  <div class="mt-2" ng-if="centreDetail.description">
+    <h3>Description</h3>
+    <p ng-bind="centreDetail.description"></p>
+  </div>
+  <div class="mt-2" ng-if="centreDetail.status">
+    <strong>Status :</strong>
+    <span ng-bind="centreDetail.status"></span>
+  </div>
+  <div class="mt-2">
+    <strong>Modified :</strong>
+    <span ng-bind="centreDetail.modified | date:'medium'"></span>
+  </div>
+  <div class="mt-2">
+    <strong>Created :</strong>
+    <span ng-bind="centreDetail.created | date:'medium'"></span>
+  </div>
+</div>

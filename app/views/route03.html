@@ -1,0 +1,43 @@
+<div class="container bg-lightGray p-4">
+    <div class="row flex-align-center mb-4">
+        <div class="cell-md-2">
+            <h1>Result</h1>
+        </div>
+        <div class="cell-md-10">
+            <h5>
+                Route(s) which gives the optimised path starting from
+                centre(s) and traversing all sensors.
+            </h5>
+        </div>
+    </div>
+    <hr class="bg-gray">
+    <div class="mt-4" data-role="panel" data-title-icon="&lt;span class='mif-flow-branch'>&lt;/span>">
+        <div ng-repeat="route in routeData track by $index">
+            <div class="card fade-animation bg-light my-1" ng-repeat="item in route track by $index">
+                <div class="card-content p-1">
+                    <div class="row no-gap">
+                        <div class="cell-md-1 text-center px-1">
+                            <img class="py-3" ng-src="{{item.icon}}" alt="map-icon">
+                        </div>
+                        <div class="cell">
+                            <strong ng-bind="item.name"></strong><br>
+                            <strong><small ng-bind="item.category"></small></strong><br>
+                            <small ng-bind="item.type"></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center" ng-if="!routeData.length">
+            [Empty]
+        </div>
+    </div>
+    <div class="text-right mt-4">
+        <a role="button" href="#!/route/step-2" class="button square secondary outline button-min-width">
+            <span class="mif-arrow-left"></span>
+        </a>
+        <a role="button" href="#!/map?show_route=1" class="button square secondary outline button-min-width">
+            <span class="mif-arrow-right"></span>
+        </a>
+    </div>
+</div>

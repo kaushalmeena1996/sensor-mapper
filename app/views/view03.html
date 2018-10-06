@@ -1,0 +1,40 @@
+<div class="container bg-lightGray p-4" ng-if="visible">
+    <div class="row">
+        <div class="cell-md-4 mb-4">
+            <img ng-src="{{sensorDetail.photo}}" onerror="this.src='assets/img/default_image.png'" alt="sensor-img"
+                class="img-thumbnail mx-auto">
+        </div>
+        <div class="cell-md-8">
+            <h2 ng-bind="sensorDetail.name"></h2>
+            <h5 ng-bind="sensorDetail.type"></h5>
+            <div class="mt-2">
+                <i class="fas fa-map-marker-alt"></i>
+                <span ng-bind="sensorDetail.address"></span>
+            </div>
+            <div class="mt-2">
+                <strong>Model :</strong>
+                <span ng-bind="sensorDetail.model"></span>
+            </div>
+            <div class="mt-2">
+                <strong>Manufacturer :</strong>
+                <span ng-bind="sensorDetail.manufacturer"></span>
+            </div>
+        </div>
+    </div>
+    <div class="mt-2" ng-if="sensorDetail.description">
+        <h3>Description</h3>
+        <p ng-bind="sensorDetail.description"></p>
+    </div>
+    <div class="mt-2" ng-if="sensorDetail.status">
+        <strong>Status :</strong>
+        <span ng-bind="sensorDetail.status"></span>
+    </div>
+    <div class="mt-2">
+        <strong>Modified :</strong>
+        <span ng-bind="sensorDetail.modified | date:'medium'"></span>
+    </div>
+    <div class="mt-2">
+        <strong>Created :</strong>
+        <span ng-bind="sensorDetail.created | date:'medium'"></span>
+    </div>
+</div>

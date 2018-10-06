@@ -1,0 +1,93 @@
+<html lang="en" ng-app="sensorApp">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title -->
+    <title>MapMySensor : {{title}}</title>
+    <!-- Metro UI stylesheet -->
+    <link href="assets/css/metro-all.min.css" rel="stylesheet">
+    <!-- Custom stylesheet   -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="assets/icon/favicon.png">
+</head>
+
+<body ng-controller="MainCtrl">
+    <div class="ploader"></div>
+
+    <header class="{{bgColor}} fg-white" data-role="appbar" data-expand-point="md">
+        <a href="#!/" class="brand">
+            <span class="mif-location mif-3x"></span>
+        </a>
+        <ul class="app-bar-menu ml-auto">
+            <li title="Home">
+                <a href="#!/">
+                    <span class="mif-home mif-3x"></span>
+                </a>
+            </li>
+            <li title="Map">
+                <a href="#!/map">
+                    <span class="mif-map mif-3x"></span>
+                </a>
+            </li>
+            <li title="Search">
+                <a href="#!/search">
+                    <span class="mif-search mif-3x"></span>
+                </a>
+            </li>
+            <li title="Route">
+                <a href="#!/route/step-1">
+                    <span class="mif-flow-branch mif-3x"></span>
+                </a>
+            </li>
+            <li title="About">
+                <a href="#!/about">
+                    <span class="mif-info mif-3x"></span>
+                </a>
+            </li>
+        </ul>
+    </header>
+
+    <div class="container">
+        <ng-view></ng-view>
+    </div>
+
+    <!-- jQuery library -->
+    <script src="assets/js/jquery-3.3.1.min.js"></script>
+    <!-- AngularJS Libraries -->
+    <script src="assets/js/angular.min.js"></script>
+    <script src="assets/js/angular-route.min.js"></script>
+    <script src="assets/js/angular-animate.min.js"></script>
+    <!-- Firebase libraries -->
+    <script src="assets/js/firebase-app.js"></script>
+    <script src="assets/js/firebase-database.js"></script>
+    <!-- Metro UI library -->
+    <script src="assets/js/metro.min.js"></script>
+    <!-- Google maps script -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYi5xP_G2X2ZN1GFwT7siOyCf12HXpeKQ" async defer></script>
+    <!-- External scripts -->
+    <!-- MODULES -->
+    <script src="app.js"></script>
+    <script src="app.config.js"></script>
+    <script src="app.routes.js"></script>
+    <!-- CONTROLLERS -->
+    <script src="controllers/main.js"></script>
+    <script src="controllers/home.js"></script>
+    <script src="controllers/map.js"></script>
+    <script src="controllers/search.js"></script>
+    <script src="controllers/view01.js"></script>
+    <script src="controllers/view02.js"></script>
+    <script src="controllers/view03.js"></script>
+    <script src="controllers/route01.js"></script>
+    <script src="controllers/route02.js"></script>
+    <script src="controllers/route03.js"></script>
+    <script src="controllers/about.js"></script>
+    <!-- SERVICES -->
+    <script src="services/pager.js"></script>
+    <script src="services/route.js"></script>
+    <!-- Custom script -->
+    <script src="assets/js/script.js"></script>
+</body>
+
+</html>

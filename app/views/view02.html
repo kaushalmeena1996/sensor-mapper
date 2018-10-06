@@ -1,0 +1,32 @@
+<div class="container bg-lightGray p-4" ng-if="visible">
+  <div class="row">
+    <div class="cell-md-4 mb-4">
+      <img ng-src="{{locationDetail.photo}}" onerror="this.src='assets/img/default_image.png'" alt="location-img"
+        class="img-thumbnail mx-auto">
+    </div>
+    <div class="cell-md-8">
+      <h2 ng-bind="locationDetail.name"></h2>
+      <h5 ng-bind="locationDetail.type"></h5>
+      <div class="mt-2">
+        <span class="mif-location"></span>
+        <span ng-bind="locationDetail.address"></span>
+      </div>
+    </div>
+  </div>
+  <div class="mt-2" ng-if="locationDetail.description">
+    <h3>Description</h3>
+    <p ng-bind="locationDetail.description"></p>
+  </div>
+  <div class="mt-2" ng-if="locationDetail.status">
+    <strong>Status :</strong>
+    <span ng-bind="locationDetail.status"></span>
+  </div>
+  <div class="mt-2">
+    <strong>Modified :</strong>
+    <span ng-bind="locationDetail.modified | date:'medium'"></span>
+  </div>
+  <div class="mt-2">
+    <strong>Created :</strong>
+    <span ng-bind="locationDetail.created | date:'medium'"></span>
+  </div>
+</div>
