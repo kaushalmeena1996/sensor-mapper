@@ -1,7 +1,6 @@
 var app = angular.module('sensorApp');
-var ref;
 
-app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, CATEGORY_TYPES, CENTRE_TYPES, LOCATION_TYPES, SENSOR_TYPES, STATUS_TYPES, PagerService) {
+app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, CATEGORY_TYPES, CENTRE_TYPES, LOCATION_TYPES, SENSOR_TYPES, STATUS_TYPES, SERVICE_EVENTS, PagerService, DataService) {
     $scope.nodeData = [];
     $scope.tableData = [];
 
@@ -28,37 +27,24 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
         pages: []
     };
 
-    $scope.getNodes = function () {
+    $scope.getNodeData = function () {
         $scope.$parent.showLoadingOverlay();
 
-        ref = firebase.database().ref().child('nodes');
+        if (DataService.isNodeDataLoaded()) {
+            $scope.nodeData = DataService.getNodeData();
+            $scope.changePage(1);
+            $scope.$parent.hideLoadingOverlay();
+        } else {
+            DataService.fetchNodeData();
 
-        ref.on("value", function (snapshot) {
-            var object = snapshot.val(),
-                data = [];
-
-            angular.forEach(object.centres, function (item) {
-                data.push(item);
+            DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
+                $scope.$apply(function () {
+                    $scope.nodeData = DataService.getNodeData();
+                    $scope.changePage(1);
+                    $scope.$parent.hideLoadingOverlay();
+                });
             });
-            angular.forEach(object.locations, function (item) {
-                data.push(item);
-            });
-            angular.forEach(object.sensors, function (item) {
-                data.push(item);
-            });
-
-            $scope.$apply(function () {
-                $scope.nodeData = data;
-                $scope.changePage(1);
-                $scope.$parent.hideLoadingOverlay();
-            });
-        }, function (error) {
-            Metro.infobox.create('' + error + '', 'alert');
-
-            $scope.$apply(function () {
-                $scope.$parent.hideLoadingOverlay();
-            });
-        });
+        }
     };
 
     $scope.changePage = function (page) {
@@ -109,7 +95,7 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
     };
 
     $scope.showNode = function (latitude, longitude) {
-        $location.url(`/map?show_node=1&latitide=${latitude}&longitude=${longitude}`);
+        $location.url('/map?show_node=1&latitide=' + latitude + '&longitude=' + longitude);
     };
 
     $scope.showDetail = function (node_category, node_id) {
@@ -123,10 +109,6 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
     };
 
     $scope.$on('$viewContentLoaded', function () {
-        $scope.getNodes();
-    });
-
-    $scope.$on('$destroy', function () {
-        ref.off();
+        $scope.getNodeData();
     });
 });

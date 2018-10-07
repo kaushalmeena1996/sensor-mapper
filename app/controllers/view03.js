@@ -1,44 +1,38 @@
 var app = angular.module('sensorApp');
 
-app.controller('ViewSensorCtrl', function ($scope, $location) {
+app.controller('ViewSensorCtrl', function ($scope, $location, SERVICE_EVENTS, DataService) {
     $scope.sensorDetail = {};
     $scope.sensorId = '';
 
-    $scope.visible = true;
+    $scope.divisionVisible = false;
 
-    $scope.getSensor = function () {
+    $scope.getSensorDetail = function () {
         $scope.$parent.showLoadingOverlay();
 
-        ref = firebase.database().ref().child('nodes/sensors/' + $scope.sensorId);
+        if (DataService.isNodeDataLoaded()) {
+            $scope.sensorDetail = DataService.getSensorDetail($scope.sensorId);
+            $scope.divisionVisible = true;
+            $scope.$parent.hideLoadingOverlay();
+        } else {
+            DataService.fetchNodeData();
 
-        ref.on("value", function (snapshot) {
-            var object = snapshot.val();
-
-            $scope.$apply(function () {
-                $scope.sensorDetail = object;
-                $scope.visible = true;
-                $scope.$parent.hideLoadingOverlay();
+            DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
+                $scope.$apply(function () {
+                    $scope.sensorDetail = DataService.getSensorDetail($scope.sensorId);
+                    $scope.divisionVisible = true;
+                    $scope.$parent.hideLoadingOverlay();
+                });
             });
-        }, function (error) {
-            Metro.infobox.create('' + error + '', 'alert');
-
-            $scope.$apply(function () {
-                $scope.$parent.hideLoadingOverlay();
-            });
-        });
+        }
     };
 
     $scope.$on('$viewContentLoaded', function () {
         if ('sensor_id' in $location.search()) {
             $scope.sensorId = $location.search().sensor_id;
-            $scope.getSensor();
+            $scope.getSensorDetail();
         } else {
             Metro.infobox.create('sensor_id was not found in the query parameters.', 'warning');
             $location.url('/home');
         }
-    });
-
-    $scope.$on('$destroy', function () {
-        ref.off();
     });
 });

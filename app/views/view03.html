@@ -1,4 +1,4 @@
-<div class="container bg-lightGray p-4" ng-if="visible">
+<div class="container bg-lightGray p-4" ng-if="divisionVisible">
     <div class="row">
         <div class="cell-md-4 mb-4">
             <img ng-src="{{sensorDetail.photo}}" onerror="this.src='assets/img/default_image.png'" alt="sensor-img"
@@ -11,13 +11,15 @@
                 <i class="fas fa-map-marker-alt"></i>
                 <span ng-bind="sensorDetail.address"></span>
             </div>
-            <div class="mt-2">
-                <strong>Model :</strong>
-                <span ng-bind="sensorDetail.model"></span>
+            <div class="mt-2" ng-if="sensorDetail.status">
+                <strong>Status :</strong>
+                <span ng-bind="sensorDetail.status"></span>
             </div>
             <div class="mt-2">
-                <strong>Manufacturer :</strong>
-                <span ng-bind="sensorDetail.manufacturer"></span>
+                <span class="display3">
+                    <span ng-bind="sensorDetail.value"></span>
+                    <span ng-bind="sensorDetail.unit"></span>
+                </span>
             </div>
         </div>
     </div>
@@ -25,9 +27,13 @@
         <h3>Description</h3>
         <p ng-bind="sensorDetail.description"></p>
     </div>
-    <div class="mt-2" ng-if="sensorDetail.status">
-        <strong>Status :</strong>
-        <span ng-bind="sensorDetail.status"></span>
+    <div class="mt-2">
+        <strong>Model :</strong>
+        <span ng-bind="sensorDetail.model"></span>
+    </div>
+    <div class="mt-2">
+        <strong>Manufacturer :</strong>
+        <span ng-bind="sensorDetail.manufacturer"></span>
     </div>
     <div class="mt-2">
         <strong>Modified :</strong>

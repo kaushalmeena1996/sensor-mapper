@@ -1,99 +1,132 @@
 var app = angular.module('sensorApp');
-var map;
+var map,
+    markers = [];
 
-app.controller('MapCtrl', function ($scope, $http, $location, $timeout, $sessionStorage, MAP_CATEGORIES, MAP_CENTRES, SENSOR_STATUSES, PAGE_EVENTS) {
+app.controller('MapCtrl', function ($scope, $location, MAP_CATEGORIES, MAP_CENTRES, SENSOR_STATUSES, SERVICE_EVENTS, RouteService, DataService) {
     $scope.nodeData = [];
-    $scope.abnormalSensor = 0;
 
-    $scope.routeMode = false;
+    $scope.sensorCount1 = 0;
+    $scope.sensorCount2 = 0;
 
-    $scope.getNodes = function () {
+    $scope.mapLoaded = false;
+
+    $scope.getNodeData = function () {
         $scope.$parent.showLoadingOverlay();
-        $http
-            .get(API_URLS.getNodes)
-            .then(function (response) {
+
+        if (DataService.isNodeDataLoaded()) {
+            $scope.nodeData = DataService.getNodeData();
+            $scope.plotMap();
+            $scope.$parent.hideLoadingOverlay();
+        } else {
+            DataService.fetchNodeData();
+
+            DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
+                $scope.$apply(function () {
+                    $scope.nodeData = DataService.getNodeData();
+                    $scope.plotMap();
                     $scope.$parent.hideLoadingOverlay();
-                    if (response.data.success) {
-                        var result = response.data.result,
-                            marker,
-                            i,
-                            j;
+                });
+            });
+        }
+    };
 
-                        $scope.nodeData = response.data.result;
+    $scope.plotMap = function () {
+        var nodeData = $scope.nodeData,
+            infowindow,
+            content,
+            counter = 0,
+            i;
 
-                        for (i = 0; i < result.length; i++) {
-                            if (result[i].display) {
+        function plotMarkers() {
+            if (nodeData[counter].display) {
 
-                                if (result[i].status == SENSOR_STATUSES.abnormal) {
-                                    $scope.abnormalSensor += 1;
-                                }
+                if (nodeData[counter].category == MAP_CATEGORIES.sensor && nodeData[counter].status == SENSOR_STATUSES.abnormal) {
+                    $scope.sensorCount1 += 1;
+                }
 
-                                marker = new google.maps.Marker({
-                                    title: result[i].name,
-                                    position: {
-                                        lat: result[i].latitude,
-                                        lng: result[i].longitude
-                                    },
-                                    icon: result[i].icon
-                                });
+                if (nodeData[counter].category == MAP_CATEGORIES.sensor && [counter].status == SENSOR_STATUSES.failure) {
+                    $scope.sensorCount2 += 1;
+                }
 
-                                marker.setMap(map);
+                var marker = new google.maps.Marker({
+                    title: nodeData[counter].name,
+                    position: {
+                        lat: nodeData[counter].latitude,
+                        lng: nodeData[counter].longitude
+                    },
+                    icon: nodeData[counter].icon,
+                    map: map
+                });
 
-                                if (result[i].bounds) {
-                                    var bounds = result[i].bounds.split(";"),
-                                        polygon,
-                                        paths = [];
+                markers.push(marker);
 
-                                    for (j = 0; j < bounds.length; j++) {
-                                        paths.push({
-                                            lat: parseFloat(bounds[j].split(',')[0]),
-                                            lng: parseFloat(bounds[j].split(',')[1])
-                                        });
-                                    }
+                infowindow = new google.maps.InfoWindow({
+                    maxWidth: 160
+                });
 
-                                    polygon = new google.maps.Polygon({
-                                        paths: paths,
-                                        strokeColor: result[i].color,
-                                        strokeOpacity: 0.3,
-                                        strokeWeight: 1,
-                                        fillColor: result[i].color,
-                                        fillOpacity: 0.2,
-                                    });
+                content = '';
 
-                                    polygon.setMap(map);
-                                }
-                            }
-                        }
+                content += '<h5>' + nodeData[counter].name + '</h5>';
+                content += '<div class="mb-2"><strong>' + nodeData[counter].type + '</strong></div>';
 
-                        /*
-                        if ($scope.abnormalSensor > 0 && $scope.routeMode == false) {
-                            $("#promptModal").modal('show');
-                        }
-                        */
-                    }
-                    if ('messages' in response.data) {
-                        $scope.$emit(PAGE_EVENTS.sendMessage, {
-                            messages: response.data.messages,
-                            persist: 1,
-                            interruptive: true
+                if (nodeData[counter].category == MAP_CATEGORIES.sensor) {
+                    content += '<div class="text-center"><h3>' + nodeData[counter].value + ' ' + nodeData[counter].unit + '</h3></div>';
+                }
+
+                content += '<address>' + nodeData[counter].address + '<address>';
+
+                marker.addListener('click', function () {
+                    infowindow.setContent(content);
+                    infowindow.open(map, this);
+                });
+
+                if (nodeData[counter].bounds) {
+                    var bounds = nodeData[counter].bounds.split(";"),
+                        polygon,
+                        paths = [];
+
+                    for (i = 0; i < bounds.length; i++) {
+                        paths.push({
+                            lat: parseFloat(bounds[i].split(',')[0]),
+                            lng: parseFloat(bounds[i].split(',')[1])
                         });
                     }
-                },
-                function () {
-                    $scope.$parent.hideLoadingOverlay();
-                    $scope.$emit(PAGE_EVENTS.sendMessage, {
-                        messages: ["Error: Something went wrong with API call."],
-                        persist: 1,
-                        interruptive: true
+
+                    polygon = new google.maps.Polygon({
+                        paths: paths,
+                        strokeColor: nodeData[counter].color,
+                        strokeOpacity: 0.3,
+                        strokeWeight: 1,
+                        fillColor: nodeData[counter].color,
+                        fillOpacity: 0.2,
                     });
-                });
+
+                    polygon.setMap(map);
+                }
+            }
+
+            nextPlot();
+        }
+
+        function nextPlot() {
+            counter++;
+
+            if (counter >= nodeData.length) {
+                return;
+            }
+
+            plotMarkers();
+        }
+
+        plotMarkers();
     };
 
     $scope.generateRequests = function (routeData) {
         var requestArray = [],
             requestObject,
             marker,
-            i;
+            i,
+            j;
 
         for (i = 0; i < routeData.length; i++) {
 
@@ -155,10 +188,10 @@ app.controller('MapCtrl', function ($scope, $http, $location, $timeout, $session
             counter = 0;
 
         function submitRequest() {
-            directionsService.route(requestArray[counter], directionResult);
+            directionsService.route(requestArray[counter], directionnodeData);
         }
 
-        function directionResult(result, status) {
+        function directionnodeData(nodeData, status) {
             if (status == google.maps.DirectionsStatus.OK) {
                 renderer = new google.maps.DirectionsRenderer();
                 renderer.setOptions({
@@ -172,121 +205,68 @@ app.controller('MapCtrl', function ($scope, $http, $location, $timeout, $session
                     }
                 });
                 renderer.setMap(map);
-                renderer.setDirections(result);
+                renderer.setDirections(nodeData);
                 nextRequest();
             }
         }
 
         function nextRequest() {
             counter++;
+
             if (counter >= requestArray.length) {
                 return;
             }
+
             submitRequest();
         }
 
         submitRequest();
     };
 
-    $scope.generateRoute = function () {
-        var nodeData = $scope.nodeData,
-            centreIds = [],
-            sensorIds = nodeData.filter(function (e) {
-                return e.status == SENSOR_STATUSES.abnormal;
-            })
-            .map(
-                function (e) {
-                    return e.id;
-                }
-            ),
-            selectedCentres = [],
-            selectedSensors = nodeData.filter(function (e) {
-                return e.status == SENSOR_STATUSES.abnormal;
-            }),
-            distance,
-            minDistance = 10000000000000000,
-            minCentreIndex = -1,
-            i,
-            j;
-
-        for (i = 0; i < nodeData.length; i++) {
-            if (nodeData[i].category == MAP_CATEGORIES.centre) {
-                for (j = 0; j < selectedSensors.length; j++) {
-                    distance = $scope.computeDitance(nodeData[i].latitude, nodeData[i].longitude, selectedSensors[j].latitude, selectedSensors[j].longitude);
-                    if (minDistance > distance) {
-                        minDistance = distance;
-                        minCentreIndex = i;
-                    }
-                }
-            }
-        }
-
-        centreIds.push(nodeData[minCentreIndex].id);
-        selectedCentres.push(nodeData[minCentreIndex]);
-
-        $sessionStorage.routeData = {
-            data: {
-                centreIds: centreIds,
-                sensorIds: sensorIds,
-                customCentres: []
-            },
-            selectedCentres: selectedCentres,
-            selectedSensors: selectedSensors,
-            currentRouteStep: 3
-        };
-
-        $('#promptModal').modal('hide');
-
-        $timeout(function () {
-            $location.url('/route/step-1');
-        }, 400);
-    };
-
-    $scope.computeDitance = function (lat1, lon1, lat2, lon2) {
-        var R = 6371;
-        var dLat = (lat2 - lat1) * (Math.PI / 180);
-        var dLon = (lon2 - lon1) * (Math.PI / 180);
-        var a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = R * c;
-        return d;
-    };
-
-    $scope.moveTo = function (lat, lng) {
+    $scope.moveTo = function (latitude, longitude) {
         map.panTo({
-            lat: lat,
-            lng: lng
+            lat: latitude,
+            lng: longitude
         });
     };
 
     $scope.$on('$viewContentLoaded', function () {
-        var coordinate = null;
-        if ($sessionStorage.routeData) {
-            map = new google.maps.Map(document.getElementById('map'), $sessionStorage.routeData.coordinate);
-            $scope.generateRequests($sessionStorage.routeData.data);
-            $scope.routeMode = true;
-            delete $sessionStorage.routeData;
-        } else {
-            if ($sessionStorage.nodeData) {
-                coordinate = $sessionStorage.nodeData.coordinate;
-                delete $sessionStorage.nodeData;
-            } else {
-                coordinate = {
-                    center: {
-                        lat: 21.1654031,
-                        lng: 72.7833882
-                    },
-                    zoom: 16,
-                    mapTypeControl: false,
-                    streetViewControl: false,
-                    fullscreenControl: false
-                };
-            }
-            map = new google.maps.Map(document.getElementById('map'), coordinate);
+        var coordinate = {
+            center: {
+                lat: 21.1654031,
+                lng: 72.7833882
+            },
+            zoom: 16,
+            mapTypeControl: false,
+            streetViewControl: false,
+            fullscreenControl: false
+        };
+
+        if ('show_route' in $location.search() && RouteService.RouteService.getRouteStep() == 2) {
+            var routeData = RouteService.generateRoute();
+
+            $scope.generateRequests(routeData);
+
+            coordinate.center.lat = routeData[0][0].latitude;
+            coordinate.center.lng = routeData[0][0].longitude;
+
+            RouteService.RouteService.setRouteStep(1);
+        } else if ('show_node' in $location.search()) {
+            coordinate.center.lat = parseFloat($location.search().latitude);
+            coordinate.center.lng = parseFloat($location.search().longitude);
         }
-        $scope.getNodes();
+
+        map = new google.maps.Map(document.getElementById('map1'), {
+            center: {
+                lat: 21.1654031,
+                lng: 72.7833882
+            },
+            zoom: 16,
+            mapTypeControl: false,
+            streetViewControl: false,
+            fullscreenControl: false
+        });
+
+        $scope.getNodeData();
     });
 });

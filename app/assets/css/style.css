@@ -3,6 +3,14 @@ body {
   margin-top: 90px;
 }
 
+.map-mode {
+  margin-top: 0px !important;
+}
+
+.map-mode header {
+  display: none;
+}
+
 .ploader {
   position: fixed;
   left: 0px;
@@ -16,20 +24,14 @@ body {
   z-index: 10000;
 }
 
-.hamburger .line {
-  background-color: #ffffff;
-}
-
 .button-min-width {
   min-width: 100px;
 }
 
 .map-container-1 {
-  position: absolute;
-  top: 46px;
-  bottom: 16px;
-  left: 0;
-  right: 0;
+  margin-top: -38px;
+  height: calc(100% + 38px);
+  width: 100%;
 }
 
 .map-container-2 {

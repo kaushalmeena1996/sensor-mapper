@@ -9,31 +9,31 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES)
 
     routeService.setRouteStep = function (data) {
         routeStep = data;
-    }
+    };
 
     routeService.setCentreData = function (data) {
         centreData = data;
-    }
+    };
 
     routeService.setSensorData = function (data) {
         sensorData = data;
-    }
+    };
 
     routeService.getRouteStep = function () {
         return routeStep;
-    }
+    };
 
     routeService.getCentreData = function () {
         return centreData;
-    }
+    };
 
     routeService.getSensorData = function () {
         return sensorData;
-    }
+    };
 
     routeService.generateRoute = function () {
         return algorithm1(centreData, sensorData);
-    }
+    };
 
     function algorithm1(centreData, sensorData) {
         var visitedSensors = [],

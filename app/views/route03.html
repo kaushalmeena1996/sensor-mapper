@@ -12,17 +12,19 @@
     </div>
     <hr class="bg-gray">
     <div class="mt-4" data-role="panel" data-title-icon="&lt;span class='mif-flow-branch'>&lt;/span>">
-        <div ng-repeat="route in routeData track by $index">
-            <div class="card fade-animation bg-light my-1" ng-repeat="item in route track by $index">
-                <div class="card-content p-1">
-                    <div class="row no-gap">
-                        <div class="cell-md-1 text-center px-1">
-                            <img class="py-3" ng-src="{{item.icon}}" alt="map-icon">
-                        </div>
-                        <div class="cell">
-                            <strong ng-bind="item.name"></strong><br>
-                            <strong><small ng-bind="item.category"></small></strong><br>
-                            <small ng-bind="item.type"></small>
+        <div class="card fade-animation bg-light border bd-gray my-1" ng-repeat="route in routeData track by $index">
+            <div class="card-content p-1">
+                <div class="card fade-animation bg-light my-1" ng-repeat="item in route track by $index">
+                    <div class="card-content p-1">
+                        <div class="row no-gap">
+                            <div class="cell-md-1 text-center px-1">
+                                <img class="py-3" ng-src="{{item.icon}}" alt="map-icon">
+                            </div>
+                            <div class="cell">
+                                <strong ng-bind="item.name"></strong><br>
+                                <strong><small ng-bind="item.category"></small></strong><br>
+                                <small ng-bind="item.type"></small>
+                            </div>
                         </div>
                     </div>
                 </div>

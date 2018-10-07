@@ -4,6 +4,10 @@ app.config(['$compileProvider', function ($compileProvider) {
     $compileProvider.debugInfoEnabled(false);
 }]);
 
+app.constant('SERVICE_EVENTS', {
+    nodeDataChanged: "event-node-data-changed"
+});
+
 app.constant('PAGE_DETAILS', {
     home: {
         title: "Home",

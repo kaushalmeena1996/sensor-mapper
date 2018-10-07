@@ -13,7 +13,7 @@
     <link rel="shortcut icon" href="assets/icon/favicon.png">
 </head>
 
-<body ng-controller="MainCtrl">
+<body ng-class="{'map-mode': title == pageDetails.map.title}" ng-controller="MainCtrl">
     <div class="ploader"></div>
 
     <header class="{{bgColor}} fg-white" data-role="appbar" data-expand-point="md">
@@ -49,23 +49,23 @@
         </ul>
     </header>
 
-    <div class="container">
+    <div ng-class="container">
         <ng-view></ng-view>
     </div>
 
     <!-- jQuery library -->
     <script src="assets/js/jquery-3.3.1.min.js"></script>
+    <!-- Google maps script -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYi5xP_G2X2ZN1GFwT7siOyCf12HXpeKQ" async defer></script>
+    <!-- Firebase libraries -->
+    <script src="assets/js/firebase-app.js"></script>
+    <script src="assets/js/firebase-database.js"></script>
     <!-- AngularJS Libraries -->
     <script src="assets/js/angular.min.js"></script>
     <script src="assets/js/angular-route.min.js"></script>
     <script src="assets/js/angular-animate.min.js"></script>
-    <!-- Firebase libraries -->
-    <script src="assets/js/firebase-app.js"></script>
-    <script src="assets/js/firebase-database.js"></script>
     <!-- Metro UI library -->
     <script src="assets/js/metro.min.js"></script>
-    <!-- Google maps script -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYi5xP_G2X2ZN1GFwT7siOyCf12HXpeKQ" async defer></script>
     <!-- External scripts -->
     <!-- MODULES -->
     <script src="app.js"></script>
@@ -86,6 +86,7 @@
     <!-- SERVICES -->
     <script src="services/pager.js"></script>
     <script src="services/route.js"></script>
+    <script src="services/data.js"></script>
     <!-- Custom script -->
     <script src="assets/js/script.js"></script>
 </body>

@@ -3,7 +3,7 @@ var app = angular.module('sensorApp');
 app.controller('RouteResultCtrl', function ($scope, $location, RouteService) {
     $scope.routeData = [];
 
-    $scope.generateRoute = function () {
+    $scope.getRouteData = function () {
         $scope.routeData = RouteService.generateRoute();
     };
 
@@ -18,7 +18,7 @@ app.controller('RouteResultCtrl', function ($scope, $location, RouteService) {
                 $location.url('/route/step-2');
                 break;
             default:
-                $scope.generateRoute();
+                $scope.getRouteData();
         }
     });
 });

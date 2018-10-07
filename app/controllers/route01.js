@@ -2,7 +2,7 @@ var app = angular.module('sensorApp');
 var map,
     ref;
 
-app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENTRES, CENTRE_TYPES, PagerService, RouteService) {
+app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENTRES, CENTRE_TYPES, SERVICE_EVENTS, PagerService, RouteService, DataService) {
     $scope.centreData = [];
     $scope.tableData = [];
 
@@ -17,10 +17,11 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENT
 
     $scope.customCentre = {
         id: '',
-        name: '',
         category: 'Centre',
+        name: '',
         type: 'Custom Centre',
         status: 'Available',
+        icon: 'assets/img/map/centres/custom-centre.png',
         rating: 1.0,
         latitude: null,
         longitude: null
@@ -38,31 +39,24 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENT
         pages: []
     };
 
-    $scope.getCentres = function () {
+    $scope.getCentreData = function () {
         $scope.$parent.showLoadingOverlay();
 
-        ref = firebase.database().ref().child('nodes/centres');
+        if (DataService.isNodeDataLoaded()) {
+            $scope.centreData = DataService.getCentreData();
+            $scope.changePage(1);
+            $scope.$parent.hideLoadingOverlay();
+        } else {
+            DataService.fetchNodeData();
 
-        ref.on("value", function (snapshot) {
-            var object = snapshot.val(),
-                data = [];
-
-            angular.forEach(object, function (item) {
-                data.push(item);
+            DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
+                $scope.$apply(function () {
+                    $scope.centreData = DataService.getCentreData();
+                    $scope.changePage(1);
+                    $scope.$parent.hideLoadingOverlay();
+                });
             });
-
-            $scope.$apply(function () {
-                $scope.centreData = data;
-                $scope.changePage(1);
-                $scope.$parent.hideLoadingOverlay();
-            });
-        }, function (error) {
-            Metro.infobox.create('' + error + '', 'alert');
-
-            $scope.$apply(function () {
-                $scope.$parent.hideLoadingOverlay();
-            });
-        });
+        }
     };
 
     $scope.setFilter = function (value) {
@@ -102,10 +96,11 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENT
 
             $scope.customCentre = {
                 id: '',
-                name: '',
                 category: 'Centre',
+                name: '',
                 type: 'Custom Centre',
                 status: 'Available',
+                icon: 'assets/img/map/centres/custom-centre.png',
                 rating: 1.0,
                 latitude: null,
                 longitude: null
@@ -113,7 +108,7 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENT
 
             $scope.changePage($scope.currentPage);
         } else {
-            Metro.infobox.create('Please select a location first.', 'default');
+            Metro.infobox.create('Please select a location first by double clicking on map.', 'default');
         }
     };
 
@@ -175,8 +170,7 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENT
     };
 
     $scope.$on('$viewContentLoaded', function () {
-        /*
-        map = new google.maps.Map(document.getElementById('map'), {
+        map = new google.maps.Map(document.getElementById('map2'), {
             center: {
                 lat: 21.1654031,
                 lng: 72.7833882
@@ -189,12 +183,8 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENT
             $("#lat").text(event.latLng.lat());
             $("#lng").text(event.latLng.lng());
         });
-        */
-        $scope.selectedCentres = RouteService.getCentreData();
-        $scope.getCentres();
-    });
 
-    $scope.$on('$destroy', function () {
-        ref.off();
+        $scope.selectedCentres = RouteService.getCentreData();
+        $scope.getCentreData();
     });
 });

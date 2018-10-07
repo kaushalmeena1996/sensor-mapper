@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 
-app.controller('RouteSensorCtrl', function ($scope, $location, $filter, SENSOR_TYPES, STATUS_TYPES, PagerService, RouteService) {
+app.controller('RouteSensorCtrl', function ($scope, $location, $filter, SENSOR_TYPES, STATUS_TYPES, SERVICE_EVENTS, PagerService, RouteService, DataService) {
     $scope.sensorData = [];
     $scope.tableData = [];
 
@@ -26,31 +26,24 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, SENSOR_T
         pages: []
     };
 
-    $scope.getSensors = function () {
+    $scope.getSensorData = function () {
         $scope.$parent.showLoadingOverlay();
 
-        ref = firebase.database().ref().child('nodes/sensors');
+        if (DataService.isNodeDataLoaded()) {
+            $scope.sensorData = DataService.getSensorData();
+            $scope.changePage(1);
+            $scope.$parent.hideLoadingOverlay();
+        } else {
+            DataService.fetchNodeData();
 
-        ref.on("value", function (snapshot) {
-            var object = snapshot.val(),
-                data = [];
-
-            angular.forEach(object, function (item) {
-                data.push(item);
+            DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
+                $scope.$apply(function () {
+                    $scope.sensorData = DataService.getSensorData();
+                    $scope.changePage(1);
+                    $scope.$parent.hideLoadingOverlay();
+                });
             });
-
-            $scope.$apply(function () {
-                $scope.sensorData = data;
-                $scope.changePage(1);
-                $scope.$parent.hideLoadingOverlay();
-            });
-        }, function (error) {
-            Metro.infobox.create('' + error + '', 'alert');
-
-            $scope.$apply(function () {
-                $scope.$parent.hideLoadingOverlay();
-            });
-        });
+        }
     };
 
     $scope.setFilter1 = function (value) {
@@ -137,11 +130,7 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, SENSOR_T
                 break;
             default:
                 $scope.selectedSensors = RouteService.getSensorData();
-                $scope.getSensors();
+                $scope.getSensorData();
         }
-    });
-
-    $scope.$on('$destroy', function () {
-        ref.off();
     });
 });
