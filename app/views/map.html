@@ -1,1 +1,110 @@
 <div id="map1" class="map-container-1"></div>
+<div class="map-action-menu-1">
+    <ul class="t-menu horizontal compact open">
+        <li><a href="#" class="dropdown-toggle"><span class="icon mif-menu"></span></a>
+            <ul class="t-menu compact" data-role="dropdown">
+                <li>
+                    <a href="#!/">
+                        <span class="icon mif-home"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#!/map">
+                        <span class="icon mif-map"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#!/search">
+                        <span class="icon mif-search"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#!/route/step-1">
+                        <span class="icon mif-flow-branch"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#!/about">
+                        <span class="icon mif-info"></span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<div class="map-action-menu-2">
+    <ul class="t-menu open compact">
+        <li class="c-pointer" ng-click="openCharmsBar(0)">
+            <a>
+                <span class="mif-bell icon"></span>
+            </a>
+        </li>
+        <li class="c-pointer" ng-click="openCharmsBar(1)">
+            <a>
+                <span class="mif-location icon"></span>
+            </a>
+        </li>
+        <li class="c-pointer" ng-click="openCharmsBar(2)">
+            <a>
+                <span class="mif-wifi-connect icon"></span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="map-action-menu-3">
+    <ul class="t-menu horizontal open">
+        <li class="c-pointer" ng-click="openCharmsBar(3)" ng-if="sensorCountFailure">
+            <a>
+                <span class="mif-wifi-connect fg-orange icon"></span>
+                <span class="badge bg-transparent" ng-bind="sensorCountFailure"></span>
+            </a>
+        </li>
+        <li class="c-pointer" ng-click="openCharmsBar(4)" ng-if="sensorCountAbnormal">
+            <a>
+                <span class="mif-wifi-connect fg-red icon"></span>
+                <span class="badge bg-transparent" ng-bind="sensorCountAbnormal"></span>
+            </a>
+        </li>
+        <li class="c-pointer" ng-click="openCharmsBar(5)" ng-if="routeData.length">
+            <a><span class="mif-flow-branch icon"></span>
+                <span class="badge bg-transparent" ng-bind="routeData.length"></span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="bg-white fg-black" id="charmsBar" data-role="charms" data-position="left">
+    <div class="map-charms-bar-width">
+        <div class="row">
+            <div class="cell my-1 mx-3">
+                <strong ng-bind="charmBarTitle">Centre</strong>
+            </div>
+            <div class="cell-4 text-right">
+                <button class="button flat-button" type="button" ng-click="closeCharmsBar()">
+                    <span class="mif-arrow-left"></span>
+                </button>
+            </div>
+        </div>
+        <div class="mt-2 mb-3 mx-2">
+            <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>" ng-model="search"
+                ng-change="applyFilter()">
+        </div>
+        <div class="map-overflow-content">
+            <div class="card fade-animation bg-light c-pointer my-1" ng-click="moveTo(item)" ng-repeat="item in tableData track by $index">
+                <div class="card-content p-1">
+                    <div class="row">
+                        <div class="cell-3 text-center">
+                            <img ng-src="{{item.icon}}" alt="map-icon">
+                        </div>
+                        <div class="cell">
+                            <strong ng-bind="item.name"></strong><br>
+                            <small ng-bind="item.type"></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center" ng-if="!tableData.length">
+                <small>No results to display.</small>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,10 +1,12 @@
 body {
   background-image: url("../../assets/img/bgdesign.png");
-  margin-top: 90px;
+  margin-top: 80px;
+  margin-bottom: 30px;
 }
 
 .map-mode {
   margin-top: 0px !important;
+  margin-bottom: 0px !important;
 }
 
 .map-mode header {
@@ -37,6 +39,56 @@ body {
 .map-container-2 {
   height: 300px;
   width: 100%;
+}
+
+.map-action-menu-1 {
+  position: absolute;
+  top: 42px;
+  right: 5px;
+}
+
+.map-action-menu-2 {
+  position: absolute;
+  top: 42px;
+  left: 5px;
+}
+
+.map-action-menu-3 {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+}
+
+.map-charms-bar-width {
+  width: 300px;
+}
+
+.map-overflow-content {
+  max-height: 600px;
+  overflow: auto;
+}
+
+.map-info-window .name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.map-info-window .type {
+  font-size: 12px;
+  font-weight: 300;
+  margin-bottom: 5px;
+}
+
+.map-info-window .content {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.map-info-window .address {
+  font-size: 12px;
+  font-weight: 300;
 }
 
 .fade-animation.ng-move,

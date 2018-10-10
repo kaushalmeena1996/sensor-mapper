@@ -95,7 +95,7 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
     };
 
     $scope.showNode = function (latitude, longitude) {
-        $location.url('/map?show_node=1&latitide=' + latitude + '&longitude=' + longitude);
+        $location.url('/map?action_code=1&latitide=' + latitude + '&longitude=' + longitude);
     };
 
     $scope.showDetail = function (node_category, node_id) {

@@ -1,12 +1,23 @@
 var app = angular.module('sensorApp');
 var map,
-    markers = [];
+    markers = [],
+    infoWindows = [];
 
-app.controller('MapCtrl', function ($scope, $location, MAP_CATEGORIES, MAP_CENTRES, SENSOR_STATUSES, SERVICE_EVENTS, RouteService, DataService) {
+app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, MAP_CENTRES, SENSOR_STATUSES, SERVICE_EVENTS, RouteService, DataService) {
     $scope.nodeData = [];
+    $scope.tableData = [];
 
-    $scope.sensorCount1 = 0;
-    $scope.sensorCount2 = 0;
+    $scope.routeData = [];
+
+    $scope.search = '';
+
+    $scope.filter1 = '*';
+    $scope.filter2 = '*';
+
+    $scope.sensorCountFailure = 0;
+    $scope.sensorCountAbnormal = 0;
+
+    $scope.charmBarTitle = '';
 
     $scope.mapLoaded = false;
 
@@ -23,29 +34,27 @@ app.controller('MapCtrl', function ($scope, $location, MAP_CATEGORIES, MAP_CENTR
             DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
                 $scope.$apply(function () {
                     $scope.nodeData = DataService.getNodeData();
-                    $scope.plotMap();
+                    $scope.plotData();
                     $scope.$parent.hideLoadingOverlay();
                 });
             });
         }
     };
 
-    $scope.plotMap = function () {
+    $scope.plotData = function () {
         var nodeData = $scope.nodeData,
-            infowindow,
-            content,
             counter = 0,
             i;
 
-        function plotMarkers() {
+        function plotMarker() {
             if (nodeData[counter].display) {
 
-                if (nodeData[counter].category == MAP_CATEGORIES.sensor && nodeData[counter].status == SENSOR_STATUSES.abnormal) {
-                    $scope.sensorCount1 += 1;
+                if (nodeData[counter].category == MAP_CATEGORIES.sensor && nodeData[counter].status == SENSOR_STATUSES.failure) {
+                    $scope.sensorCountFailure += 1;
                 }
 
-                if (nodeData[counter].category == MAP_CATEGORIES.sensor && [counter].status == SENSOR_STATUSES.failure) {
-                    $scope.sensorCount2 += 1;
+                if (nodeData[counter].category == MAP_CATEGORIES.sensor && nodeData[counter].status == SENSOR_STATUSES.abnormal) {
+                    $scope.sensorCountAbnormal += 1;
                 }
 
                 var marker = new google.maps.Marker({
@@ -60,25 +69,7 @@ app.controller('MapCtrl', function ($scope, $location, MAP_CATEGORIES, MAP_CENTR
 
                 markers.push(marker);
 
-                infowindow = new google.maps.InfoWindow({
-                    maxWidth: 160
-                });
-
-                content = '';
-
-                content += '<h5>' + nodeData[counter].name + '</h5>';
-                content += '<div class="mb-2"><strong>' + nodeData[counter].type + '</strong></div>';
-
-                if (nodeData[counter].category == MAP_CATEGORIES.sensor) {
-                    content += '<div class="text-center"><h3>' + nodeData[counter].value + ' ' + nodeData[counter].unit + '</h3></div>';
-                }
-
-                content += '<address>' + nodeData[counter].address + '<address>';
-
-                marker.addListener('click', function () {
-                    infowindow.setContent(content);
-                    infowindow.open(map, this);
-                });
+                attachInfoWindow(marker, nodeData[counter]);
 
                 if (nodeData[counter].bounds) {
                     var bounds = nodeData[counter].bounds.split(";"),
@@ -115,10 +106,34 @@ app.controller('MapCtrl', function ($scope, $location, MAP_CATEGORIES, MAP_CENTR
                 return;
             }
 
-            plotMarkers();
+            plotMarker();
         }
 
-        plotMarkers();
+        function attachInfoWindow(marker, node) {
+            var content = '';
+
+            content += '<div class="map-info-window">';
+            content += '<div class="name">' + node.name + '</h5>';
+            content += '<div class="type">' + node.type + '</div>';
+
+            if (node.category == MAP_CATEGORIES.sensor) {
+                content += '<div class="content">' + node.value + ' ' + node.unit + '</div>';
+            }
+
+            content += '<div class="address">' + node.address + '</div>';
+            content += '</div>';
+
+            var infoWindow = new google.maps.InfoWindow({
+                maxWidth: 200,
+                content: content
+            });
+
+            marker.addListener('click', function () {
+                infoWindow.open(map, this);
+            });
+        }
+
+        plotMarker();
     };
 
     $scope.generateRequests = function (routeData) {
@@ -223,11 +238,71 @@ app.controller('MapCtrl', function ($scope, $location, MAP_CATEGORIES, MAP_CENTR
         submitRequest();
     };
 
-    $scope.moveTo = function (latitude, longitude) {
+    $scope.moveTo = function (item) {
         map.panTo({
-            lat: latitude,
-            lng: longitude
+            lat: item.latitude,
+            lng: item.longitude
         });
+    };
+
+    $scope.openCharmsBar = function (actionCode) {
+        switch (actionCode) {
+            case 0:
+                $scope.filter1 = MAP_CATEGORIES.centre;
+                $scope.charmBarTitle = 'Centres';
+                break;
+            case 1:
+                $scope.filter1 = MAP_CATEGORIES.location;
+                $scope.charmBarTitle = 'Locations';
+                break;
+            case 2:
+                $scope.filter1 = MAP_CATEGORIES.sensor;
+                $scope.filter2 = SENSOR_STATUSES.normal;
+                $scope.charmBarTitle = 'Normal Sensors';
+                break;
+            case 3:
+                $scope.filter1 = MAP_CATEGORIES.sensor;
+                $scope.filter2 = SENSOR_STATUSES.failure;
+                $scope.charmBarTitle = 'Failed Sensors';
+                break;
+            case 4:
+                $scope.filter1 = MAP_CATEGORIES.sensor;
+                $scope.filter2 = SENSOR_STATUSES.abnormal;
+                $scope.charmBarTitle = 'Abnormal Sensors';
+                break;
+        }
+
+        $scope.applyFilter();
+
+        $('#charmsBar').data('charms').open();
+    };
+
+    $scope.closeCharmsBar = function () {
+        $('#charmsBar').data('charms').close();
+    };
+
+    $scope.applyFilter = function () {
+        var nodeData = $scope.nodeData;
+
+        if ($scope.search) {
+            nodeData = $filter('filter')(nodeData, {
+                'name': $scope.search
+            });
+        }
+
+        if ($scope.filter1 !== '*') {
+            nodeData = $filter('filter')(nodeData, {
+                'category': $scope.filter1
+            }, true);
+        }
+
+        if ($scope.filter1 == MAP_CATEGORIES.sensor && $scope.filter2 !== '*') {
+            nodeData = $filter('filter')(nodeData, {
+                'status': $scope.filter2
+            }, true);
+        }
+
+        $scope.tableData = nodeData;
     };
 
     $scope.$on('$viewContentLoaded', function () {
@@ -242,18 +317,26 @@ app.controller('MapCtrl', function ($scope, $location, MAP_CATEGORIES, MAP_CENTR
             fullscreenControl: false
         };
 
-        if ('show_route' in $location.search() && RouteService.RouteService.getRouteStep() == 2) {
-            var routeData = RouteService.generateRoute();
 
-            $scope.generateRequests(routeData);
+        if ('action_code' in $location.search()) {
+            switch ($location.search().action_code) {
+                case '1':
+                    coordinate.center.lat = parseFloat($location.search().latitude);
+                    coordinate.center.lng = parseFloat($location.search().longitude);
+                    break;
+                case '2':
+                    if (RouteService.getRouteStep() == 2) {
+                        $scope.routeData = RouteService.generateRoute();
 
-            coordinate.center.lat = routeData[0][0].latitude;
-            coordinate.center.lng = routeData[0][0].longitude;
+                        $scope.generateRequests($scope.routeData);
 
-            RouteService.RouteService.setRouteStep(1);
-        } else if ('show_node' in $location.search()) {
-            coordinate.center.lat = parseFloat($location.search().latitude);
-            coordinate.center.lng = parseFloat($location.search().longitude);
+                        coordinate.center.lat = routeData[0][0].latitude;
+                        coordinate.center.lng = routeData[0][0].longitude;
+
+                        RouteService.setRouteStep(1);
+                    }
+                    break;
+            }
         }
 
         map = new google.maps.Map(document.getElementById('map1'), {
@@ -269,4 +352,5 @@ app.controller('MapCtrl', function ($scope, $location, MAP_CATEGORIES, MAP_CENTR
 
         $scope.getNodeData();
     });
+
 });
