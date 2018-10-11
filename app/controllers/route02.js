@@ -29,21 +29,13 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, SENSOR_T
     $scope.getSensorData = function () {
         $scope.$parent.showLoadingOverlay();
 
-        if (DataService.isNodeDataLoaded()) {
-            $scope.sensorData = DataService.getSensorData();
-            $scope.changePage(1);
-            $scope.$parent.hideLoadingOverlay();
-        } else {
-            DataService.fetchNodeData();
-
-            DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
-                $scope.$apply(function () {
-                    $scope.sensorData = DataService.getSensorData();
-                    $scope.changePage(1);
-                    $scope.$parent.hideLoadingOverlay();
-                });
+        DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
+            $scope.$parent.safeApply(function () {
+                $scope.sensorData = DataService.getSensorData();
+                $scope.changePage(1);
+                $scope.$parent.hideLoadingOverlay();
             });
-        }
+        });
     };
 
     $scope.setFilter1 = function (value) {

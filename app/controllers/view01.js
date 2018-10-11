@@ -9,21 +9,13 @@ app.controller('ViewCentreCtrl', function ($scope, $location, SERVICE_EVENTS, Da
     $scope.getCentreDetail = function () {
         $scope.$parent.showLoadingOverlay();
 
-        if (DataService.isNodeDataLoaded()) {
-            $scope.centreDetail = DataService.getCentreDetail($scope.centreId);
-            $scope.divisionVisible = true;
-            $scope.$parent.hideLoadingOverlay();
-        } else {
-            DataService.fetchNodeData();
-
-            DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
-                $scope.$apply(function () {
-                    $scope.centreDetail = DataService.getCentreDetail($scope.centreId);
-                    $scope.divisionVisible = true;
-                    $scope.$parent.hideLoadingOverlay();
-                });
+        DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
+            $scope.$parent.safeApply(function () {
+                $scope.centreDetail = DataService.getCentreDetail($scope.centreId);
+                $scope.divisionVisible = true;
+                $scope.$parent.hideLoadingOverlay();
             });
-        }
+        });
     };
 
     $scope.$on('$viewContentLoaded', function () {

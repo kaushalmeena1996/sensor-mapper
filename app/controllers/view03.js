@@ -9,21 +9,13 @@ app.controller('ViewSensorCtrl', function ($scope, $location, SERVICE_EVENTS, Da
     $scope.getSensorDetail = function () {
         $scope.$parent.showLoadingOverlay();
 
-        if (DataService.isNodeDataLoaded()) {
-            $scope.sensorDetail = DataService.getSensorDetail($scope.sensorId);
-            $scope.divisionVisible = true;
-            $scope.$parent.hideLoadingOverlay();
-        } else {
-            DataService.fetchNodeData();
-
-            DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
-                $scope.$apply(function () {
-                    $scope.sensorDetail = DataService.getSensorDetail($scope.sensorId);
-                    $scope.divisionVisible = true;
-                    $scope.$parent.hideLoadingOverlay();
-                });
+        DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
+            $scope.$parent.safeApply(function () {
+                $scope.sensorDetail = DataService.getSensorDetail($scope.sensorId);
+                $scope.divisionVisible = true;
+                $scope.$parent.hideLoadingOverlay();
             });
-        }
+        });
     };
 
     $scope.$on('$viewContentLoaded', function () {

@@ -30,21 +30,13 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
     $scope.getNodeData = function () {
         $scope.$parent.showLoadingOverlay();
 
-        if (DataService.isNodeDataLoaded()) {
-            $scope.nodeData = DataService.getNodeData();
-            $scope.changePage(1);
-            $scope.$parent.hideLoadingOverlay();
-        } else {
-            DataService.fetchNodeData();
-
-            DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
-                $scope.$apply(function () {
-                    $scope.nodeData = DataService.getNodeData();
-                    $scope.changePage(1);
-                    $scope.$parent.hideLoadingOverlay();
-                });
+        DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
+            $scope.$parent.safeApply(function () {
+                $scope.nodeData = DataService.getNodeData();
+                $scope.changePage(1);
+                $scope.$parent.hideLoadingOverlay();
             });
-        }
+        });
     };
 
     $scope.changePage = function (page) {

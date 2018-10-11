@@ -42,21 +42,13 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENT
     $scope.getCentreData = function () {
         $scope.$parent.showLoadingOverlay();
 
-        if (DataService.isNodeDataLoaded()) {
-            $scope.centreData = DataService.getCentreData();
-            $scope.changePage(1);
-            $scope.$parent.hideLoadingOverlay();
-        } else {
-            DataService.fetchNodeData();
-
-            DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
-                $scope.$apply(function () {
-                    $scope.centreData = DataService.getCentreData();
-                    $scope.changePage(1);
-                    $scope.$parent.hideLoadingOverlay();
-                });
+        DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
+            $scope.$parent.safeApply(function () {
+                $scope.centreData = DataService.getCentreData();
+                $scope.changePage(1);
+                $scope.$parent.hideLoadingOverlay();
             });
-        }
+        });
     };
 
     $scope.setFilter = function (value) {

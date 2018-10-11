@@ -9,21 +9,13 @@ app.controller('ViewLocationCtrl', function ($scope, $location, SERVICE_EVENTS, 
     $scope.getLocationDetail = function () {
         $scope.$parent.showLoadingOverlay();
 
-        if (DataService.isNodeDataLoaded()) {
-            $scope.locationDetail = DataService.getLocationDetail($scope.locationId);
-            $scope.divisionVisible = true;
-            $scope.$parent.hideLoadingOverlay();
-        } else {
-            DataService.fetchNodeData();
-
-            DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
-                $scope.$apply(function () {
-                    $scope.locationDetail = DataService.getLocationDetail($scope.locationId);
-                    $scope.divisionVisible = true;
-                    $scope.$parent.hideLoadingOverlay();
-                });
+        DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
+            $scope.$parent.safeApply(function () {
+                $scope.locationDetail = DataService.getLocationDetail($scope.locationId);
+                $scope.divisionVisible = true;
+                $scope.$parent.hideLoadingOverlay();
             });
-        }
+        });
     };
 
     $scope.$on('$viewContentLoaded', function () {

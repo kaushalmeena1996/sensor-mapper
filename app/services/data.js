@@ -11,9 +11,9 @@ app.factory('DataService', function ($rootScope, $filter, MAP_CATEGORIES, SERVIC
         nodeRef = firebase.database().ref().child('nodes');
 
         nodeRef.on("value", function (snapshot) {
-            var object = snapshot.val();
+            nodeData = [];
 
-            angular.forEach(object, function (item) {
+            angular.forEach(snapshot.val(), function (item) {
                 nodeData.push(item);
             });
 
@@ -27,6 +27,13 @@ app.factory('DataService', function ($rootScope, $filter, MAP_CATEGORIES, SERVIC
 
     dataService.subscribe = function (scope, event, callback) {
         var handler = $rootScope.$on(event, callback);
+
+        if (nodeDataLoaded) {
+            $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged);
+        } else {
+            dataService.fetchNodeData();
+        }
+
         scope.$on('$destroy', handler);
     };
 

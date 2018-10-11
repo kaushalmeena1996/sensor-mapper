@@ -1,123 +1,125 @@
-<div class="row">
-    <div class="cell-md-4 order-sm-2">
-        <div class="card bg-white mx-0 mt-0 mb-4">
-            <div class="card-header bg-white">
-                <strong>Category</strong>
-            </div>
-            <div class="card-content px-2">
-                <div class="form-check" ng-repeat="type in ::categoryTypes track by $index">
-                    <input type="radio" name="filter1" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter1(type)">
+<div class="container">
+    <div class="row">
+        <div class="cell-md-4 order-sm-2">
+            <div class="card bg-white mx-0 mt-0 mb-4">
+                <div class="card-header bg-white">
+                    <strong>Category</strong>
                 </div>
-                <div class="form-check text-right mt-2">
-                    <input type="radio" name="filter1" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter1('*')"
-                        checked>
-                </div>
-            </div>
-        </div>
-        <div class="card bg-white mx-0 mt-0 mb-4" ng-if="filter1==categories.centre">
-            <div class="card-header">
-                <strong>Type</strong>
-            </div>
-            <div class="card-content px-2">
-                <div class="form-check" ng-repeat="type in ::centreTypes track by $index">
-                    <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter2(type)">
-                </div>
-                <div class="form-check text-right mt-2">
-                    <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter2('*')"
-                        checked>
-                </div>
-            </div>
-        </div>
-        <div class="card bg-white mx-0 mt-0 mb-4" ng-if="filter1==categories.location">
-            <div class="card-header">
-                <strong>Type</strong>
-            </div>
-            <div class="card-content px-2">
-                <div class="form-check" ng-repeat="type in ::locationTypes track by $index">
-                    <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter2(type)">
-                </div>
-                <div class="form-check text-right mt-2">
-                    <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter2('*')"
-                        checked>
-                </div>
-            </div>
-        </div>
-        <div class="card bg-white mx-0 mt-0 mb-4" ng-if="filter1==categories.sensor">
-            <div class="card-header">
-                <strong>Type</strong>
-            </div>
-            <div class="card-content px-2">
-                <div class="form-check" ng-repeat="type in ::sensorTypes track by $index">
-                    <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter2(type)">
-                </div>
-                <div class="form-check text-right mt-2">
-                    <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter2('*')"
-                        checked>
-                </div>
-            </div>
-        </div>
-        <div class="card bg-white mx-0 mt-0 mb-4" ng-if="filter1==categories.sensor">
-            <div class="card-header">
-                <strong>Status</strong>
-            </div>
-            <div class="card-content px-2">
-                <div class="form-check" ng-repeat="type in ::statusTypes track by $index">
-                    <input type="radio" name="filter3" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter3(type)">
-                </div>
-                <div class="form-check text-right mt-2">
-                    <input type="radio" name="filter3" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter3('*')"
-                        checked>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="cell-md-8 order-sm-1">
-        <div class="container bg-lightGray p-4 mb-4">
-            <div class="mt-2 mb-5 mx-2">
-                <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>" ng-model="search"
-                    ng-change="changePage(1)">
-            </div>
-            <div class="card fade-animation bg-light my-1" ng-repeat="item in tableData track by $index">
-                <div class="card-content p-1">
-                    <div class="row no-gap">
-                        <div class="cell-md-1 text-center px-1">
-                            <img class="py-3" ng-src="{{item.icon}}" alt="map-icon">
-                        </div>
-                        <div class="cell">
-                            <strong ng-bind="item.name"></strong><br>
-                            <strong><small ng-bind="item.category"></small></strong><br>
-                            <small ng-bind="item.type"></small>
-                        </div>
-                        <div class="cell-md-2 text-right pr-0">
-                            <button type="button" class="button square secondary outline small" ng-click="showDetail(item.category, item.id)">
-                                <span class="mif-folder-open mif-2x"></span>
-                            </button>
-                            <button type="button" class="button square secondary outline small" ng-click="showNode(item.latitude, item.longitude)">
-                                <span class="mif-map mif-2x"></span>
-                            </button>
-                        </div>
+                <div class="card-content px-2">
+                    <div class="form-check" ng-repeat="type in ::categoryTypes track by $index">
+                        <input type="radio" name="filter1" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter1(type)">
+                    </div>
+                    <div class="form-check text-right mt-2">
+                        <input type="radio" name="filter1" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter1('*')"
+                            checked>
                     </div>
                 </div>
             </div>
-            <div class="text-center" ng-if="!tableData.length">
-                No nodes to display.
+            <div class="card bg-white mx-0 mt-0 mb-4" ng-if="filter1==categories.centre">
+                <div class="card-header">
+                    <strong>Type</strong>
+                </div>
+                <div class="card-content px-2">
+                    <div class="form-check" ng-repeat="type in ::centreTypes track by $index">
+                        <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter2(type)">
+                    </div>
+                    <div class="form-check text-right mt-2">
+                        <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter2('*')"
+                            checked>
+                    </div>
+                </div>
             </div>
-            <div class="mt-4">
-                <ul class="pagination flex-justify-center no-gap">
-                    <li ng-class="{'page-item': true, 'disabled': pager.currentPage &lt;= 1}">
-                        <a class="page-link" ng-click="changePage(pager.currentPage - 1)">
-                            <span class="mif-chevron-left fg-black"></span>
-                        </a>
-                    </li>
-                    <li ng-class="{'page-item': true, 'active': pager.currentPage == page}" ng-repeat="page in pager.pages">
-                        <a class="page-link" ng-click="changePage(page)" ng-bind="page"></a>
-                    </li>
-                    <li ng-class="{'page-item': true, 'disabled': pager.currentPage &gt;= pager.totalPages}">
-                        <a class="page-link" ng-click="changePage(pager.currentPage + 1)">
-                            <span class="mif-chevron-right fg-black"></span>
-                        </a>
-                    </li>
-                </ul>
+            <div class="card bg-white mx-0 mt-0 mb-4" ng-if="filter1==categories.location">
+                <div class="card-header">
+                    <strong>Type</strong>
+                </div>
+                <div class="card-content px-2">
+                    <div class="form-check" ng-repeat="type in ::locationTypes track by $index">
+                        <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter2(type)">
+                    </div>
+                    <div class="form-check text-right mt-2">
+                        <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter2('*')"
+                            checked>
+                    </div>
+                </div>
+            </div>
+            <div class="card bg-white mx-0 mt-0 mb-4" ng-if="filter1==categories.sensor">
+                <div class="card-header">
+                    <strong>Type</strong>
+                </div>
+                <div class="card-content px-2">
+                    <div class="form-check" ng-repeat="type in ::sensorTypes track by $index">
+                        <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter2(type)">
+                    </div>
+                    <div class="form-check text-right mt-2">
+                        <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter2('*')"
+                            checked>
+                    </div>
+                </div>
+            </div>
+            <div class="card bg-white mx-0 mt-0 mb-4" ng-if="filter1==categories.sensor">
+                <div class="card-header">
+                    <strong>Status</strong>
+                </div>
+                <div class="card-content px-2">
+                    <div class="form-check" ng-repeat="type in ::statusTypes track by $index">
+                        <input type="radio" name="filter3" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter3(type)">
+                    </div>
+                    <div class="form-check text-right mt-2">
+                        <input type="radio" name="filter3" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter3('*')"
+                            checked>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cell-md-8 order-sm-1">
+            <div class="container bg-lightGray p-4 mb-4">
+                <div class="mt-2 mb-5 mx-2">
+                    <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>" ng-model="search"
+                        ng-change="changePage(1)">
+                </div>
+                <div class="card fade-animation bg-light my-1" ng-repeat="item in tableData track by $index">
+                    <div class="card-content p-1">
+                        <div class="row no-gap">
+                            <div class="cell-md-1 text-center px-1">
+                                <img class="py-3" ng-src="{{item.icon}}" alt="map-icon">
+                            </div>
+                            <div class="cell">
+                                <strong ng-bind="item.name"></strong><br>
+                                <strong><small ng-bind="item.category"></small></strong><br>
+                                <small ng-bind="item.type"></small>
+                            </div>
+                            <div class="cell-md-2 text-right pr-0">
+                                <button type="button" class="button square secondary outline small" ng-click="showDetail(item.category, item.id)">
+                                    <span class="mif-folder-open mif-2x"></span>
+                                </button>
+                                <button type="button" class="button square secondary outline small" ng-click="showNode(item.latitude, item.longitude)">
+                                    <span class="mif-map mif-2x"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center" ng-if="!tableData.length">
+                    No nodes to display.
+                </div>
+                <div class="mt-4">
+                    <ul class="pagination flex-justify-center no-gap">
+                        <li ng-class="{'page-item': true, 'disabled': pager.currentPage &lt;= 1}">
+                            <a class="page-link" ng-click="changePage(pager.currentPage - 1)">
+                                <span class="mif-chevron-left fg-black"></span>
+                            </a>
+                        </li>
+                        <li ng-class="{'page-item': true, 'active': pager.currentPage == page}" ng-repeat="page in pager.pages">
+                            <a class="page-link" ng-click="changePage(page)" ng-bind="page"></a>
+                        </li>
+                        <li ng-class="{'page-item': true, 'disabled': pager.currentPage &gt;= pager.totalPages}">
+                            <a class="page-link" ng-click="changePage(pager.currentPage + 1)">
+                                <span class="mif-chevron-right fg-black"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

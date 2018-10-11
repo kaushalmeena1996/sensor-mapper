@@ -24,21 +24,13 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
     $scope.getNodeData = function () {
         $scope.$parent.showLoadingOverlay();
 
-        if (DataService.isNodeDataLoaded()) {
-            $scope.nodeData = DataService.getNodeData();
-            $scope.plotMap();
-            $scope.$parent.hideLoadingOverlay();
-        } else {
-            DataService.fetchNodeData();
-
-            DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
-                $scope.$apply(function () {
-                    $scope.nodeData = DataService.getNodeData();
-                    $scope.plotData();
-                    $scope.$parent.hideLoadingOverlay();
-                });
+        DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
+            $scope.$parent.safeApply(function () {
+                $scope.nodeData = DataService.getNodeData();
+                $scope.plotData();
+                $scope.$parent.hideLoadingOverlay();
             });
-        }
+        });
     };
 
     $scope.plotData = function () {
