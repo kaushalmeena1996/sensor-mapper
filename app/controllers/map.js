@@ -1,7 +1,6 @@
 var app = angular.module('sensorApp');
 var map,
-    markers = [],
-    infoWindows = [];
+    markerData = {};
 
 app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, MAP_CENTRES, SENSOR_STATUSES, SERVICE_EVENTS, RouteService, DataService) {
     $scope.nodeData = [];
@@ -27,27 +26,59 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
         DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
             $scope.$parent.safeApply(function () {
                 $scope.nodeData = DataService.getNodeData();
-                $scope.plotData();
+
+                if ($scope.mapLoaded) {
+                    $scope.updateMap();
+                } else {
+                    $scope.createMap();
+                }
+
                 $scope.$parent.hideLoadingOverlay();
             });
         });
     };
 
-    $scope.plotData = function () {
+    $scope.updateMap = function () {
+        var nodeData = $scope.nodeData,
+            sensorCountFailure = 0,
+            sensorCountAbnormal = 0,
+            content,
+            i;
+
+        for (i = 0; i < nodeData.length; i++) {
+            if (nodeData[i].category == MAP_CATEGORIES.sensor) {
+                content = $scope.generateContent(nodeData[i]);
+
+                if (nodeData[i].status == SENSOR_STATUSES.failure) {
+                    sensorCountFailure += 1;
+                }
+
+                if (nodeData[i].status == SENSOR_STATUSES.abnormal) {
+                    sensorCountAbnormal += 1;
+                }
+
+                markerData[nodeData[i].id].setIcon(nodeData[i].icon);
+
+                markerData[nodeData[i].id].infoWindow.setContent(content);
+
+                if ($scope.isInfoWindowOpen(markerData[nodeData[i].id].infoWindow)) {
+                    markerData[nodeData[i].id].infoWindow.close();
+                    markerData[nodeData[i].id].infoWindow.open(map, markerData[nodeData[i].id]);
+                }
+            }
+        }
+
+        $scope.sensorCountFailure = sensorCountFailure;
+        $scope.sensorCountAbnormal = sensorCountAbnormal;
+    };
+
+    $scope.createMap = function () {
         var nodeData = $scope.nodeData,
             counter = 0,
             i;
 
         function plotMarker() {
             if (nodeData[counter].display) {
-
-                if (nodeData[counter].category == MAP_CATEGORIES.sensor && nodeData[counter].status == SENSOR_STATUSES.failure) {
-                    $scope.sensorCountFailure += 1;
-                }
-
-                if (nodeData[counter].category == MAP_CATEGORIES.sensor && nodeData[counter].status == SENSOR_STATUSES.abnormal) {
-                    $scope.sensorCountAbnormal += 1;
-                }
 
                 var marker = new google.maps.Marker({
                     title: nodeData[counter].name,
@@ -59,9 +90,28 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
                     map: map
                 });
 
-                markers.push(marker);
+                content = $scope.generateContent(nodeData[counter]);
 
-                attachInfoWindow(marker, nodeData[counter]);
+                marker.infoWindow = new google.maps.InfoWindow({
+                    maxWidth: 200,
+                    content: content
+                });
+
+                marker.addListener('click', function () {
+                    marker.infoWindow.open(map, this);
+                });
+
+                markerData[nodeData[counter].id] = marker;
+
+                if (nodeData[counter].category == MAP_CATEGORIES.sensor) {
+                    if (nodeData[counter].status == SENSOR_STATUSES.failure) {
+                        $scope.sensorCountFailure += 1;
+                    }
+
+                    if (nodeData[counter].status == SENSOR_STATUSES.abnormal) {
+                        $scope.sensorCountAbnormal += 1;
+                    }
+                }
 
                 if (nodeData[counter].bounds) {
                     var bounds = nodeData[counter].bounds.split(";"),
@@ -95,37 +145,36 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
             counter++;
 
             if (counter >= nodeData.length) {
+                $scope.mapLoaded = true;
                 return;
             }
 
             plotMarker();
         }
 
-        function attachInfoWindow(marker, node) {
-            var content = '';
+        plotMarker();
+    };
 
-            content += '<div class="map-info-window">';
-            content += '<div class="name">' + node.name + '</h5>';
-            content += '<div class="type">' + node.type + '</div>';
+    $scope.generateContent = function (node) {
+        var content = '';
 
-            if (node.category == MAP_CATEGORIES.sensor) {
-                content += '<div class="content">' + node.value + ' ' + node.unit + '</div>';
-            }
+        content += '<div class="map-info-window">';
+        content += '<div class="name">' + node.name + '</h5>';
+        content += '<div class="type">' + node.type + '</div>';
 
-            content += '<div class="address">' + node.address + '</div>';
-            content += '</div>';
-
-            var infoWindow = new google.maps.InfoWindow({
-                maxWidth: 200,
-                content: content
-            });
-
-            marker.addListener('click', function () {
-                infoWindow.open(map, this);
-            });
+        if (node.category == MAP_CATEGORIES.sensor) {
+            content += '<div class="content">' + node.value + ' ' + node.unit + '</div>';
         }
 
-        plotMarker();
+        content += '<div class="address">' + node.address + '</div>';
+        content += '</div>';
+
+        return content;
+    };
+
+    $scope.isInfoWindowOpen = function (infoWindow) {
+        var map = infoWindow.getMap();
+        return (map !== null && typeof map !== "undefined");
     };
 
     $scope.generateRequests = function (routeData) {
@@ -235,6 +284,8 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
             lat: item.latitude,
             lng: item.longitude
         });
+
+        google.maps.event.trigger(markerData[item.id], 'click');
     };
 
     $scope.openCharmsBar = function (actionCode) {
