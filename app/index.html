@@ -15,6 +15,11 @@
 
 <body ng-class="{'map-mode': title == pageDetails.map.title}" ng-controller="MainCtrl">
     <div class="ploader"></div>
+    <div class="cloader" ng-if="pageLoading">
+        <div class="content">
+            <span class="mif-spinner3 mif-5x ani-spin"></span>
+        </div>
+    </div>
 
     <header class="{{bgColor}} fg-white" data-role="appbar" data-expand-point="md">
         <a href="#!/" class="brand">

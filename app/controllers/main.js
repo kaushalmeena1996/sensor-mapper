@@ -1,18 +1,16 @@
 var app = angular.module('sensorApp');
-var activity = null;
 
 app.controller('MainCtrl', function ($scope, PAGE_DETAILS) {
+    $scope.pageLoading = false;
+
     $scope.pageDetails = PAGE_DETAILS;
 
     $scope.showLoadingOverlay = function () {
-        activity = Metro.activity.open({
-            type: 'square',
-            style: 'black'
-        });
+        $scope.pageLoading = true;
     };
 
     $scope.hideLoadingOverlay = function () {
-        Metro.activity.close(activity);
+        $scope.pageLoading = false;
     };
 
     $scope.safeApply = function (func) {

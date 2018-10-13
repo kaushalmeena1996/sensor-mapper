@@ -6,7 +6,7 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
     $scope.nodeData = [];
     $scope.tableData = [];
 
-    $scope.routeData = [];
+    $scope.routeList = [];
 
     $scope.search = '';
 
@@ -146,6 +146,34 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
 
             if (counter >= nodeData.length) {
                 $scope.mapLoaded = true;
+
+                if ('action_code' in $location.search()) {
+                    switch ($location.search().action_code) {
+                        case '1':
+                            var item = DataService.getNodeDetail($location.search().node_id);
+
+                            if (item) {
+                                $scope.moveTo(item);
+                            }
+
+                            break;
+                        case '2':
+                            if (RouteService.getRouteStep() == 2) {
+                                var routeData = RouteService.generateRoute();
+
+                                $scope.generateRequests(routeData);
+
+                                $scope.routeList.push(routeData);
+
+                                $scope.moveTo(routeData[0][0]);
+
+                                RouteService.setRouteStep(1);
+                            }
+
+                            break;
+                    }
+                }
+
                 return;
             }
 
@@ -349,39 +377,6 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
     };
 
     $scope.$on('$viewContentLoaded', function () {
-        var coordinate = {
-            center: {
-                lat: 21.1654031,
-                lng: 72.7833882
-            },
-            zoom: 16,
-            mapTypeControl: false,
-            streetViewControl: false,
-            fullscreenControl: false
-        };
-
-
-        if ('action_code' in $location.search()) {
-            switch ($location.search().action_code) {
-                case '1':
-                    coordinate.center.lat = parseFloat($location.search().latitude);
-                    coordinate.center.lng = parseFloat($location.search().longitude);
-                    break;
-                case '2':
-                    if (RouteService.getRouteStep() == 2) {
-                        $scope.routeData = RouteService.generateRoute();
-
-                        $scope.generateRequests($scope.routeData);
-
-                        coordinate.center.lat = routeData[0][0].latitude;
-                        coordinate.center.lng = routeData[0][0].longitude;
-
-                        RouteService.setRouteStep(1);
-                    }
-                    break;
-            }
-        }
-
         map = new google.maps.Map(document.getElementById('map1'), {
             center: {
                 lat: 21.1654031,

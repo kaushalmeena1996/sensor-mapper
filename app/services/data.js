@@ -45,6 +45,14 @@ app.factory('DataService', function ($rootScope, $filter, MAP_CATEGORIES, SERVIC
         return nodeData;
     };
 
+    dataService.getNodeDetail = function (id) {
+        var data = $filter('filter')(nodeData, {
+            'id': id
+        }, true);
+
+        return data[0];
+    };
+
     dataService.getCentreData = function () {
         var data = $filter('filter')(nodeData, {
             'category': MAP_CATEGORIES.centre

@@ -52,7 +52,7 @@
     </ul>
 </div>
 <div class="map-action-menu-3">
-    <ul class="t-menu horizontal open">
+    <ul class="t-menu open">
         <li class="c-pointer" ng-click="openCharmsBar(3)" ng-if="sensorCountFailure">
             <a>
                 <span class="mif-wifi-connect fg-orange icon"></span>
@@ -72,18 +72,19 @@
         </li>
     </ul>
 </div>
-<div class="bg-white fg-black" id="charmsBar" data-role="charms" data-position="left">
+<div class="bg-white fg-black border-right bd-lightGray" id="charmsBar" data-role="charms" data-position="left">
     <div class="map-charms-bar-width">
-        <div class="row">
-            <div class="cell my-1 mx-3">
+        <div class="row no-gap">
+            <div class="cell my-1 my-2 mx-3">
                 <strong ng-bind="charmBarTitle">Centre</strong>
             </div>
-            <div class="cell-4 text-right">
+            <div class="cell-4 my-1 text-right">
                 <button class="button flat-button" type="button" ng-click="closeCharmsBar()">
                     <span class="mif-arrow-left"></span>
                 </button>
             </div>
         </div>
+        <hr class="bg-lightGray mt-0">
         <div class="mt-2 mb-3 mx-2">
             <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>" ng-model="search"
                 ng-change="applyFilter()">
