@@ -70,8 +70,8 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, SENSOR_T
 
     $scope.nextStep = function () {
         if ($scope.selectedSensors.length) {
-            RouteService.setSensorData(angular.copy($scope.selectedSensors));
-            RouteService.setRouteStep(3);
+            RouteService.setCustomSensorData(angular.copy($scope.selectedSensors));
+            RouteService.setCustomRouteStep(3);
 
             $location.url('/route/result');
         } else {
@@ -115,13 +115,13 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, SENSOR_T
     };
 
     $scope.$on('$viewContentLoaded', function () {
-        switch (RouteService.getRouteStep()) {
+        switch (RouteService.getCustomRouteStep()) {
             case 1:
                 Metro.infobox.create('Please select a centre first.', 'warning');
                 $location.url('/route/step-1');
                 break;
             default:
-                $scope.selectedSensors = RouteService.getSensorData();
+                $scope.selectedSensors = RouteService.getCustomSensorData();
                 $scope.getSensorData();
         }
     });

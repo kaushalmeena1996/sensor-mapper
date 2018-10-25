@@ -111,8 +111,8 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENT
 
     $scope.nextStep = function () {
         if ($scope.selectedCentres.length) {
-            RouteService.setCentreData(angular.copy($scope.selectedCentres));
-            RouteService.setRouteStep(2);
+            RouteService.setCustomCentreData(angular.copy($scope.selectedCentres));
+            RouteService.setCustomRouteStep(2);
 
             $location.url('/route/step-2');
         } else {
@@ -176,7 +176,7 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENT
             $("#lng").text(event.latLng.lng());
         });
 
-        $scope.selectedCentres = RouteService.getCentreData();
+        $scope.selectedCentres = RouteService.getCustomCentreData();
         $scope.getCentreData();
     });
 });

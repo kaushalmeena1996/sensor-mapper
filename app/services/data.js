@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 
-app.factory('DataService', function ($rootScope, $filter, MAP_CATEGORIES, SERVICE_EVENTS) {
+app.factory('DataService', function ($rootScope, $filter, MAP_CATEGORIES, SENSOR_STATUSES, SERVICE_EVENTS) {
     var dataService = {};
 
     var nodeData = [],
@@ -35,10 +35,6 @@ app.factory('DataService', function ($rootScope, $filter, MAP_CATEGORIES, SERVIC
         }
 
         scope.$on('$destroy', handler);
-    };
-
-    dataService.isNodeDataLoaded = function () {
-        return nodeDataLoaded;
     };
 
     dataService.getNodeData = function () {
@@ -93,6 +89,61 @@ app.factory('DataService', function ($rootScope, $filter, MAP_CATEGORIES, SERVIC
         }, true);
 
         return data;
+    };
+
+    dataService.getNormalSensorData = function () {
+        var data = $filter('filter')(nodeData, {
+            'category': MAP_CATEGORIES.sensor,
+            'status': SENSOR_STATUSES.normal
+        }, true);
+
+        return data;
+    };
+
+    dataService.getNormalSensorCount = function () {
+        var data = $filter('filter')(nodeData, {
+            'category': MAP_CATEGORIES.sensor,
+            'status': SENSOR_STATUSES.normal
+        }, true);
+
+        return data.length;
+    };
+
+
+    dataService.getFailureSensorData = function () {
+        var data = $filter('filter')(nodeData, {
+            'category': MAP_CATEGORIES.sensor,
+            'status': SENSOR_STATUSES.failure
+        }, true);
+
+        return data;
+    };
+
+    dataService.getFailureSensorCount = function () {
+        var data = $filter('filter')(nodeData, {
+            'category': MAP_CATEGORIES.sensor,
+            'status': SENSOR_STATUSES.failure
+        }, true);
+
+        return data.length;
+    };
+
+    dataService.getAbnormalSensorData = function () {
+        var data = $filter('filter')(nodeData, {
+            'category': MAP_CATEGORIES.sensor,
+            'status': SENSOR_STATUSES.abnormal
+        }, true);
+
+        return data;
+    };
+
+    dataService.getAbnormalSensorCount = function () {
+        var data = $filter('filter')(nodeData, {
+            'category': MAP_CATEGORIES.sensor,
+            'status': SENSOR_STATUSES.abnormal
+        }, true);
+
+        return data.length;
     };
 
     dataService.getSensorDetail = function (id) {

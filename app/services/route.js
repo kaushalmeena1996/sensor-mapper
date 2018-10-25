@@ -1,68 +1,131 @@
 var app = angular.module('sensorApp');
 
-app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES) {
+app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES, MAP_ROUTES, DataService) {
     var routeService = {};
 
-    var centreData = [],
-        sensorData = [],
-        routeStep = 1;
+    var customCentreData = [],
+        customeSensorData = [],
+        customRouteStep = 1;
 
-    routeService.setRouteStep = function (data) {
-        routeStep = data;
+    routeService.setCustomRouteStep = function (data) {
+        customRouteStep = data;
     };
 
-    routeService.setCentreData = function (data) {
-        centreData = data;
+    routeService.setCustomCentreData = function (data) {
+        customCentreData = data;
     };
 
-    routeService.setSensorData = function (data) {
-        sensorData = data;
+    routeService.setCustomSensorData = function (data) {
+        customSensorData = data;
     };
 
-    routeService.getRouteStep = function () {
-        return routeStep;
+    routeService.getCustomRouteStep = function () {
+        return customRouteStep;
     };
 
-    routeService.getCentreData = function () {
-        return centreData;
+    routeService.getCustomCentreData = function () {
+        return customCentreData;
     };
 
-    routeService.getSensorData = function () {
-        return sensorData;
+    routeService.getCustomSensorData = function () {
+        return customeSensorData;
     };
 
-    routeService.generateRoute = function () {
-        return algorithm1(centreData, sensorData);
+    routeService.getEmergencyRouteData = function () {
+        var centreData = DataService.getCentreData(),
+            abnormalSensorData = DataService.getAbnormalSensorData(),
+            selectedCentreData = [],
+            selectedCentreLimit = 5,
+            distance,
+            rating,
+            score,
+            maxCentreIndex,
+            maxScore,
+            i,
+            j;
+
+        if (abnormalSensorData) {
+            while (1) {
+                maxScore = 0;
+
+                for (i = 0; i < abnormalSensorData.length; i++) {
+                    for (j = 0; j < centreData.length; j++) {
+                        if (selectedCentreData.includes(centreData[j]) == false) {
+                            distance = computeDistance(
+                                abnormalSensorData[i].latitude,
+                                abnormalSensorData[i].longitude,
+                                centreData[j].latitude,
+                                centreData[j].longitude
+                            );
+
+                            rating = centreData[i].rating;
+
+                            score = (rating) / (distance);
+
+                            if (maxScore < score) {
+                                maxCentreIndex = j;
+                                maxScore = score;
+                            }
+
+                        }
+                    }
+                }
+
+                if (maxScore > 0 && selectedCentreData.length < selectedCentreLimit) {
+                    selectedCentreData.push(
+                        centreData[maxCentreIndex]
+                    );
+                } else {
+                    break;
+                }
+            }
+
+            return algorithm1(selectedCentreData, abnormalSensorData, MAP_ROUTES.emergency);
+        } else {
+            return null;
+        }
     };
 
-    function algorithm1(centreData, sensorData) {
+    routeService.getCustomRouteData = function () {
+        return algorithm1(customCentreData, customSensorData, MAP_ROUTES.custom);
+    };
+
+    function algorithm1(centreData, sensorData, routeType) {
         var visitedSensors = [],
-            tempData = [],
             routeData = [],
             distance,
             priority,
             rating,
             score,
             totalScore,
+            maxCentreIndex,
+            maxSensorIndex,
+            minDistance,
+            maxScore,
             i,
             j;
 
         for (i = 0; i < centreData.length; i++) {
-            tempData.push({
-                id: centreData[i].id,
-                previousSensorIndex: -1,
-                totalNodes: 1,
-                totalScore: 0
+            routeData.push({
+                routeInfo: {
+                    routeType: routeType,
+                    previousSensorIndex: -1,
+                    origin: centreData[i].name,
+                    destination: null,
+                    totalNodes: 1,
+                    totalDistance: 0,
+                    totalScore: 0
+                },
+                routeArray: [
+                    centreData[i]
+                ]
             });
-
-            routeData.push([
-                centreData[i]
-            ]);
         }
 
         while (1) {
             maxCentreIndex = -1;
             maxSensorIndex = -1;
+            minDistance = 0;
             maxScore = 0;
 
             for (i = 0; i < centreData.length; i++) {
@@ -72,7 +135,7 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES)
                             continue;
                         }
 
-                        if (tempData[i].previousSensorIndex == -1) {
+                        if (routeData[i].routeInfo.previousSensorIndex == -1) {
                             distance = computeDistance(
                                 centreData[i].latitude,
                                 centreData[i].longitude,
@@ -81,8 +144,8 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES)
                             );
                         } else {
                             distance = computeDistance(
-                                sensorData[tempData[i].previousSensorIndex].latitude,
-                                sensorData[tempData[i].previousSensorIndex].longitude,
+                                sensorData[routeData[i].routeInfo.previousSensorIndex].latitude,
+                                sensorData[routeData[i].routeInfo.previousSensorIndex].longitude,
                                 sensorData[j].latitude,
                                 sensorData[j].longitude
                             );
@@ -106,33 +169,40 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES)
 
                         score = (rating * priority) / (distance);
 
-                        totalScore = tempData[i].totalScore;
+                        totalScore = routeData[i].routeInfo.totalScore;
 
                         if (maxScore + totalScore < score + totalScore) {
                             maxCentreIndex = i;
                             maxSensorIndex = j;
+                            minDistance = distance;
                             maxScore = score;
                         }
                     }
                 }
             }
 
-            if (maxScore) {
-                tempData[maxCentreIndex].previousSensorIndex = maxSensorIndex;
-                tempData[maxCentreIndex].totalScore += maxScore;
-                tempData[maxCentreIndex].totalNodes += 1;
+            if (maxScore > 0) {
+                routeData[maxCentreIndex].routeInfo.previousSensorIndex = maxSensorIndex;
+                routeData[maxCentreIndex].routeInfo.destination = sensorData[maxSensorIndex].name;
+                routeData[maxCentreIndex].routeInfo.totalDistance += (Math.round(minDistance * 1000) / 1000);
+                routeData[maxCentreIndex].routeInfo.totalScore += (Math.round(maxScore * 1000) / 1000);
+                routeData[maxCentreIndex].routeInfo.totalNodes += 1;
+
+                routeData[maxCentreIndex].routeArray.push(
+                    sensorData[maxSensorIndex]
+                );
 
                 visitedSensors.push(
                     sensorData[maxSensorIndex].id
-                );
-
-                routeData[maxCentreIndex].push(
-                    sensorData[maxSensorIndex]
                 );
             } else {
                 break;
             }
         }
+
+        routeData = routeData.filter(function (e) {
+            return e.routeInfo.totalNodes > 1;
+        });
 
         return routeData;
     }

@@ -4,11 +4,11 @@ app.controller('RouteResultCtrl', function ($scope, $location, RouteService) {
     $scope.routeData = [];
 
     $scope.getRouteData = function () {
-        $scope.routeData = RouteService.generateRoute();
+        $scope.routeData = RouteService.getCustomRouteData();
     };
 
     $scope.$on('$viewContentLoaded', function () {
-        switch (RouteService.getRouteStep()) {
+        switch (RouteService.getCustomRouteStep()) {
             case 1:
                 Metro.infobox.create('Please select a centre first.', 'warning');
                 $location.url('/route/step-1');

@@ -53,21 +53,28 @@
 </div>
 <div class="map-action-menu-3">
     <ul class="t-menu open">
-        <li class="c-pointer" ng-click="openCharmsBar(3)" ng-if="sensorCountFailure">
+        <li class="c-pointer" ng-click="openCharmsBar(3)" ng-if="failureSensorCount">
             <a>
                 <span class="mif-wifi-connect fg-orange icon"></span>
-                <span class="badge bg-transparent" ng-bind="sensorCountFailure"></span>
+                <span class="badge bg-transparent" ng-bind="failureSensorCount"></span>
             </a>
         </li>
-        <li class="c-pointer" ng-click="openCharmsBar(4)" ng-if="sensorCountAbnormal">
+        <li class="c-pointer" ng-click="openCharmsBar(4)" ng-if="abnormalSensorCount">
             <a>
                 <span class="mif-wifi-connect fg-red icon"></span>
-                <span class="badge bg-transparent" ng-bind="sensorCountAbnormal"></span>
+                <span class="badge bg-transparent" ng-bind="abnormalSensorCount"></span>
             </a>
         </li>
-        <li class="c-pointer" ng-click="openCharmsBar(5)" ng-if="routeData.length">
-            <a><span class="mif-flow-branch icon"></span>
-                <span class="badge bg-transparent" ng-bind="routeData.length"></span>
+        <li class="c-pointer" ng-click="openCharmsBar(5)" ng-if="emergencyRouteData.length">
+            <a>
+                <span class="mif-flow-branch fg-red icon"></span>
+                <span class="badge bg-transparent" ng-bind="emergencyRouteData.length"></span>
+            </a>
+        </li>
+        <li class="c-pointer" ng-click="openCharmsBar(6)" ng-if="customRouteData.length">
+            <a>
+                <span class="mif-flow-branch icon"></span>
+                <span class="badge bg-transparent" ng-bind="customRouteData.length"></span>
             </a>
         </li>
     </ul>
@@ -85,25 +92,87 @@
             </div>
         </div>
         <hr class="bg-lightGray mt-0">
-        <div class="mt-2 mb-3 mx-2">
-            <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>" ng-model="search"
-                ng-change="applyFilter()">
+        <div class="marker-division" ng-if="!emergencyRouteMode && !customRouteMode">
+            <div class="mt-2 mb-3 mx-2">
+                <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>" ng-model="search"
+                    ng-change="applyFilter()">
+            </div>
+            <div class="map-overflow-content">
+                <div class="card fade-animation bg-light c-pointer my-1" ng-click="moveMapTo(item)" ng-repeat="item in tableData track by $index">
+                    <div class="card-content p-1">
+                        <div class="row">
+                            <div class="cell-3 text-center">
+                                <img ng-src="{{item.icon}}" alt="map-icon">
+                            </div>
+                            <div class="cell">
+                                <strong ng-bind="item.name"></strong><br>
+                                <small ng-bind="item.type"></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center" ng-if="!tableData.length">
+                    <small>No results to display.</small>
+                </div>
+            </div>
         </div>
-        <div class="map-overflow-content">
-            <div class="card fade-animation bg-light c-pointer my-1" ng-click="moveTo(item)" ng-repeat="item in tableData track by $index">
+        <div class="map-overflow-content" ng-if="emergencyRouteMode">
+            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0])"
+                ng-repeat="item in emergencyRouteData track by $index">
                 <div class="card-content p-1">
-                    <div class="row">
-                        <div class="cell-3 text-center">
-                            <img ng-src="{{item.icon}}" alt="map-icon">
+                    <div class="row no-gap">
+                        <div class="cell-md-2 fg-red text-center px-1">
+                            <span class="mif-flow-branch mif-3x"></span>
                         </div>
                         <div class="cell">
-                            <strong ng-bind="item.name"></strong><br>
-                            <small ng-bind="item.type"></small>
+                            <strong>From :</strong>
+                            <strong ng-bind="item.routeInfo.origin"></strong><br>
+                            <strong>To :</strong>
+                            <strong ng-bind="item.routeInfo.destination"></strong><br>
+                            <small>
+                                <span>Nodes :</span>
+                                <span ng-bind="item.routeInfo.totalNodes"></span><br>
+                                <span>Distance :</span>
+                                <span ng-bind="item.routeInfo.totalDistance"></span>
+                                <span>km</span><br>
+                                <span>Score :</span>
+                                <span ng-bind="item.routeInfo.totalScore"></span>
+                            </small>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="text-center" ng-if="!tableData.length">
+            <div class="text-center" ng-if="!emergencyRouteData.length">
+                <small>No results to display.</small>
+            </div>
+        </div>
+        <div class="map-overflow-content" ng-if="customRouteMode">
+            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0])"
+                ng-repeat="item in customRouteData track by $index">
+                <div class="card-content p-1">
+                    <div class="row no-gap">
+                        <div class="cell-md-2 text-center px-1">
+                            <span class="mif-flow-branch mif-3x"></span>
+                        </div>
+                        <div class="cell">
+                            <strong>From :</strong>
+                            <strong ng-bind="item.routeInfo.origin"></strong><br>
+                            <strong>To :</strong>
+                            <strong ng-bind="item.routeInfo.destination"></strong><br>
+                            <small>
+                                <span>Nodes :</span>
+                                <span ng-bind="item.routeInfo.totalNodes"></span><br>
+                                <span>Distance :</span>
+                                <span ng-bind="item.routeInfo.totalDistance"></span>
+                                <span>km</span><br>
+                                <span>Score :</span>
+                                <span ng-bind="item.routeInfo.totalScore"></span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center" ng-if="!customRouteData.length">
                 <small>No results to display.</small>
             </div>
         </div>

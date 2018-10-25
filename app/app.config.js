@@ -181,3 +181,8 @@ app.constant('STATUS_TYPES', [
     "Failure",
     "Abnormal"
 ]);
+
+app.constant('MAP_ROUTES', {
+    emergency: "Emergency Route",
+    custom: "Custom Route"
+});
