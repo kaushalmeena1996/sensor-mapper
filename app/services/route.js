@@ -207,8 +207,8 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
             if (maxScore > 0) {
                 routeData[maxCentreIndex].routeInfo.previousSensorIndex = maxSensorIndex;
                 routeData[maxCentreIndex].routeInfo.destination = sensorData[maxSensorIndex].name;
-                routeData[maxCentreIndex].routeInfo.totalDistance += (Math.round(minDistance * 1000) / 1000);
-                routeData[maxCentreIndex].routeInfo.totalScore += (Math.round(maxScore * 1000) / 1000);
+                routeData[maxCentreIndex].routeInfo.totalDistance += minDistance;
+                routeData[maxCentreIndex].routeInfo.totalScore += maxScore;
                 routeData[maxCentreIndex].routeInfo.totalNodes += 1;
 
                 routeData[maxCentreIndex].routeArray.push(
@@ -226,6 +226,11 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
         routeData = routeData.filter(function (e) {
             return e.routeInfo.totalNodes > 1;
         });
+
+        for (i = 0; i < routeData.length; i++) {
+            routeData[i].routeInfo.totalDistance = (Math.round(routeData[i].routeInfo.totalDistance * 1000) / 1000);
+            routeData[i].routeInfo.totalScore = (Math.round(routeData[i].routeInfo.totalScore * 1000) / 1000);
+        }
 
         return routeData;
     }

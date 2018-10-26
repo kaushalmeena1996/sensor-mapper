@@ -173,6 +173,8 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
 
                                 $scope.moveMapTo(customRouteData[0].routeArray[0]);
 
+                                RouteService.setCustomCentreData([]);
+                                RouteService.setCustomSensorData([]);
                                 RouteService.setCustomRouteStep(1);
                             }
 

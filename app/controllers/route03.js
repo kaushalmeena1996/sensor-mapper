@@ -1,10 +1,10 @@
 var app = angular.module('sensorApp');
 
 app.controller('RouteResultCtrl', function ($scope, $location, RouteService) {
-    $scope.routeData = [];
+    $scope.customRouteData = [];
 
-    $scope.getRouteData = function () {
-        $scope.routeData = RouteService.getCustomRouteData();
+    $scope.getCustomRouteData = function () {
+        $scope.customRouteData = RouteService.getCustomRouteData();
     };
 
     $scope.$on('$viewContentLoaded', function () {
@@ -18,7 +18,7 @@ app.controller('RouteResultCtrl', function ($scope, $location, RouteService) {
                 $location.url('/route/step-2');
                 break;
             default:
-                $scope.getRouteData();
+                $scope.getCustomRouteData();
         }
     });
 });

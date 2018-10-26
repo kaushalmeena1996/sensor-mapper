@@ -12,9 +12,9 @@
     </div>
     <hr class="bg-gray">
     <div class="mt-4" data-role="panel" data-title-icon="&lt;span class='mif-flow-branch'>&lt;/span>">
-        <div class="card fade-animation bg-light border bd-gray my-1" ng-repeat="routeItem in routeData track by $index">
+        <div class="card fade-animation bg-light border bd-gray my-1" ng-repeat="routeItem in customRouteData track by $index">
             <div class="card-content p-1">
-                <div class="card fade-animation bg-light my-1" ng-repeat="item in routeItem.route track by $index">
+                <div class="card fade-animation bg-light my-1" ng-repeat="item in routeItem.routeArray track by $index">
                     <div class="card-content p-1">
                         <div class="row no-gap">
                             <div class="cell-md-1 text-center px-1">
@@ -28,9 +28,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="p-2">
+                    <div class="row flex-justify-end">
+                        <div class="cell-md-2">
+                            <strong>Nodes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</strong>
+                            <span ng-bind="routeItem.routeInfo.totalNodes"></span><br>
+                            <strong>Distance :</strong>
+                            <span ng-bind="routeItem.routeInfo.totalDistance"></span>
+                            <span>km</span><br>
+                            <strong>Score&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</strong>
+                            <span ng-bind="routeItem.routeInfo.totalScore"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="text-center" ng-if="!routeData.length">
+        <div class="text-center" ng-if="!customRouteData.length">
             [Empty]
         </div>
     </div>
