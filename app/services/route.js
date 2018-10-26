@@ -34,7 +34,35 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
     routeService.getEmergencyRouteData = function () {
         var centreData = DataService.getCentreData(),
             abnormalSensorData = DataService.getAbnormalSensorData(),
-            selectedCentreData = [],
+            selectedCentreData;
+
+        if (abnormalSensorData) {
+            selectedCentreData = centreSelectionAlgorithm1(
+                centreData,
+                abnormalSensorData
+            );
+
+            return routeGenerationAlgorithm1(
+                selectedCentreData,
+                abnormalSensorData,
+                MAP_ROUTES.emergency
+            );
+        } else {
+            return [];
+        }
+    };
+
+    routeService.getCustomRouteData = function () {
+        return routeGenerationAlgorithm1(
+            customCentreData,
+            customSensorData,
+            MAP_ROUTES.custom
+        );
+    };
+
+    function centreSelectionAlgorithm1(centreData, sensorData) {
+        var selectedCentreData = [],
+            selectedCentreIds = [],
             selectedCentreLimit = 5,
             distance,
             rating,
@@ -44,53 +72,48 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
             i,
             j;
 
-        if (abnormalSensorData) {
-            while (1) {
-                maxScore = 0;
+        while (1) {
+            maxScore = 0;
 
-                for (i = 0; i < abnormalSensorData.length; i++) {
-                    for (j = 0; j < centreData.length; j++) {
-                        if (selectedCentreData.includes(centreData[j]) == false) {
-                            distance = computeDistance(
-                                abnormalSensorData[i].latitude,
-                                abnormalSensorData[i].longitude,
-                                centreData[j].latitude,
-                                centreData[j].longitude
-                            );
+            for (i = 0; i < sensorData.length; i++) {
+                for (j = 0; j < centreData.length; j++) {
+                    if (selectedCentreIds.includes(centreData[j].id) == false) {
+                        distance = computeDistance(
+                            sensorData[i].latitude,
+                            sensorData[i].longitude,
+                            centreData[j].latitude,
+                            centreData[j].longitude
+                        );
 
-                            rating = centreData[i].rating;
+                        rating = centreData[i].rating;
 
-                            score = (rating) / (distance);
+                        score = (rating) / (distance);
 
-                            if (maxScore < score) {
-                                maxCentreIndex = j;
-                                maxScore = score;
-                            }
-
+                        if (maxScore < score) {
+                            maxCentreIndex = j;
+                            maxScore = score;
                         }
                     }
                 }
-
-                if (maxScore > 0 && selectedCentreData.length < selectedCentreLimit) {
-                    selectedCentreData.push(
-                        centreData[maxCentreIndex]
-                    );
-                } else {
-                    break;
-                }
             }
 
-            return algorithm1(selectedCentreData, abnormalSensorData, MAP_ROUTES.emergency);
-        } else {
-            return null;
+            if (maxScore > 0 && selectedCentreData.length < selectedCentreLimit) {
+                selectedCentreData.push(
+                    centreData[maxCentreIndex]
+                );
+
+                selectedCentreIds.push(
+                    centreData[maxCentreIndex].id
+                );
+            } else {
+                break;
+            }
         }
-    };
 
-    routeService.getCustomRouteData = function () {
-        return algorithm1(customCentreData, customSensorData, MAP_ROUTES.custom);
-    };
+        return selectedCentreData;
+    }
 
-    function algorithm1(centreData, sensorData, routeType) {
+    function routeGenerationAlgorithm1(centreData, sensorData, routeType) {
         var visitedSensors = [],
             routeData = [],
             distance,
