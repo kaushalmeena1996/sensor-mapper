@@ -92,12 +92,15 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
         function plotMarkers() {
             if (nodeData[counter].display) {
                 var marker = new google.maps.Marker({
-                    title: nodeData[counter].name,
+                    label: nodeData[counter].name,
                     position: {
                         lat: nodeData[counter].latitude,
                         lng: nodeData[counter].longitude
                     },
-                    icon: nodeData[counter].icon,
+                    icon: {
+                        labelOrigin: new google.maps.Point(15, -5),
+                        url: nodeData[counter].icon
+                    },
                     map: map
                 });
 

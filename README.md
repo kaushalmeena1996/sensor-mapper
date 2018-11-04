@@ -25,4 +25,4 @@ To start the app simply run :
 ~~~~
 npm start
 ~~~~
-and open http://localhost:8000 in any mordern browser.
+and open http://localhost:8000 in any modern browser.

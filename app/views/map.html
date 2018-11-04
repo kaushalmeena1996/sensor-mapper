@@ -1,34 +1,38 @@
 <div id="map1" class="map-container-1"></div>
 <div class="map-action-menu-1">
-    <ul class="t-menu horizontal compact open">
-        <li><a href="#" class="dropdown-toggle"><span class="icon mif-menu"></span></a>
-            <ul class="t-menu compact" data-role="dropdown">
-                <li>
-                    <a href="#!/">
-                        <span class="icon mif-home"></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#!/map">
-                        <span class="icon mif-map"></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#!/search">
-                        <span class="icon mif-search"></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#!/route/step-1">
-                        <span class="icon mif-flow-branch"></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#!/about">
-                        <span class="icon mif-info"></span>
-                    </a>
-                </li>
-            </ul>
+    <ul class="t-menu compact open">
+        <li><a class="dropdown-toggle"><span class="icon mif-menu"></span></a></li>
+    </ul>
+    <ul class="d-menu drop-left" data-role="dropdown">
+        <li>
+            <a href="#!/">
+                <span class="icon mif-home"></span>
+                <span>Home</span>
+            </a>
+        </li>
+        <li>
+            <a href="#!/map">
+                <span class="icon mif-map"></span>
+                <span>Map</span>
+            </a>
+        </li>
+        <li>
+            <a href="#!/search">
+                <span class="icon mif-search"></span>
+                <span>Search</span>
+            </a>
+        </li>
+        <li>
+            <a href="#!/route/step-1">
+                <span class="icon mif-flow-branch"></span>
+                <span>Route</span>
+            </a>
+        </li>
+        <li>
+            <a href="#!/about">
+                <span class="icon mif-info"></span>
+                <span>About</span>
+            </a>
         </li>
     </ul>
 </div>
@@ -100,12 +104,13 @@
             <div class="map-overflow-content">
                 <div class="card fade-animation bg-light c-pointer my-1" ng-click="moveMapTo(item)" ng-repeat="item in tableData track by $index">
                     <div class="card-content p-1">
-                        <div class="row">
-                            <div class="cell-3 text-center">
-                                <img ng-src="{{item.icon}}" alt="map-icon">
+                        <div class="row no-gap">
+                            <div class="cell-3 text-center px-1">
+                                <img class="py-3" ng-src="{{item.icon}}" alt="map-icon">
                             </div>
                             <div class="cell">
                                 <strong ng-bind="item.name"></strong><br>
+                                <strong><small ng-bind="item.category"></small></strong><br>
                                 <small ng-bind="item.type"></small>
                             </div>
                         </div>

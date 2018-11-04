@@ -4,8 +4,8 @@ app.config(function ($routeProvider, PAGE_DETAILS) {
     $routeProvider
         .when("/", {
             templateUrl: "views/home.html",
-            title: PAGE_DETAILS.home.title,
             controller: "HomeCtrl",
+            title: PAGE_DETAILS.home.title,
             data: PAGE_DETAILS.home.data
         })
         .when("/map", {
@@ -66,8 +66,8 @@ app.config(function ($routeProvider, PAGE_DETAILS) {
         })
         .otherwise("/", {
             templateUrl: "views/home.html",
-            title: PAGE_DETAILS.home.title,
             controller: "HomeCtrl",
+            title: PAGE_DETAILS.home.title,
             data: PAGE_DETAILS.home.data
         });
 });
