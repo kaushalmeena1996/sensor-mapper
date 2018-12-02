@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 
-app.controller('RouteSensorCtrl', function ($scope, $location, $filter, SENSOR_TYPES, STATUS_TYPES, SERVICE_EVENTS, PagerService, RouteService, DataService) {
+app.controller('RouteSensorCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, SENSOR_TYPES, STATUS_TYPES, STATUS_CODES, SERVICE_EVENTS, PagerService, RouteService, DataService) {
     $scope.sensorData = [];
     $scope.tableData = [];
 
@@ -10,6 +10,8 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, SENSOR_T
     $scope.statusTypes = STATUS_TYPES;
 
     $scope.visibleDivision = false;
+
+    $scope.search = '';
 
     $scope.filter1 = '*';
     $scope.filter2 = '*';
@@ -26,15 +28,27 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, SENSOR_T
         pages: []
     };
 
-    $scope.getSensorData = function () {
+    $scope.getSensorDataAsArray = function () {
         $scope.$parent.showLoadingOverlay();
 
-        DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
-            $scope.$parent.safeApply(function () {
-                $scope.sensorData = DataService.getSensorData();
-                $scope.changePage(1);
-                $scope.$parent.hideLoadingOverlay();
-            });
+        DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeDataChanged, function (event, data) {
+            switch (data.changeCode) {
+                case STATUS_CODES.dataLoaded:
+                    $scope.$parent.safeApply(function () {
+                        $scope.sensorData = DataService.getSensorDataAsArray();
+                        $scope.changePage(1);
+                        $scope.$parent.hideLoadingOverlay();
+                    });
+                    break;
+                case STATUS_CODES.dataUpdated:
+                    if (data.nodeItem.sensor == MAP_CATEGORIES.sensor) {
+                        $scope.$parent.safeApply(function () {
+                            $scope.sensorData = DataService.getSensorDataAsArray();
+                            $scope.changePage(1);
+                        });
+                    }
+                    break;
+            }
         });
     };
 
@@ -81,10 +95,10 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, SENSOR_T
 
     $scope.changePage = function (page) {
         var selectedIds = $scope.selectedSensors.map(
-                function (e) {
-                    return e.id;
-                }
-            ),
+            function (e) {
+                return e.id;
+            }
+        ),
             sensorData = $scope.sensorData.filter(
                 function (e) {
                     return selectedIds.indexOf(e.id) == -1;
@@ -122,7 +136,7 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, SENSOR_T
                 break;
             default:
                 $scope.selectedSensors = RouteService.getCustomSensorData();
-                $scope.getSensorData();
+                $scope.getSensorDataAsArray();
         }
     });
 });

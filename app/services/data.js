@@ -1,162 +1,227 @@
 var app = angular.module('sensorApp');
 
-app.factory('DataService', function ($rootScope, $filter, MAP_CATEGORIES, SENSOR_STATUSES, SERVICE_EVENTS) {
+app.factory('DataService', function ($rootScope, STATUS_CODES, MAP_CATEGORIES, SENSOR_STATUSES, SERVICE_EVENTS) {
     var dataService = {};
 
-    var nodeData = [],
+    var nodeData = {},
         nodeRef,
-        nodeDataLoaded = false;
+        nodeDataLoaded = false,
+        valueData = {},
+        valueRef,
+        valueDataLoaded = false;
 
-    dataService.fetchNodeData = function () {
+    function fetchNodeData() {
         nodeRef = firebase.database().ref().child('nodes');
 
         nodeRef.on("value", function (snapshot) {
-            nodeData = [];
-
-            angular.forEach(snapshot.val(), function (item) {
-                nodeData.push(item);
-            });
-
+            nodeData = snapshot.val();
             nodeDataLoaded = true;
+            $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged, { changeCode: STATUS_CODES.dataLoaded });
+        }, function (error) {
+            Metro.infobox.create('' + error + '', 'alert');
+        });
 
-            $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged);
+        nodeRef.on("child_changed", function (snapshot) {
+            var item = snapshot.val();
+            nodeData[item.id] = item;
+            $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged, { changeCode: STATUS_CODES.dataUpdated, nodeItem: item });
         }, function (error) {
             Metro.infobox.create('' + error + '', 'alert');
         });
     };
 
-    dataService.subscribe = function (scope, event, callback) {
+    function fetchValueData() {
+        valueRef = firebase.database().ref().child('values');
+
+        valueRef.once("value", function (snapshot) {
+            valueData = snapshot.val();
+            valueDataLoaded = true;
+            $rootScope.$emit(SERVICE_EVENTS.valueDataChanged, { changeCode: STATUS_CODES.dataLoaded });
+        }, function (error) {
+            Metro.infobox.create('' + error + '', 'alert');
+        });
+
+        valueRef.on("child_changed", function (snapshot) {
+            var item = snapshot.val();
+            valueData[item.id] = item;
+            $rootScope.$emit(SERVICE_EVENTS.valueDataChanged, { changeCode: STATUS_CODES.dataUpdated, valueItem: item });
+        }, function (error) {
+            Metro.infobox.create('' + error + '', 'alert');
+        });
+    };
+
+    dataService.subscribeNodeData = function (scope, event, callback) {
         var handler = $rootScope.$on(event, callback);
 
         if (nodeDataLoaded) {
-            $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged);
+            $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged, { changeCode: STATUS_CODES.dataLoaded });
         } else {
-            dataService.fetchNodeData();
+            fetchNodeData();
         }
 
         scope.$on('$destroy', handler);
     };
 
-    dataService.getNodeData = function () {
+    dataService.subscribeValueData = function (scope, event, callback) {
+        var handler = $rootScope.$on(event, callback);
+
+        if (valueDataLoaded) {
+            $rootScope.$emit(SERVICE_EVENTS.valueDataChanged, { changeCode: STATUS_CODES.dataLoaded });
+        } else {
+            fetchValueData();
+        }
+
+        scope.$on('$destroy', handler);
+    };
+
+    dataService.getNodeDataAsArray = function () {
+        var data = [];
+
+        angular.forEach(nodeData, function (item) {
+            data.push(item);
+        });
+
+        return data;
+    };
+
+    dataService.getNodeDataAsObject = function () {
         return nodeData;
     };
 
-    dataService.getNodeDetail = function (id) {
-        var data = $filter('filter')(nodeData, {
-            'id': id
-        }, true);
+    dataService.getValueDataAsArray = function () {
+        var data = [];
 
-        return data[0];
-    };
-
-    dataService.getCentreData = function () {
-        var data = $filter('filter')(nodeData, {
-            'category': MAP_CATEGORIES.centre
-        }, true);
+        angular.forEach(valueData, function (item) {
+            data.push(item);
+        });
 
         return data;
     };
 
-    dataService.getCentreDetail = function (id) {
-        var data = $filter('filter')(nodeData, {
-            'category': MAP_CATEGORIES.centre,
-            'id': id
-        }, true);
-
-        return data[0];
+    dataService.getValueDataAsObject = function () {
+        return valueData;
     };
 
-    dataService.getLocationData = function () {
-        var data = $filter('filter')(nodeData, {
-            'category': MAP_CATEGORIES.location
-        }, true);
+    dataService.getNodeItem = function (id) {
+        return nodeData[id];;
+    };
+
+    dataService.getValueItem = function (id) {
+        return valueData[id];
+    };
+
+    dataService.getCentreDataAsArray = function () {
+        var data = [];
+
+        angular.forEach(nodeData, function (item) {
+            if (item.category == MAP_CATEGORIES.centre) {
+                data.push(item);
+            }
+        });
 
         return data;
     };
 
-    dataService.getLocationDetail = function (id) {
-        var data = $filter('filter')(nodeData, {
-            'category': MAP_CATEGORIES.location,
-            'id': id
-        }, true);
+    dataService.getLocationDataAsArray = function () {
+        var data = [];
 
-        return data[0];
-    };
-
-    dataService.getSensorData = function () {
-        var data = $filter('filter')(nodeData, {
-            'category': MAP_CATEGORIES.sensor
-        }, true);
+        angular.forEach(nodeData, function (item) {
+            if (item.category == MAP_CATEGORIES.location) {
+                data.push(item);
+            }
+        });
 
         return data;
     };
 
-    dataService.getNormalSensorData = function () {
-        var data = $filter('filter')(nodeData, {
-            'category': MAP_CATEGORIES.sensor,
-            'status': SENSOR_STATUSES.normal
-        }, true);
+    dataService.getSensorDataAsArray = function () {
+        var data = [];
+
+        angular.forEach(nodeData, function (item) {
+            if (item.category == MAP_CATEGORIES.sensor) {
+                data.push(item);
+            }
+        });
+
+        return data;
+    };
+
+    dataService.getNormalSensorDataAsArray = function () {
+        var data = [];
+
+        angular.forEach(nodeData, function (item) {
+            if (item.category == MAP_CATEGORIES.sensor && item.status == SENSOR_STATUSES.normal) {
+                data.push(item);
+            }
+        });
 
         return data;
     };
 
     dataService.getNormalSensorCount = function () {
-        var data = $filter('filter')(nodeData, {
-            'category': MAP_CATEGORIES.sensor,
-            'status': SENSOR_STATUSES.normal
-        }, true);
+        var count = 0;
 
-        return data.length;
+        angular.forEach(nodeData, function (item) {
+            if (item.category == MAP_CATEGORIES.sensor && item.status == SENSOR_STATUSES.normal) {
+                count++;
+            }
+        });
+
+        return count;
     };
 
 
-    dataService.getFailureSensorData = function () {
-        var data = $filter('filter')(nodeData, {
-            'category': MAP_CATEGORIES.sensor,
-            'status': SENSOR_STATUSES.failure
-        }, true);
+    dataService.getFailedSensorDataAsArray = function () {
+        var data = [];
+
+        angular.forEach(nodeData, function (item) {
+            if (item.category == MAP_CATEGORIES.sensor && item.status == SENSOR_STATUSES.failure) {
+                data.push(item);
+            }
+        });
 
         return data;
     };
 
-    dataService.getFailureSensorCount = function () {
-        var data = $filter('filter')(nodeData, {
-            'category': MAP_CATEGORIES.sensor,
-            'status': SENSOR_STATUSES.failure
-        }, true);
+    dataService.getFailedSensorCount = function () {
+        var count = 0;
 
-        return data.length;
+        angular.forEach(nodeData, function (item) {
+            if (item.category == MAP_CATEGORIES.sensor && item.status == SENSOR_STATUSES.failure) {
+                count++;
+            }
+        });
+
+        return count;
     };
 
-    dataService.getAbnormalSensorData = function () {
-        var data = $filter('filter')(nodeData, {
-            'category': MAP_CATEGORIES.sensor,
-            'status': SENSOR_STATUSES.abnormal
-        }, true);
+    dataService.getAbnormalSensorDataAsArray = function () {
+        var data = [];
+
+        angular.forEach(nodeData, function (item) {
+            if (item.category == MAP_CATEGORIES.sensor && item.status == SENSOR_STATUSES.abnormal) {
+                data.push(item);
+            }
+        });
 
         return data;
     };
 
     dataService.getAbnormalSensorCount = function () {
-        var data = $filter('filter')(nodeData, {
-            'category': MAP_CATEGORIES.sensor,
-            'status': SENSOR_STATUSES.abnormal
-        }, true);
+        var count = 0;
 
-        return data.length;
-    };
+        angular.forEach(nodeData, function (item) {
+            if (item.category == MAP_CATEGORIES.sensor && item.status == SENSOR_STATUSES.abnormal) {
+                count++;
+            }
+        });
 
-    dataService.getSensorDetail = function (id) {
-        var data = $filter('filter')(nodeData, {
-            'category': MAP_CATEGORIES.sensor,
-            'id': id
-        }, true);
-
-        return data[0];
+        return count;
     };
 
     $rootScope.$on('$destroy', function () {
         nodeRef.off();
+        valueRef.off();
     });
 
     return dataService;

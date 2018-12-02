@@ -1,8 +1,10 @@
 var app = angular.module('sensorApp');
 
-app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, CATEGORY_TYPES, CENTRE_TYPES, LOCATION_TYPES, SENSOR_TYPES, STATUS_TYPES, SERVICE_EVENTS, PagerService, DataService) {
+app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, CATEGORY_TYPES, CENTRE_TYPES, LOCATION_TYPES, SENSOR_TYPES, STATUS_TYPES, STATUS_CODES, SERVICE_EVENTS, PagerService, DataService) {
     $scope.nodeData = [];
     $scope.tableData = [];
+
+    $scope.search = '';
 
     $scope.filter1 = '*';
     $scope.filter2 = '*';
@@ -27,15 +29,25 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
         pages: []
     };
 
-    $scope.getNodeData = function () {
+    $scope.getNodeDataAsArray = function () {
         $scope.$parent.showLoadingOverlay();
 
-        DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
-            $scope.$parent.safeApply(function () {
-                $scope.nodeData = DataService.getNodeData();
-                $scope.changePage(1);
-                $scope.$parent.hideLoadingOverlay();
-            });
+        DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeDataChanged, function (event, data) {
+            switch (data.changeCode) {
+                case STATUS_CODES.dataLoaded:
+                    $scope.$parent.safeApply(function () {
+                        $scope.nodeData = DataService.getNodeDataAsArray();
+                        $scope.changePage(1);
+                        $scope.$parent.hideLoadingOverlay();
+                    });
+                    break;
+                case STATUS_CODES.dataUpdated:
+                    $scope.$parent.safeApply(function () {
+                        $scope.nodeData = DataService.getNodeDataAsArray();
+                        $scope.changePage(1);
+                    });
+                    break;
+            }
         });
     };
 
@@ -86,11 +98,11 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
         $scope.changePage(1);
     };
 
-    $scope.showNode = function (id) {
-        $location.url('/map?action_code=1&node_id=' + id);
+    $scope.showNodeItemOnMap = function (id) {
+        $location.url('/map?action_code=0&node_id=' + id);
     };
 
-    $scope.showDetail = function (node_category, node_id) {
+    $scope.showNodeItem = function (node_category, node_id) {
         var link = '/view',
             category = node_category.toLowerCase();
 
@@ -101,6 +113,6 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
     };
 
     $scope.$on('$viewContentLoaded', function () {
-        $scope.getNodeData();
+        $scope.getNodeDataAsArray();
     });
 });

@@ -10,8 +10,7 @@
                         <input type="radio" name="filter1" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter1(type)">
                     </div>
                     <div class="form-check text-right mt-2">
-                        <input type="radio" name="filter1" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter1('*')"
-                            checked>
+                        <input type="radio" name="filter1" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter1('*')" checked>
                     </div>
                 </div>
             </div>
@@ -24,8 +23,7 @@
                         <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter2(type)">
                     </div>
                     <div class="form-check text-right mt-2">
-                        <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter2('*')"
-                            checked>
+                        <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter2('*')" checked>
                     </div>
                 </div>
             </div>
@@ -38,8 +36,7 @@
                         <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter2(type)">
                     </div>
                     <div class="form-check text-right mt-2">
-                        <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter2('*')"
-                            checked>
+                        <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter2('*')" checked>
                     </div>
                 </div>
             </div>
@@ -52,8 +49,7 @@
                         <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter2(type)">
                     </div>
                     <div class="form-check text-right mt-2">
-                        <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter2('*')"
-                            checked>
+                        <input type="radio" name="filter2" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter2('*')" checked>
                     </div>
                 </div>
             </div>
@@ -66,8 +62,7 @@
                         <input type="radio" name="filter3" data-role="radio" ng-attr-data-caption="{{type}}" ng-click="setFilter3(type)">
                     </div>
                     <div class="form-check text-right mt-2">
-                        <input type="radio" name="filter3" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter3('*')"
-                            checked>
+                        <input type="radio" name="filter3" data-role="radio" ng-attr-data-caption="View all" ng-click="setFilter3('*')" checked>
                     </div>
                 </div>
             </div>
@@ -75,8 +70,7 @@
         <div class="cell-md-8 order-sm-1">
             <div class="container bg-lightGray p-4 mb-4">
                 <div class="mt-2 mb-5 mx-2">
-                    <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>" ng-model="search"
-                        ng-change="changePage(1)">
+                    <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>" ng-model="search" ng-change="changePage(1)">
                 </div>
                 <div class="card fade-animation bg-light my-1" ng-repeat="item in tableData track by $index">
                     <div class="card-content p-1">
@@ -85,15 +79,19 @@
                                 <img class="py-3" ng-src="{{item.icon}}" alt="map-icon">
                             </div>
                             <div class="cell">
-                                <strong ng-bind="item.name"></strong><br>
-                                <strong><small ng-bind="item.category"></small></strong><br>
+                                <strong ng-bind="item.name"></strong>
+                                <br>
+                                <strong>
+                                    <small ng-bind="item.category"></small>
+                                </strong>
+                                <br>
                                 <small ng-bind="item.type"></small>
                             </div>
                             <div class="cell-md-2 text-right pr-0">
-                                <button type="button" class="button square secondary outline small" ng-click="showDetail(item.category, item.id)">
+                                <button type="button" class="button square secondary outline small" ng-click="showNodeItem(item.category, item.id)">
                                     <span class="mif-folder-open mif-2x"></span>
                                 </button>
-                                <button type="button" class="button square secondary outline small" ng-click="showNode(item.id)">
+                                <button type="button" class="button square secondary outline small" ng-click="showNodeItemOnMap(item.id)">
                                     <span class="mif-map mif-2x"></span>
                                 </button>
                             </div>

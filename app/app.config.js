@@ -4,11 +4,7 @@ app.config(['$compileProvider', function ($compileProvider) {
     $compileProvider.debugInfoEnabled(false);
 }]);
 
-app.constant('SERVICE_EVENTS', {
-    nodeDataChanged: "event-node-data-changed"
-});
-
-app.constant('PAGE_DETAILS', {
+app.constant('PAGES', {
     home: {
         title: "Home",
         data: {
@@ -69,6 +65,31 @@ app.constant('PAGE_DETAILS', {
             }
         }
     }
+});
+
+app.constant('SERVICE_EVENTS', {
+    nodeDataChanged: "event-node-data-loaded",
+    valueDataChanged: "event-value-data-changed"
+});
+
+app.constant('CHARMS_BAR_CODES', {
+    centres: 0,
+    locations: 1,
+    normalSensors: 2,
+    failedSensors: 3,
+    abnormalSensors: 4,
+    emergencyRoutes: 5,
+    customRoutes: 6
+});
+
+app.constant('STATUS_CODES', {
+    dataLoaded: 0,
+    dataUpdated: 1
+});
+
+app.constant('ACTION_CODES', {
+    showNodeItemOnMap: '0',
+    showRouteOnMap: '1'
 });
 
 app.constant('MAP_CATEGORIES', {
@@ -160,6 +181,14 @@ app.constant('MAP_SENSORS', {
             failure: "assets/img/map/sensors/anemometer-failure.png",
             abnormal: "assets/img/map/sensors/anemometer-abnormal.png"
         }
+    },
+    mobile: {
+        name: "Mobile",
+        icon: {
+            normal: "assets/img/map/sensors/mobile-normal.png",
+            failure: "assets/img/map/sensors/mobile-failure.png",
+            abnormal: "assets/img/map/sensors/mobile-abnormal.png"
+        }
     }
 });
 
@@ -167,7 +196,8 @@ app.constant('SENSOR_TYPES', [
     "Thermometer",
     "Seismometer",
     "Pluviometer",
-    "Anemometer"
+    "Anemometer",
+    "Mobile"
 ]);
 
 app.constant('SENSOR_STATUSES', {

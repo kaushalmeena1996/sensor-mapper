@@ -1,32 +1,32 @@
-<div class="container bg-lightGray p-4" ng-if="divisionVisible">
+<div class="container bg-lightGray p-4" ng-if="locationItemLoaded">
   <div class="row">
     <div class="cell-md-4 mb-4">
-      <img ng-src="{{locationDetail.photo}}" onerror="this.src='assets/img/default_image.png'" alt="location-img"
+      <img ng-src="{{locationItem.photo}}" onerror="this.src='assets/img/default_image.png'" alt="location-img"
         class="img-thumbnail mx-auto">
     </div>
     <div class="cell-md-8">
-      <h2 ng-bind="locationDetail.name"></h2>
-      <h5 ng-bind="locationDetail.type"></h5>
+      <h2 ng-bind="locationItem.name"></h2>
+      <h5 ng-bind="locationItem.type"></h5>
       <div class="mt-2">
         <span class="mif-location"></span>
-        <span ng-bind="locationDetail.address"></span>
+        <span ng-bind="locationItem.address"></span>
       </div>
     </div>
   </div>
-  <div class="mt-2" ng-if="locationDetail.description">
+  <div class="mt-2" ng-if="locationItem.description">
     <h3>Description</h3>
-    <p ng-bind="locationDetail.description"></p>
+    <p ng-bind="locationItem.description"></p>
   </div>
-  <div class="mt-2" ng-if="locationDetail.status">
+  <div class="mt-2" ng-if="locationItem.status">
     <strong>Status :</strong>
-    <span ng-bind="locationDetail.status"></span>
+    <span ng-bind="locationItem.status"></span>
   </div>
   <div class="mt-2">
     <strong>Modified :</strong>
-    <span ng-bind="locationDetail.modified | date:'medium'"></span>
+    <span ng-bind="locationItem.modified | date:'medium'"></span>
   </div>
   <div class="mt-2">
     <strong>Created :</strong>
-    <span ng-bind="locationDetail.created | date:'medium'"></span>
+    <span ng-bind="locationItem.created | date:'medium'"></span>
   </div>
 </div>

@@ -2,7 +2,7 @@ var app = angular.module('sensorApp');
 var map,
     ref;
 
-app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENTRES, CENTRE_TYPES, SERVICE_EVENTS, PagerService, RouteService, DataService) {
+app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, CENTRE_TYPES, STATUS_CODES, SERVICE_EVENTS, PagerService, RouteService, DataService) {
     $scope.centreData = [];
     $scope.tableData = [];
 
@@ -12,6 +12,8 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENT
 
     $scope.visibleDivision1 = false;
     $scope.visibleDivision2 = false;
+
+    $scope.search = '';
 
     $scope.filter = '*';
 
@@ -39,15 +41,27 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENT
         pages: []
     };
 
-    $scope.getCentreData = function () {
+    $scope.getCentreDataAsArray = function () {
         $scope.$parent.showLoadingOverlay();
 
-        DataService.subscribe($scope, SERVICE_EVENTS.nodeDataChanged, function () {
-            $scope.$parent.safeApply(function () {
-                $scope.centreData = DataService.getCentreData();
-                $scope.changePage(1);
-                $scope.$parent.hideLoadingOverlay();
-            });
+        DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeDataChanged, function (event, data) {
+            switch (data.changeCode) {
+                case STATUS_CODES.dataLoaded:
+                    $scope.$parent.safeApply(function () {
+                        $scope.centreData = DataService.getCentreDataAsArray();
+                        $scope.changePage(1);
+                        $scope.$parent.hideLoadingOverlay();
+                    });
+                    break;
+                case STATUS_CODES.dataUpdated:
+                    if (data.nodeItem.category == MAP_CATEGORIES.centre) {
+                        $scope.$parent.safeApply(function () {
+                            $scope.centreData = DataService.getCentreDataAsArray();
+                            $scope.changePage(1);
+                        });
+                    }
+                    break;
+            }
         });
     };
 
@@ -122,10 +136,10 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENT
 
     $scope.changePage = function (page) {
         var selectedIds = $scope.selectedCentres.map(
-                function (e) {
-                    return e.id;
-                }
-            ),
+            function (e) {
+                return e.id;
+            }
+        ),
             centreData = $scope.centreData.filter(
                 function (e) {
                     return selectedIds.indexOf(e.id) == -1;
@@ -177,6 +191,6 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CENT
         });
 
         $scope.selectedCentres = RouteService.getCustomCentreData();
-        $scope.getCentreData();
+        $scope.getCentreDataAsArray();
     });
 });

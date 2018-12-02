@@ -4,7 +4,7 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
     var routeService = {};
 
     var customCentreData = [],
-        customeSensorData = [],
+        customSensorData = [],
         customRouteStep = 1;
 
     routeService.setCustomRouteStep = function (data) {
@@ -28,12 +28,12 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
     };
 
     routeService.getCustomSensorData = function () {
-        return customeSensorData;
+        return customSensorData;
     };
 
     routeService.getEmergencyRouteData = function () {
-        var centreData = DataService.getCentreData(),
-            abnormalSensorData = DataService.getAbnormalSensorData(),
+        var centreData = DataService.getCentreDataAsArray(),
+            abnormalSensorData = DataService.getAbnormalSensorDataAsArray(),
             selectedCentreData;
 
         if (abnormalSensorData) {

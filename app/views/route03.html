@@ -5,8 +5,7 @@
         </div>
         <div class="cell-md-10">
             <h5>
-                Route(s) which gives the optimised path starting from
-                centre(s) and traversing all sensors.
+                Route(s) which gives the optimised path starting from centre(s) and traversing all sensors.
             </h5>
         </div>
     </div>
@@ -21,8 +20,12 @@
                                 <img class="py-3" ng-src="{{item.icon}}" alt="map-icon">
                             </div>
                             <div class="cell">
-                                <strong ng-bind="item.name"></strong><br>
-                                <strong><small ng-bind="item.category"></small></strong><br>
+                                <strong ng-bind="item.name"></strong>
+                                <br>
+                                <strong>
+                                    <small ng-bind="item.category"></small>
+                                </strong>
+                                <br>
                                 <small ng-bind="item.type"></small>
                             </div>
                         </div>
@@ -32,10 +35,12 @@
                     <div class="row flex-justify-end">
                         <div class="cell-md-2">
                             <strong>Nodes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</strong>
-                            <span ng-bind="routeItem.routeInfo.totalNodes"></span><br>
+                            <span ng-bind="routeItem.routeInfo.totalNodes"></span>
+                            <br>
                             <strong>Distance :</strong>
                             <span ng-bind="routeItem.routeInfo.totalDistance"></span>
-                            <span>km</span><br>
+                            <span>km</span>
+                            <br>
                             <strong>Score&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</strong>
                             <span ng-bind="routeItem.routeInfo.totalScore"></span>
                         </div>
@@ -51,8 +56,8 @@
         <a role="button" href="#!/route/step-2" class="button square secondary outline button-min-width">
             <span class="mif-arrow-left"></span>
         </a>
-        <a role="button" href="#!/map?action_code=2" class="button square secondary outline button-min-width">
-            <span class="mif-arrow-right"></span>
+        <a role="button" href="#!/map?action_code=1" class="button square secondary outline button-min-width">
+            <span class="mif-map"></span>
         </a>
     </div>
 </div>

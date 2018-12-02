@@ -13,7 +13,7 @@
     <link rel="shortcut icon" href="assets/icon/favicon.png">
 </head>
 
-<body ng-class="{'map-mode': title == pageDetails.map.title}" ng-controller="MainCtrl">
+<body ng-class="{'map-mode': title == pages.map.title}" ng-controller="MainCtrl">
     <div class="ploader"></div>
     <div class="cloader" ng-if="pageLoading">
         <div class="content">
@@ -26,27 +26,27 @@
             <span class="mif-location mif-3x"></span>
         </a>
         <ul class="app-bar-menu ml-auto">
-            <li title="Home">
+            <li title="Home&#013;Home page of application.">
                 <a href="#!/">
                     <span class="mif-home mif-3x"></span>
                 </a>
             </li>
-            <li title="Map">
+            <li title="Map&#013;Displays centres, locations and sensors on map.">
                 <a href="#!/map">
                     <span class="mif-map mif-3x"></span>
                 </a>
             </li>
-            <li title="Search">
+            <li title="Search&#013;Search centres, location or sensor by text or apply filter.">
                 <a href="#!/search">
                     <span class="mif-search mif-3x"></span>
                 </a>
             </li>
-            <li title="Route">
+            <li title="Route&#013;Generates route between selected centres and sensors.">
                 <a href="#!/route/step-1">
                     <span class="mif-flow-branch mif-3x"></span>
                 </a>
             </li>
-            <li title="About">
+            <li title="About&#013;Displays information about application.">
                 <a href="#!/about">
                     <span class="mif-info mif-3x"></span>
                 </a>

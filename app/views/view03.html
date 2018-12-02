@@ -1,46 +1,48 @@
-<div class="container bg-lightGray p-4" ng-if="divisionVisible">
+<div class="container bg-lightGray p-4" ng-if="sensorItemLoaded">
     <div class="row">
         <div class="cell-md-4 mb-4">
-            <img ng-src="{{sensorDetail.photo}}" onerror="this.src='assets/img/default_image.png'" alt="sensor-img"
-                class="img-thumbnail mx-auto">
+            <img ng-src="{{sensorItem.photo}}" onerror="this.src='assets/img/default_image.png'" alt="sensor-img" class="img-thumbnail mx-auto">
         </div>
         <div class="cell-md-8">
-            <h2 ng-bind="sensorDetail.name"></h2>
-            <h5 ng-bind="sensorDetail.type"></h5>
+            <h2 ng-bind="sensorItem.name"></h2>
+            <h5 ng-bind="sensorItem.type"></h5>
             <div class="mt-2">
                 <i class="fas fa-map-marker-alt"></i>
-                <span ng-bind="sensorDetail.address"></span>
+                <span ng-bind="sensorItem.address"></span>
             </div>
-            <div class="mt-2" ng-if="sensorDetail.status">
+            <div class="mt-2" ng-if="sensorItem.status">
                 <strong>Status :</strong>
-                <span ng-bind="sensorDetail.status"></span>
+                <span ng-bind="sensorItem.status"></span>
             </div>
             <div class="mt-2">
-                <span class="display3">
-                    <span ng-bind="sensorDetail.value"></span>
-                    <span ng-bind="sensorDetail.unit"></span>
+                <span class="display3" ng-if="valueItemLoaded">
+                    <span ng-bind="valueItem.value"></span>
+                    <span ng-bind="valueItem.unit"></span>
+                </span>
+                <span class="display3" ng-if="!valueItemLoaded">
+                    <span class="mif-spinner3 ani-spin"></span>
                 </span>
             </div>
         </div>
     </div>
-    <div class="mt-2" ng-if="sensorDetail.description">
+    <div class="mt-2" ng-if="sensorItem.description">
         <h3>Description</h3>
-        <p ng-bind="sensorDetail.description"></p>
+        <p ng-bind="sensorItem.description"></p>
     </div>
     <div class="mt-2">
         <strong>Model :</strong>
-        <span ng-bind="sensorDetail.model"></span>
+        <span ng-bind="sensorItem.model"></span>
     </div>
     <div class="mt-2">
         <strong>Manufacturer :</strong>
-        <span ng-bind="sensorDetail.manufacturer"></span>
+        <span ng-bind="sensorItem.manufacturer"></span>
     </div>
     <div class="mt-2">
         <strong>Modified :</strong>
-        <span ng-bind="sensorDetail.modified | date:'medium'"></span>
+        <span ng-bind="sensorItem.modified | date:'medium'"></span>
     </div>
     <div class="mt-2">
         <strong>Created :</strong>
-        <span ng-bind="sensorDetail.created | date:'medium'"></span>
+        <span ng-bind="sensorItem.created | date:'medium'"></span>
     </div>
 </div>

@@ -1,54 +1,53 @@
 <div id="map1" class="map-container-1"></div>
 <div class="map-action-menu-1">
-    <ul class="t-menu compact open">
-        <li><a class="dropdown-toggle"><span class="icon mif-menu"></span></a></li>
-    </ul>
-    <ul class="d-menu drop-left" data-role="dropdown">
-        <li>
-            <a href="#!/">
-                <span class="icon mif-home"></span>
-                <span>Home</span>
+    <ul class="t-menu horizontal compact open">
+        <li title="Menu">
+            <a href="#" class="dropdown-toggle">
+                <span class="icon mif-menu"></span>
             </a>
-        </li>
-        <li>
-            <a href="#!/map">
-                <span class="icon mif-map"></span>
-                <span>Map</span>
-            </a>
-        </li>
-        <li>
-            <a href="#!/search">
-                <span class="icon mif-search"></span>
-                <span>Search</span>
-            </a>
-        </li>
-        <li>
-            <a href="#!/route/step-1">
-                <span class="icon mif-flow-branch"></span>
-                <span>Route</span>
-            </a>
-        </li>
-        <li>
-            <a href="#!/about">
-                <span class="icon mif-info"></span>
-                <span>About</span>
-            </a>
+            <ul class="t-menu compact" data-role="dropdown">
+                <li title="Home&#013;Home page of application.">
+                    <a href="#!/">
+                        <span class="icon mif-home"></span>
+                    </a>
+                </li>
+                <li title="Map&#013;Displays centres, locations and sensors on map.">
+                    <a href="#!/map">
+                        <span class="icon mif-map"></span>
+                    </a>
+                </li>
+                <li title="Search&#013;Search centres, location or sensor by text or apply filter.">
+                    <a href="#!/search">
+                        <span class="icon mif-search"></span>
+                    </a>
+                </li>
+                <li title="Route&#013;Generates route between selected centres and sensors.">
+                    <a href="#!/route/step-1">
+                        <span class="icon mif-flow-branch"></span>
+                    </a>
+                </li>
+                <li title="About&#013;Displays information about application.">
+                    <a href="#!/about">
+                        <span class="icon mif-info"></span>
+                    </a>
+                </li>
+            </ul>
         </li>
     </ul>
 </div>
 <div class="map-action-menu-2">
     <ul class="t-menu open compact">
-        <li class="c-pointer" ng-click="openCharmsBar(0)">
+        <li class="c-pointer" ng-click="openCharmsBar(0)" title="Centres&#013;Displays list of relief centres.">
             <a>
                 <span class="mif-bell icon"></span>
             </a>
         </li>
-        <li class="c-pointer" ng-click="openCharmsBar(1)">
+        <li class="c-pointer" ng-click="openCharmsBar(1)" title="Locations&#013;Displays list of places or regions.">
             <a>
                 <span class="mif-location icon"></span>
             </a>
         </li>
-        <li class="c-pointer" ng-click="openCharmsBar(2)">
+        <li class="c-pointer" ng-click="openCharmsBar(2)" title="Normal Sensors&#013;Displays list of sensors behaving normally.">
             <a>
                 <span class="mif-wifi-connect icon"></span>
             </a>
@@ -57,25 +56,25 @@
 </div>
 <div class="map-action-menu-3">
     <ul class="t-menu open">
-        <li class="c-pointer" ng-click="openCharmsBar(3)" ng-if="failureSensorCount">
+        <li class="c-pointer" ng-click="openCharmsBar(3)" ng-if="failedSensorCount" title="Failed Sensors&#013;Displays list sensors which stopped working or have technical problems.">
             <a>
                 <span class="mif-wifi-connect fg-orange icon"></span>
-                <span class="badge bg-transparent" ng-bind="failureSensorCount"></span>
+                <span class="badge bg-transparent" ng-bind="failedSensorCount"></span>
             </a>
         </li>
-        <li class="c-pointer" ng-click="openCharmsBar(4)" ng-if="abnormalSensorCount">
+        <li class="c-pointer" ng-click="openCharmsBar(4)" ng-if="abnormalSensorCount" title="Abnormal Sensors&#013;Displays list of sensors behaving abnormally.">
             <a>
                 <span class="mif-wifi-connect fg-red icon"></span>
                 <span class="badge bg-transparent" ng-bind="abnormalSensorCount"></span>
             </a>
         </li>
-        <li class="c-pointer" ng-click="openCharmsBar(5)" ng-if="emergencyRouteData.length">
+        <li class="c-pointer" ng-click="openCharmsBar(5)" ng-if="emergencyRouteData.length" title="Emergency Routes&#013;Displays list of routes from relief centres to abnormal sensors.">
             <a>
                 <span class="mif-flow-branch fg-red icon"></span>
                 <span class="badge bg-transparent" ng-bind="emergencyRouteData.length"></span>
             </a>
         </li>
-        <li class="c-pointer" ng-click="openCharmsBar(6)" ng-if="customRouteData.length">
+        <li class="c-pointer" ng-click="openCharmsBar(6)" ng-if="customRouteData.length" title="Custom Routes&#013;Displays list of user defined generated routes.">
             <a>
                 <span class="mif-flow-branch icon"></span>
                 <span class="badge bg-transparent" ng-bind="customRouteData.length"></span>
@@ -96,10 +95,9 @@
             </div>
         </div>
         <hr class="bg-lightGray mt-0">
-        <div class="marker-division" ng-if="!emergencyRouteMode && !customRouteMode">
+        <div class="marker-division" ng-show="!emergencyRouteMode &amp;&amp; !customRouteMode">
             <div class="mt-2 mb-3 mx-2">
-                <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>" ng-model="search"
-                    ng-change="applyFilter()">
+                <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>" ng-model="search" ng-change="applyFilter()">
             </div>
             <div class="map-overflow-content">
                 <div class="card fade-animation bg-light c-pointer my-1" ng-click="moveMapTo(item)" ng-repeat="item in tableData track by $index">
@@ -109,8 +107,12 @@
                                 <img class="py-3" ng-src="{{item.icon}}" alt="map-icon">
                             </div>
                             <div class="cell">
-                                <strong ng-bind="item.name"></strong><br>
-                                <strong><small ng-bind="item.category"></small></strong><br>
+                                <strong ng-bind="item.name"></strong>
+                                <br>
+                                <strong>
+                                    <small ng-bind="item.category"></small>
+                                </strong>
+                                <br>
                                 <small ng-bind="item.type"></small>
                             </div>
                         </div>
@@ -122,8 +124,7 @@
             </div>
         </div>
         <div class="map-overflow-content" ng-if="emergencyRouteMode">
-            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0])"
-                ng-repeat="item in emergencyRouteData track by $index">
+            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0])" ng-repeat="item in emergencyRouteData track by $index">
                 <div class="card-content p-1">
                     <div class="row no-gap">
                         <div class="cell-md-2 fg-red text-center px-1">
@@ -131,15 +132,19 @@
                         </div>
                         <div class="cell">
                             <strong>From :</strong>
-                            <strong ng-bind="item.routeInfo.origin"></strong><br>
+                            <strong ng-bind="item.routeInfo.origin"></strong>
+                            <br>
                             <strong>To :</strong>
-                            <strong ng-bind="item.routeInfo.destination"></strong><br>
+                            <strong ng-bind="item.routeInfo.destination"></strong>
+                            <br>
                             <small>
                                 <span>Nodes :</span>
-                                <span ng-bind="item.routeInfo.totalNodes"></span><br>
+                                <span ng-bind="item.routeInfo.totalNodes"></span>
+                                <br>
                                 <span>Distance :</span>
                                 <span ng-bind="item.routeInfo.totalDistance"></span>
-                                <span>km</span><br>
+                                <span>km</span>
+                                <br>
                                 <span>Score :</span>
                                 <span ng-bind="item.routeInfo.totalScore"></span>
                             </small>
@@ -152,8 +157,7 @@
             </div>
         </div>
         <div class="map-overflow-content" ng-if="customRouteMode">
-            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0])"
-                ng-repeat="item in customRouteData track by $index">
+            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0])" ng-repeat="item in customRouteData track by $index">
                 <div class="card-content p-1">
                     <div class="row no-gap">
                         <div class="cell-md-2 text-center px-1">
@@ -161,15 +165,19 @@
                         </div>
                         <div class="cell">
                             <strong>From :</strong>
-                            <strong ng-bind="item.routeInfo.origin"></strong><br>
+                            <strong ng-bind="item.routeInfo.origin"></strong>
+                            <br>
                             <strong>To :</strong>
-                            <strong ng-bind="item.routeInfo.destination"></strong><br>
+                            <strong ng-bind="item.routeInfo.destination"></strong>
+                            <br>
                             <small>
                                 <span>Nodes :</span>
-                                <span ng-bind="item.routeInfo.totalNodes"></span><br>
+                                <span ng-bind="item.routeInfo.totalNodes"></span>
+                                <br>
                                 <span>Distance :</span>
                                 <span ng-bind="item.routeInfo.totalDistance"></span>
-                                <span>km</span><br>
+                                <span>km</span>
+                                <br>
                                 <span>Score :</span>
                                 <span ng-bind="item.routeInfo.totalScore"></span>
                             </small>

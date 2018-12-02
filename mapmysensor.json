@@ -132,8 +132,6 @@
       "manufacturer": "XYZ",
       "type": "Thermometer",
       "status": "Normal",
-      "value": 38,
-      "unit": "°C",
       "icon": "assets/img/map/sensors/thermometer-normal.png",
       "photo": "assets/img/default_image.png",
       "description": "",
@@ -154,11 +152,9 @@
       "address": " Tagore Bhavan Hostel, SVNIT Campus, Athwa Surat, Gujarat 395007 India",
       "model": "A000",
       "manufacturer": "XYZ",
-      "type": "Thermometer",
+      "type": "Mobile",
       "status": "Normal",
-      "value": 38,
-      "unit": "°C",
-      "icon": "assets/img/map/sensors/thermometer-normal.png",
+      "icon": "assets/img/map/sensors/mobile-normal.png",
       "photo": "assets/img/default_image.png",
       "description": "",
       "level": 2,
@@ -179,18 +175,16 @@
       "model": "A000",
       "manufacturer": "XYZ",
       "type": "Thermometer",
-      "status": "Abnormal",
-      "value": 100,
-      "unit": "°C",
-      "icon": "assets/img/map/sensors/thermometer-abnormal.png",
+      "status": "Normal",
+      "icon": "assets/img/map/sensors/thermometer-normal.png",
       "photo": "assets/img/default_image.png",
       "description": "",
       "level": 2,
       "display": true,
       "bounds": null,
       "color": null,
-      "latitude": 21.163051,
-      "longitude": 72.789336,
+      "latitude": 21.162896,
+      "longitude": 72.785273,
       "modified": 1518244200000,
       "created": 1518244200000
     },
@@ -204,8 +198,6 @@
       "manufacturer": "XYZ",
       "type": "Thermometer",
       "status": "Normal",
-      "value": 38,
-      "unit": "°C",
       "icon": "assets/img/map/sensors/thermometer-normal.png",
       "photo": "assets/img/default_image.png",
       "description": "",
@@ -227,10 +219,8 @@
       "model": "B000",
       "manufacturer": "XYZ",
       "type": "Thermometer",
-      "status": "Failure",
-      "value": 0,
-      "unit": "°C",
-      "icon": "assets/img/map/sensors/thermometer-failure.png",
+      "status": "Normal",
+      "icon": "assets/img/map/sensors/thermometer-normal.png",
       "photo": "assets/img/default_image.png",
       "description": "",
       "level": 2,
@@ -252,8 +242,6 @@
       "manufacturer": "XYZ",
       "type": "Thermometer",
       "status": "Normal",
-      "value": 38,
-      "unit": "°C",
       "icon": "assets/img/map/sensors/thermometer-normal.png",
       "photo": "assets/img/default_image.png",
       "description": "",
@@ -265,6 +253,40 @@
       "longitude": 72.896519,
       "modified": 1518244200000,
       "created": 1518244200000
+    }
+  },
+  "values": {
+    "s001": {
+      "id": "s001",
+      "value": 36,
+      "unit": "°C"
+    },
+    "s002": {
+      "id": "s002",
+      "value": 37,
+      "unit": "lx",
+      "latitude": 21.160652,
+      "longitude": 72.789348
+    },
+    "s003": {
+      "id": "s003",
+      "value": 37,
+      "unit": "°C"
+    },
+    "s004": {
+      "id": "s004",
+      "value": 36,
+      "unit": "°C"
+    },
+    "s005": {
+      "id": "s005",
+      "value": 37,
+      "unit": "°C"
+    },
+    "s006": {
+      "id": "s006",
+      "value": 36,
+      "unit": "°C"
     }
   }
 }
