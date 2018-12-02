@@ -149,7 +149,6 @@
       "parent_id": "l002",
       "category": "Sensor",
       "name": "Sensor B",
-      "address": " Tagore Bhavan Hostel, SVNIT Campus, Athwa Surat, Gujarat 395007 India",
       "model": "A000",
       "manufacturer": "XYZ",
       "type": "Mobile",
@@ -161,8 +160,6 @@
       "display": true,
       "bounds": null,
       "color": null,
-      "latitude": 21.160652,
-      "longitude": 72.789348,
       "modified": 1518244200000,
       "created": 1518244200000
     },
@@ -266,7 +263,8 @@
       "value": 37,
       "unit": "lx",
       "latitude": 21.160652,
-      "longitude": 72.789348
+      "longitude": 72.789348,
+      "address": " Swami Vivekanand Bhavan, SVNIT Campus, Athwa Surat, Gujarat 395007 India"
     },
     "s003": {
       "id": "s003",

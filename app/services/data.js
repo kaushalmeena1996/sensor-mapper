@@ -13,7 +13,7 @@ app.factory('DataService', function ($rootScope, STATUS_CODES, MAP_CATEGORIES, S
     function fetchNodeData() {
         nodeRef = firebase.database().ref().child('nodes');
 
-        nodeRef.on("value", function (snapshot) {
+        nodeRef.once("value", function (snapshot) {
             nodeData = snapshot.val();
             nodeDataLoaded = true;
             $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged, { changeCode: STATUS_CODES.dataLoaded });

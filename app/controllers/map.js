@@ -59,6 +59,10 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
                             markerObject[data.valueItem.id].setPosition(latlng);
                         };
 
+                        if ('address' in data.valueItem) {
+                            $("#info-window-" + data.valueItem.id + " .address").eq(0).html(data.valueItem.address)
+                        };
+
                         $("#info-window-" + data.valueItem.id + " .content").eq(0).html(data.valueItem.value + ' ' + data.valueItem.unit)
                     }
                     break;
@@ -67,13 +71,13 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
         });
     };
 
-    $scope.updateMap = function (node) {
+    $scope.updateMap = function (nodeItem) {
         var emergencyRouteData = RouteService.getEmergencyRouteData(),
             i;
 
-        markerObject[node.id].setIcon({
+        markerObject[nodeItem.id].setIcon({
             labelOrigin: new google.maps.Point(15, -5),
-            url: node.icon
+            url: nodeItem.icon
         });
 
 
@@ -226,21 +230,24 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
         plotMarkers();
     };
 
-    $scope.generateContent = function (node) {
+    $scope.generateContent = function (nodeItem) {
         var content = '',
             item;
 
-        content += '<div class="map-info-window" id="info-window-' + node.id + '">';
-        content += '<div class="name">' + node.name + '</h5>';
-        content += '<div class="type">' + node.type + '</div>';
+        content += '<div class="map-info-window" id="info-window-' + nodeItem.id + '">';
+        content += '<div class="name">' + nodeItem.name + '</h5>';
+        content += '<div class="type">' + nodeItem.type + '</div>';
 
-        if (node.category == MAP_CATEGORIES.sensor) {
-            item = DataService.getValueItem(node.id);
+        if (nodeItem.category == MAP_CATEGORIES.sensor) {
+            item = DataService.getValueItem(nodeItem.id);
             content += '<div class="content">' + item.value + ' ' + item.unit + '</div>';
         }
 
-        if (node.type != MAP_CENTRES.customCentre.name) {
-            content += '<div class="address">' + node.address + '</div>';
+        if ('address' in nodeItem) {
+            content += '<div class="address">' + nodeItem.address + '</div>';
+        } else {
+            item = DataService.getValueItem(nodeItem.id);
+            content += '<div class="address">' + item.address + '</div>';
         }
 
         content += '</div>';

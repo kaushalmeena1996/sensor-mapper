@@ -97,22 +97,46 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
 
     $scope.selectLocation = function () {
         if ($scope.customCentre.latitude && $scope.customCentre.longitude) {
+            $scope.$parent.showLoadingOverlay();
+
             $scope.customCentre.id = $scope.generateLocationId();
-            $scope.selectedCentres.push($scope.customCentre);
 
-            $scope.customCentre = {
-                id: '',
-                category: 'Centre',
-                name: '',
-                type: 'Custom Centre',
-                status: 'Available',
-                icon: 'assets/img/map/centres/custom-centre.png',
-                rating: 1.0,
-                latitude: null,
-                longitude: null
-            };
+            var geocoder = new google.maps.Geocoder;
 
-            $scope.changePage($scope.currentPage);
+            geocoder.geocode({ "location": { lat: $scope.customCentre.latitude, lng: $scope.customCentre.longitude } }, function (results, status) {
+                if (status === 'OK') {
+                    if (results[0]) {
+                        $scope.$parent.safeApply(function () {
+                            $scope.customCentre.address = results[0].formatted_address;
+
+                            $scope.selectedCentres.push($scope.customCentre);
+
+                            $scope.customCentre = {
+                                id: '',
+                                category: 'Centre',
+                                name: '',
+                                type: 'Custom Centre',
+                                status: 'Available',
+                                icon: 'assets/img/map/centres/custom-centre.png',
+                                address: '',
+                                rating: 1.0,
+                                latitude: null,
+                                longitude: null
+                            };
+
+                            $scope.changePage($scope.currentPage);
+                        });
+                    } else {
+                        Metro.infobox.create('Geocoder ended with no results.', 'default');
+                    }
+                } else {
+                    Metro.infobox.create('Geocoder failed due to: ' + status, 'default');
+                }
+
+                $scope.$parent.safeApply(function () {
+                    $scope.$parent.hideLoadingOverlay();
+                });
+            });
         } else {
             Metro.infobox.create('Please select a location first by double clicking on map.', 'default');
         }
