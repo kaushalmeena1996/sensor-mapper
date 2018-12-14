@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 var map,
-    ref;
+    markerObject = null;
 
 app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, CENTRE_TYPES, STATUS_CODES, SERVICE_EVENTS, PagerService, RouteService, DataService) {
     $scope.centreData = [];
@@ -96,12 +96,12 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
     };
 
     $scope.selectLocation = function () {
-        if ($scope.customCentre.latitude && $scope.customCentre.longitude) {
+        if ($scope.customCentre.name && $scope.customCentre.latitude && $scope.customCentre.longitude) {
             $scope.$parent.showLoadingOverlay();
 
             $scope.customCentre.id = $scope.generateLocationId();
 
-            var geocoder = new google.maps.Geocoder;
+            var geocoder = new google.maps.Geocoder();
 
             geocoder.geocode({ "location": { lat: $scope.customCentre.latitude, lng: $scope.customCentre.longitude } }, function (results, status) {
                 if (status === 'OK') {
@@ -138,7 +138,7 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
                 });
             });
         } else {
-            Metro.infobox.create('Please select a location first by double clicking on map.', 'default');
+            Metro.infobox.create('Please enter the name of centre and then select a location by right clicking on map.', 'default');
         }
     };
 
@@ -207,11 +207,33 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
             },
             zoom: 16
         });
-        map.addListener('dblclick', function (event) {
+
+        map.addListener('rightclick', function (event) {
             $scope.customCentre.latitude = event.latLng.lat();
             $scope.customCentre.longitude = event.latLng.lng();
-            $("#lat").text(event.latLng.lat());
-            $("#lng").text(event.latLng.lng());
+
+            if (markerObject) {
+                markerObject.setPosition({
+                    lat: $scope.customCentre.latitude,
+                    lng: $scope.customCentre.longitude
+                });
+            } else {
+                markerObject = new google.maps.Marker({
+                    label: $scope.customCentre.name,
+                    position: {
+                        lat: $scope.customCentre.latitude,
+                        lng: $scope.customCentre.longitude
+                    },
+                    icon: {
+                        labelOrigin: new google.maps.Point(15, -5),
+                        url: $scope.customCentre.icon
+                    },
+                    map: map
+                });
+            }
+
+            $("#lat").text($scope.customCentre.latitude);
+            $("#lng").text($scope.customCentre.latitude);
         });
 
         $scope.selectedCentres = RouteService.getCustomCentreData();

@@ -4,21 +4,21 @@
       <img ng-src="{{centreItem.photo}}" onerror="this.src='assets/img/default_image.png'" alt="centre-img" class="img-thumbnail mx-auto">
     </div>
     <div class="cell-md-8">
-      <h2 ng-bind="centreItem.name"></h2>
-      <h5 ng-bind="centreItem.type"></h5>
+      <h2 ng-bind="::centreItem.name"></h2>
+      <h5 ng-bind="::centreItem.type"></h5>
       <div class="mt-2">
         <span class="fas fa-map-marker-alt"></span>
         <span ng-bind="centreItem.address"></span>
       </div>
       <div class="mt-2">
         <span class="h2">
-          <span ng-bind="centreItem.rating"></span>/5</span>
+          <span ng-bind="::centreItem.rating"></span>/5</span>
       </div>
     </div>
   </div>
   <div class="mt-2" ng-if="centreItem.description">
     <h3>Description</h3>
-    <p ng-bind="centreItem.description"></p>
+    <p ng-bind="::centreItem.description"></p>
   </div>
   <div class="mt-2" ng-if="centreItem.status">
     <strong>Status :</strong>
@@ -26,10 +26,10 @@
   </div>
   <div class="mt-2">
     <strong>Modified :</strong>
-    <span ng-bind="centreItem.modified | date:'medium'"></span>
+    <span ng-bind="::centreItem.modified | date:'medium'"></span>
   </div>
   <div class="mt-2">
     <strong>Created :</strong>
-    <span ng-bind="centreItem.created | date:'medium'"></span>
+    <span ng-bind="::centreItem.created | date:'medium'"></span>
   </div>
 </div>

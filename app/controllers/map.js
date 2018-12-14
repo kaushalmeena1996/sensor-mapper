@@ -31,71 +31,74 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
     $scope.getNodeDataAsArray = function () {
         $scope.$parent.showLoadingOverlay();
 
-        DataService.subscribeValueData($scope, SERVICE_EVENTS.valueDataChanged, function (event, data) {
+        DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeDataChanged, function (event, data) {
             switch (data.changeCode) {
                 case STATUS_CODES.dataLoaded:
-                    DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeDataChanged, function (event, data) {
-                        switch (data.changeCode) {
-                            case STATUS_CODES.dataLoaded:
-                                $scope.$parent.safeApply(function () {
-                                    $scope.nodeData = DataService.getNodeDataAsArray();
-                                    $scope.createMap();
-                                    $scope.$parent.hideLoadingOverlay();
-                                });
-                                break;
-                            case STATUS_CODES.dataUpdated:
-                                if ($scope.mapLoaded) {
-                                    $scope.nodeData = DataService.getNodeDataAsArray();
-                                    $scope.updateMap(data.nodeItem);
-                                }
-                                break;
-                        }
+                    $scope.$parent.safeApply(function () {
+                        $scope.nodeData = DataService.getNodeDataAsArray();
+                        $scope.createMap();
+                        $scope.$parent.hideLoadingOverlay();
                     });
                     break;
                 case STATUS_CODES.dataUpdated:
                     if ($scope.mapLoaded) {
-                        if ('latitude' in data.valueItem && 'longitude' in data.valueItem) {
-                            var latlng = new google.maps.LatLng(data.valueItem.latitude, data.valueItem.longitude);
-                            markerObject[data.valueItem.id].setPosition(latlng);
-                        };
-
-                        if ('address' in data.valueItem) {
-                            $("#info-window-" + data.valueItem.id + " .address").eq(0).html(data.valueItem.address)
-                        };
-
-                        $("#info-window-" + data.valueItem.id + " .content").eq(0).html(data.valueItem.value + ' ' + data.valueItem.unit)
+                        $scope.nodeData = DataService.getNodeDataAsArray();
+                        $scope.updateMap(data.nodeItem);
                     }
                     break;
-
             }
         });
     };
 
     $scope.updateMap = function (nodeItem) {
-        var emergencyRouteData = RouteService.getEmergencyRouteData(),
-            i;
+        if (nodeItem.dynamicCoordinates) {
+            markerObject[nodeItem.id].setPosition({
+                lat: nodeItem.latitude,
+                lng: nodeItem.longitude
+            });
 
-        markerObject[nodeItem.id].setIcon({
-            labelOrigin: new google.maps.Point(15, -5),
-            url: nodeItem.icon
-        });
-
-
-        for (i = 0; i < routeObject.emergency.length; i++) {
-            routeObject.emergency[i].setMap(null);
+            $("#info-window-" + nodeItem.id)
+                .find(".address")
+                .eq(0)
+                .html(nodeItem.address)
         }
 
-        routeObject.emergency = [];
-
-        if (emergencyRouteData.length > 0) {
-            $scope.generateRouteRequests(emergencyRouteData);
-            $scope.moveMapTo(emergencyRouteData[0].routeArray[0]);
+        if (nodeItem.category == MAP_CATEGORIES.sensor) {
+            $("#info-window-" + nodeItem.id)
+                .find(".content")
+                .eq(0)
+                .html(nodeItem.value + ' ' + nodeItem.unit)
         }
 
-        $scope.emergencyRouteData = emergencyRouteData;
+        if (nodeItem.status != markerObject[nodeItem.id].status) {
+            var emergencyRouteData = RouteService.getEmergencyRouteData(),
+                failedCount = DataService.getFailedSensorCount(),
+                abnormalCount = DataService.getAbnormalSensorCount(),
+                i;
 
-        $scope.failedSensorCount = DataService.getFailedSensorCount();
-        $scope.abnormalSensorCount = DataService.getAbnormalSensorCount();
+            markerObject[nodeItem.id].setIcon({
+                labelOrigin: new google.maps.Point(15, -5),
+                url: nodeItem.icon
+            });
+
+
+            for (i = 0; i < routeObject.emergency.length; i++) {
+                routeObject.emergency[i].setMap(null);
+            }
+
+            routeObject.emergency = [];
+
+            if (emergencyRouteData.length > 0) {
+                $scope.generateRouteRequests(emergencyRouteData);
+                $scope.moveMapTo(emergencyRouteData[0].routeArray[0]);
+            }
+
+            $scope.$parent.safeApply(function () {
+                $scope.emergencyRouteData = emergencyRouteData;
+                $scope.failedSensorCount = failedCount;
+                $scope.abnormalSensorCount = abnormalCount;
+            });
+        }
     };
 
     $scope.createMap = function () {
@@ -105,30 +108,20 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
 
         function plotMarkers() {
             if (nodeData[counter].display) {
-                var object = {
+                var marker = new google.maps.Marker({
                     label: nodeData[counter].name,
+                    position: {
+                        lat: nodeData[counter].latitude,
+                        lng: nodeData[counter].longitude
+                    },
                     icon: {
                         labelOrigin: new google.maps.Point(15, -5),
                         url: nodeData[counter].icon
                     },
+                    status: nodeData[counter].status,
                     map: map
-                };
+                });
 
-                if ('latitude' in nodeData[counter] && 'longitude' in nodeData[counter]) {
-                    object.position = {
-                        lat: nodeData[counter].latitude,
-                        lng: nodeData[counter].longitude
-                    }
-                } else {
-                    var item = DataService.getValueItem(nodeData[counter].id);
-
-                    object.position = {
-                        lat: item.latitude,
-                        lng: item.longitude
-                    }
-                }
-
-                var marker = new google.maps.Marker(object);
                 var content = $scope.generateContent(nodeData[counter]);
 
                 marker.infoWindow = new google.maps.InfoWindow({
@@ -184,10 +177,10 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
                 if ('action_code' in $location.search()) {
                     switch ($location.search().action_code) {
                         case ACTION_CODES.showNodeItemOnMap:
-                            var item = DataService.getNodeItem($location.search().node_id);
+                            var nodeItem = DataService.getNodeItem($location.search().node_id);
 
-                            if (item) {
-                                $scope.moveMapTo(item);
+                            if (nodeItem) {
+                                $scope.moveMapTo(nodeItem);
                             }
 
                             break;
@@ -231,25 +224,17 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
     };
 
     $scope.generateContent = function (nodeItem) {
-        var content = '',
-            item;
+        var content = '';
 
         content += '<div class="map-info-window" id="info-window-' + nodeItem.id + '">';
         content += '<div class="name">' + nodeItem.name + '</h5>';
         content += '<div class="type">' + nodeItem.type + '</div>';
 
         if (nodeItem.category == MAP_CATEGORIES.sensor) {
-            item = DataService.getValueItem(nodeItem.id);
-            content += '<div class="content">' + item.value + ' ' + item.unit + '</div>';
+            content += '<div class="content">' + nodeItem.value + ' ' + nodeItem.unit + '</div>';
         }
 
-        if ('address' in nodeItem) {
-            content += '<div class="address">' + nodeItem.address + '</div>';
-        } else {
-            item = DataService.getValueItem(nodeItem.id);
-            content += '<div class="address">' + item.address + '</div>';
-        }
-
+        content += '<div class="address">' + nodeItem.address + '</div>';
         content += '</div>';
 
         return content;
@@ -263,14 +248,15 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
 
         for (i = 0; i < routeData.length; i++) {
             requestObject = {
-                origin: null,
-                destination: null,
+                origin: {
+                    lat: routeData[i].routeArray[0].latitude,
+                    lng: routeData[i].routeArray[0].longitude
+                },
+                destination: {
+                    lat: routeData[i].routeArray[routeData[i].routeArray.length - 1].latitude,
+                    lng: routeData[i].routeArray[routeData[i].routeArray.length - 1].longitude
+                },
                 travelMode: 'DRIVING'
-            };
-
-            requestObject.origin = {
-                lat: routeData[i].routeArray[0].latitude,
-                lng: routeData[i].routeArray[0].longitude
             };
 
             if (routeData[i].routeArray[0].type == MAP_CENTRES.customCentre.name) {
@@ -284,6 +270,7 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
                         labelOrigin: new google.maps.Point(15, -5),
                         url: routeData[i].routeArray[0].icon
                     },
+                    status: routeData[i].routeArray[0].status,
                     map: map
                 });
 
@@ -303,6 +290,7 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
 
             if (routeData[i].routeArray.length > 2) {
                 requestObject.waypoints = [];
+
                 for (j = 1; j < routeData[i].routeArray.length - 1; j++) {
                     requestObject.waypoints.push({
                         location: {
@@ -313,11 +301,6 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
                     });
                 }
             }
-
-            requestObject.destination = {
-                lat: routeData[i].routeArray[routeData[i].routeArray.length - 1].latitude,
-                lng: routeData[i].routeArray[routeData[i].routeArray.length - 1].longitude
-            };
 
             requestArray.push(requestObject);
         }
@@ -337,6 +320,7 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
         function directionCallback(nodeData, status) {
             if (status == google.maps.DirectionsStatus.OK) {
                 var renderer = new google.maps.DirectionsRenderer();
+
                 renderer.setOptions({
                     preserveViewport: true,
                     suppressInfoWindows: true,
@@ -376,13 +360,16 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
         submitRequest();
     };
 
-    $scope.moveMapTo = function (item) {
+    $scope.moveMapTo = function (nodeItem) {
         map.panTo({
-            lat: item.latitude,
-            lng: item.longitude
+            lat: nodeItem.latitude,
+            lng: nodeItem.longitude
         });
 
-        google.maps.event.trigger(markerObject[item.id], 'click');
+        google
+            .maps
+            .event
+            .trigger(markerObject[nodeItem.id], 'click');
     };
 
     $scope.openCharmsBar = function (openCode) {

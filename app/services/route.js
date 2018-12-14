@@ -63,7 +63,6 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
     function centreSelectionAlgorithm1(centreData, sensorData) {
         var selectedCentreData = [],
             selectedCentreIds = [],
-            selectedCentreLimit = 5,
             distance,
             rating,
             score,
@@ -73,6 +72,7 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
             j;
 
         while (1) {
+            maxCentreIndex = -1;
             maxScore = 0;
 
             for (i = 0; i < sensorData.length; i++) {
@@ -82,10 +82,10 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
                             sensorData[i].latitude,
                             sensorData[i].longitude,
                             centreData[j].latitude,
-                            centreData[j].longitude
+                            centreData[j].longitude,
                         );
 
-                        rating = centreData[i].rating;
+                        rating = centreData[j].rating;
 
                         score = (rating) / (distance);
 
@@ -97,7 +97,7 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
                 }
             }
 
-            if (maxScore > 0 && selectedCentreData.length < selectedCentreLimit) {
+            if (maxScore > 0) {
                 selectedCentreData.push(
                     centreData[maxCentreIndex]
                 );
@@ -170,7 +170,7 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
                                 sensorData[routeData[i].routeInfo.previousSensorIndex].latitude,
                                 sensorData[routeData[i].routeInfo.previousSensorIndex].longitude,
                                 sensorData[j].latitude,
-                                sensorData[j].longitude
+                                sensorData[j].longitude,
                             );
                         }
 

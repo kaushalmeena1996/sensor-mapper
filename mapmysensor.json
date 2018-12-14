@@ -2,7 +2,7 @@
   "nodes": {
     "c001": {
       "id": "c001",
-      "parent_id": "l001",
+      "parentId": "l001",
       "category": "Centre",
       "name": "Majura Fire Station",
       "address": "NX-1, Ghod Dod Rd, Sanskar Nagar, Athwa, Surat, Gujarat 395017",
@@ -16,6 +16,7 @@
       "display": true,
       "bounds": null,
       "color": null,
+      "dynamicCoordinates": false,
       "latitude": 21.176406,
       "longitude": 72.818579,
       "modified": 1518244200000,
@@ -23,7 +24,7 @@
     },
     "c002": {
       "id": "c002",
-      "parent_id": "l001",
+      "parentId": "l001",
       "category": "Centre",
       "name": "Kapodra Fire Station",
       "address": "112, Surat - Kamrej Hwy, Kalakunj Society, Kapodra Patiya, Surat, Gujarat 395006",
@@ -37,6 +38,7 @@
       "display": true,
       "bounds": null,
       "color": null,
+      "dynamicCoordinates": false,
       "latitude": 21.220653,
       "longitude": 72.874993,
       "modified": 1518244200000,
@@ -44,7 +46,7 @@
     },
     "l001": {
       "id": "l001",
-      "parent_id": null,
+      "parentId": null,
       "category": "Location",
       "name": "Surat",
       "address": "Gujarat, India",
@@ -57,6 +59,7 @@
       "display": false,
       "bounds": null,
       "color": null,
+      "dynamicCoordinates": false,
       "latitude": 21.174179,
       "longitude": 72.831741,
       "modified": 1518244200000,
@@ -64,7 +67,7 @@
     },
     "l002": {
       "id": "l002",
-      "parent_id": "l001",
+      "parentId": "l001",
       "category": "Location",
       "name": "SVNIT Campus",
       "address": "Athwa, Surat, Gujarat 395007",
@@ -77,6 +80,7 @@
       "display": true,
       "bounds": "21.165702,72.781551;21.168643,72.788053;21.168463,72.788225;21.165202,72.788976;21.163561,72.789662;21.163401,72.790628;21.16264,72.790907;21.160559,72.790885;21.157978,72.785714;21.157538,72.784405;21.157177,72.781594;21.16128,72.779599;21.1619,72.780629;21.163,72.780285;21.163361,72.781122;21.164701,72.781873;21.165522,72.78153",
       "color": "#0000FF",
+      "dynamicCoordinates": false,
       "latitude": 21.165176,
       "longitude": 72.784903,
       "modified": 1518244200000,
@@ -84,7 +88,7 @@
     },
     "l003": {
       "id": "l003",
-      "parent_id": "l001",
+      "parentId": "l001",
       "category": "Location",
       "name": "Veer Narmad South Gujarat University",
       "address": "Udhana - Magdalla Road, Surat, Gujarat 395007",
@@ -97,6 +101,7 @@
       "display": true,
       "bounds": "21.153361,72.782539;21.153831,72.783735;21.152751,72.784154;21.152295,72.782984",
       "color": "#0000FF",
+      "dynamicCoordinates": false,
       "latitude": 21.153369,
       "longitude": 72.783263,
       "modified": 1518244200000,
@@ -104,7 +109,7 @@
     },
     "l004": {
       "id": "l004",
-      "parent_id": "l001",
+      "parentId": "l001",
       "category": "Location",
       "name": "INOX Raj Imperial Multiplex",
       "address": "RAJ Imperial, 3rd floor , near deep kamal mall & Multiplex, Zoo Road, Surat, Gujarat 395006",
@@ -117,6 +122,7 @@
       "display": true,
       "bounds": "21.22938,72.896353;21.229388,72.896382;21.22949,72.896465;21.229595,72.896825;21.229565,72.896844;21.229595,72.896919;21.22925,72.897066;21.22904,72.896503",
       "color": "#0000FF",
+      "dynamicCoordinates": false,
       "latitude": 21.229265,
       "longitude": 72.896735,
       "modified": 1518244200000,
@@ -124,10 +130,10 @@
     },
     "s001": {
       "id": "s001",
-      "parent_id": "l002",
+      "parentId": "l002",
       "category": "Sensor",
       "name": "Sensor A",
-      "address": "Bhabha Bhavan Hostel, SVNIT Campus, Athwa Surat, Gujarat 395007 India",
+      "address": "Surat, SVNIT Campus, Athwa, Surat, Gujarat 395007, India",
       "model": "A000",
       "manufacturer": "XYZ",
       "type": "Thermometer",
@@ -139,16 +145,20 @@
       "display": true,
       "bounds": null,
       "color": null,
-      "latitude": 21.159815,
-      "longitude": 72.788055,
+      "value": 37,
+      "unit": "°C",
+      "dynamicCoordinates": false,
+      "latitude": 21.163993,
+      "longitude": 72.785186,
       "modified": 1518244200000,
       "created": 1518244200000
     },
     "s002": {
       "id": "s002",
-      "parent_id": "l002",
+      "parentId": "l002",
       "category": "Sensor",
       "name": "Sensor B",
+      "address": "Ichchhanath, Surat, Gujarat 395007, India",
       "model": "A000",
       "manufacturer": "XYZ",
       "type": "Mobile",
@@ -160,15 +170,20 @@
       "display": true,
       "bounds": null,
       "color": null,
+      "value": 42,
+      "unit": "lx",
+      "dynamicCoordinates": true,
+      "latitude": 21.162769,
+      "longitude": 72.790081,
       "modified": 1518244200000,
       "created": 1518244200000
     },
     "s003": {
       "id": "s003",
-      "parent_id": "l002",
+      "parentId": "l002",
       "category": "Sensor",
       "name": "Sensor C",
-      "address": " Swami Vivekanand Bhavan, SVNIT Campus, Athwa Surat, Gujarat 395007 India",
+      "address": "Gajjar Bhavan Rd, SVNIT Campus, Athwa, Surat, Gujarat 395007, India",
       "model": "A000",
       "manufacturer": "XYZ",
       "type": "Thermometer",
@@ -180,14 +195,17 @@
       "display": true,
       "bounds": null,
       "color": null,
-      "latitude": 21.162896,
-      "longitude": 72.785273,
+      "value": 36,
+      "unit": "°C",
+      "dynamicCoordinates": false,
+      "latitude": 21.160237,
+      "longitude": 72.788133,
       "modified": 1518244200000,
       "created": 1518244200000
     },
     "s004": {
       "id": "s004",
-      "parent_id": "l003",
+      "parentId": "l003",
       "category": "Sensor",
       "name": "Sensor D",
       "address": "Veer Narmad South Gujarat University Udhana - Magdalla Road Surat, Gujarat 395007 India",
@@ -202,6 +220,9 @@
       "display": true,
       "bounds": null,
       "color": null,
+      "value": 36,
+      "unit": "°C",
+      "dynamicCoordinates": false,
       "latitude": 21.153159,
       "longitude": 72.782957,
       "modified": 1518244200000,
@@ -209,7 +230,7 @@
     },
     "s005": {
       "id": "s005",
-      "parent_id": "l003",
+      "parentId": "l003",
       "category": "Sensor",
       "name": "Sensor E",
       "address": "Veer Narmad South Gujarat University Udhana - Magdalla Road Surat, Gujarat 395007 India",
@@ -224,6 +245,9 @@
       "display": true,
       "bounds": null,
       "color": null,
+      "value": 36,
+      "unit": "°C",
+      "dynamicCoordinates": false,
       "latitude": 21.153324,
       "longitude": 72.783717,
       "modified": 1518244200000,
@@ -231,10 +255,10 @@
     },
     "s006": {
       "id": "s006",
-      "parent_id": "l004",
+      "parentId": "l004",
       "category": "Sensor",
       "name": "Sensor F",
-      "address": "Sarthana Nature Park Surat - Kamrej Highway, Sarthana Jakat Naka Nature Park and Zoo, Nana Varachha Surat, Gujarat 395006 India",
+      "address": "Sarthana Nature Park Surat - Kaamrej Highway, Sarthana Jakat Naka Nature Park and Zoo, Nana Varachha Surat, Gujarat 395006 India",
       "model": "C000",
       "manufacturer": "XYZ",
       "type": "Thermometer",
@@ -246,45 +270,13 @@
       "display": true,
       "bounds": null,
       "color": null,
+      "value": 36,
+      "unit": "°C",
+      "dynamicCoordinates": false,
       "latitude": 21.229353,
       "longitude": 72.896519,
       "modified": 1518244200000,
       "created": 1518244200000
-    }
-  },
-  "values": {
-    "s001": {
-      "id": "s001",
-      "value": 36,
-      "unit": "°C"
-    },
-    "s002": {
-      "id": "s002",
-      "value": 37,
-      "unit": "lx",
-      "latitude": 21.160652,
-      "longitude": 72.789348,
-      "address": " Swami Vivekanand Bhavan, SVNIT Campus, Athwa Surat, Gujarat 395007 India"
-    },
-    "s003": {
-      "id": "s003",
-      "value": 37,
-      "unit": "°C"
-    },
-    "s004": {
-      "id": "s004",
-      "value": 36,
-      "unit": "°C"
-    },
-    "s005": {
-      "id": "s005",
-      "value": 37,
-      "unit": "°C"
-    },
-    "s006": {
-      "id": "s006",
-      "value": 36,
-      "unit": "°C"
     }
   }
 }

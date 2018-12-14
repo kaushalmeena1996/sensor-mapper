@@ -68,8 +68,7 @@ app.constant('PAGES', {
 });
 
 app.constant('SERVICE_EVENTS', {
-    nodeDataChanged: "event-node-data-loaded",
-    valueDataChanged: "event-value-data-changed"
+    nodeDataChanged: "event-node-data-loaded"
 });
 
 app.constant('CHARMS_BAR_CODES', {

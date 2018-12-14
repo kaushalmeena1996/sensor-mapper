@@ -5,10 +5,7 @@ app.factory('DataService', function ($rootScope, STATUS_CODES, MAP_CATEGORIES, S
 
     var nodeData = {},
         nodeRef,
-        nodeDataLoaded = false,
-        valueData = {},
-        valueRef,
-        valueDataLoaded = false;
+        nodeDataLoaded = false;
 
     function fetchNodeData() {
         nodeRef = firebase.database().ref().child('nodes');
@@ -28,27 +25,7 @@ app.factory('DataService', function ($rootScope, STATUS_CODES, MAP_CATEGORIES, S
         }, function (error) {
             Metro.infobox.create('' + error + '', 'alert');
         });
-    };
-
-    function fetchValueData() {
-        valueRef = firebase.database().ref().child('values');
-
-        valueRef.once("value", function (snapshot) {
-            valueData = snapshot.val();
-            valueDataLoaded = true;
-            $rootScope.$emit(SERVICE_EVENTS.valueDataChanged, { changeCode: STATUS_CODES.dataLoaded });
-        }, function (error) {
-            Metro.infobox.create('' + error + '', 'alert');
-        });
-
-        valueRef.on("child_changed", function (snapshot) {
-            var item = snapshot.val();
-            valueData[item.id] = item;
-            $rootScope.$emit(SERVICE_EVENTS.valueDataChanged, { changeCode: STATUS_CODES.dataUpdated, valueItem: item });
-        }, function (error) {
-            Metro.infobox.create('' + error + '', 'alert');
-        });
-    };
+    }
 
     dataService.subscribeNodeData = function (scope, event, callback) {
         var handler = $rootScope.$on(event, callback);
@@ -57,18 +34,6 @@ app.factory('DataService', function ($rootScope, STATUS_CODES, MAP_CATEGORIES, S
             $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged, { changeCode: STATUS_CODES.dataLoaded });
         } else {
             fetchNodeData();
-        }
-
-        scope.$on('$destroy', handler);
-    };
-
-    dataService.subscribeValueData = function (scope, event, callback) {
-        var handler = $rootScope.$on(event, callback);
-
-        if (valueDataLoaded) {
-            $rootScope.$emit(SERVICE_EVENTS.valueDataChanged, { changeCode: STATUS_CODES.dataLoaded });
-        } else {
-            fetchValueData();
         }
 
         scope.$on('$destroy', handler);
@@ -88,26 +53,8 @@ app.factory('DataService', function ($rootScope, STATUS_CODES, MAP_CATEGORIES, S
         return nodeData;
     };
 
-    dataService.getValueDataAsArray = function () {
-        var data = [];
-
-        angular.forEach(valueData, function (item) {
-            data.push(item);
-        });
-
-        return data;
-    };
-
-    dataService.getValueDataAsObject = function () {
-        return valueData;
-    };
-
     dataService.getNodeItem = function (id) {
-        return nodeData[id];;
-    };
-
-    dataService.getValueItem = function (id) {
-        return valueData[id];
+        return nodeData[id];
     };
 
     dataService.getCentreDataAsArray = function () {
@@ -221,7 +168,6 @@ app.factory('DataService', function ($rootScope, STATUS_CODES, MAP_CATEGORIES, S
 
     $rootScope.$on('$destroy', function () {
         nodeRef.off();
-        valueRef.off();
     });
 
     return dataService;

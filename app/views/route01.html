@@ -115,20 +115,19 @@
         </div>
     </div>
     <div id="locationDivision" class="bg-white p-4" style="display: none;">
-        <div class="my-2"><small> Note : Double click on location to record its latitude and longitude.</small></div>
+        <div class="my-2"><small> Note : Right click on location to record its latitude and longitude.</small></div>
         <div id="map2" class="map-container-2"></div>
         <form class="mt-2">
             <div class="row">
                 <div class="cell-md-6">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" data-role="input" ng-model="customCentre.name" required>
+                        <input type="text" name="name" data-role="input" ng-model="customCentre.name" required>
                     </div>
                     <div class="form-group">
-                        <label for="rating">Rating</label>
-                        <input data-role="slider" data-min="0" data-max="5" data-hint-always="true" ng-model="customCentre.rating">
-                        <small class="form-text text-muted">More the rating more the chance that route will
-                            start from this location.</small>
+                        <label for="rating">Rating</label><br>
+                        <input name="rating" data-role="rating" ng-model="customCentre.rating"><br>
+                        <small class="form-text text-muted">More the rating more the chance that route will start from this location.</small>
                     </div>
                 </div>
                 <div class="cell-md-6 text-center mt-3">
