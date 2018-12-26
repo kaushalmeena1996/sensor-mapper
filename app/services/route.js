@@ -154,7 +154,7 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
             for (i = 0; i < centreData.length; i++) {
                 for (j = 0; j < sensorData.length; j++) {
                     if (visitedSensors.includes(sensorData[j].id) == false) {
-                        if (centreData[i].type == MAP_CENTRES.fireStation && sensorData[j].type != MAP_SENSORS.thermometer.name) {
+                        if (centreData[i].typeName == MAP_CENTRES.ct001.name && sensorData[j].typeName != MAP_SENSORS.st001.name) {
                             continue;
                         }
 

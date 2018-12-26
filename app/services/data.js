@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 
-app.factory('DataService', function ($rootScope, STATUS_CODES, MAP_CATEGORIES, SENSOR_STATUSES, SERVICE_EVENTS) {
+app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, MAP_LOCATIONS, MAP_SENSORS, SENSOR_STATUSES, STATUS_CODES, SERVICE_EVENTS) {
     var dataService = {};
 
     var nodeData = {},
@@ -12,6 +12,7 @@ app.factory('DataService', function ($rootScope, STATUS_CODES, MAP_CATEGORIES, S
 
         nodeRef.once("value", function (snapshot) {
             nodeData = snapshot.val();
+            updateNodeData();
             nodeDataLoaded = true;
             $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged, { changeCode: STATUS_CODES.dataLoaded });
         }, function (error) {
@@ -21,10 +22,51 @@ app.factory('DataService', function ($rootScope, STATUS_CODES, MAP_CATEGORIES, S
         nodeRef.on("child_changed", function (snapshot) {
             var item = snapshot.val();
             nodeData[item.id] = item;
-            $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged, { changeCode: STATUS_CODES.dataUpdated, nodeItem: item });
+            updateSensorItem(item);
+            $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged, { changeCode: STATUS_CODES.dataUpdated, nodeItem: nodeData[item.id] });
         }, function (error) {
             Metro.infobox.create('' + error + '', 'alert');
         });
+    }
+
+    function updateNodeData() {
+        angular.forEach(nodeData, function (item) {
+            switch (item.category) {
+                case MAP_CATEGORIES.centre:
+                    nodeData[item.id].icon = MAP_CENTRES[item.typeId].icon;
+                    break;
+                case MAP_CATEGORIES.location:
+                    nodeData[item.id].icon = MAP_LOCATIONS[item.typeId].icon;
+                    break;
+                case MAP_CATEGORIES.sensor:
+                    if (item.value > item.upperLimit) {
+                        nodeData[item.id].status = SENSOR_STATUSES.abnormal;
+                        nodeData[item.id].icon = MAP_SENSORS[item.typeId].icon.abnormal;
+                    } else if (item.value > item.lowerLimit) {
+                        nodeData[item.id].status = SENSOR_STATUSES.normal;
+                        nodeData[item.id].icon = MAP_SENSORS[item.typeId].icon.normal;
+                    } else {
+                        nodeData[item.id].status = SENSOR_STATUSES.failure;
+                        nodeData[item.id].icon = MAP_SENSORS[item.typeId].icon.failure;
+                    }
+                    break;
+            }
+        });
+    }
+
+    function updateSensorItem(item) {
+        if (item.category == MAP_CATEGORIES.sensor) {
+            if (item.value > item.upperLimit) {
+                nodeData[item.id].status = SENSOR_STATUSES.abnormal;
+                nodeData[item.id].icon = MAP_SENSORS[item.typeId].icon.abnormal;
+            } else if (item.value > item.lowerLimit) {
+                nodeData[item.id].status = SENSOR_STATUSES.normal;
+                nodeData[item.id].icon = MAP_SENSORS[item.typeId].icon.normal;
+            } else {
+                nodeData[item.id].status = SENSOR_STATUSES.failure;
+                nodeData[item.id].icon = MAP_SENSORS[item.typeId].icon.failure;
+            }
+        }
     }
 
     dataService.subscribeNodeData = function (scope, event, callback) {

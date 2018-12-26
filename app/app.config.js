@@ -104,38 +104,39 @@ app.constant('CATEGORY_TYPES', [
 ]);
 
 app.constant('MAP_CENTRES', {
-    fireStation: {
+    ct001: {
         name: "Fire Station",
         icon: "assets/img/map/centres/fire-station.png"
     },
-    hospital: {
+    ct002: {
         name: "Hospital",
         icon: "assets/img/map/centres/hospital.png"
     },
-    customCentre: {
+    ct00x: {
         name: "Custom Centre",
         icon: "assets/img/map/centres/custom-centre.png"
     }
 });
+
 app.constant('CENTRE_TYPES', [
     "Fire Station",
     "Hospital"
 ]);
 
 app.constant('MAP_LOCATIONS', {
-    location: {
+    lt001: {
         name: "Location",
         icon: "assets/img/map/locations/location.png",
     },
-    cinema: {
+    lt002: {
         name: "Cinema",
         icon: "assets/img/map/locations/cinema.png",
     },
-    college: {
+    lt003: {
         name: "College",
         icon: "assets/img/map/locations/college.png",
     },
-    school: {
+    lt004: {
         name: "School",
         icon: "assets/img/map/locations/school.png",
     },
@@ -149,7 +150,7 @@ app.constant('LOCATION_TYPES', [
 ]);
 
 app.constant('MAP_SENSORS', {
-    thermometer: {
+    st001: {
         name: "Thermometer",
         icon: {
             normal: "assets/img/map/sensors/thermometer-normal.png",
@@ -157,7 +158,7 @@ app.constant('MAP_SENSORS', {
             abnormal: "assets/img/map/sensors/thermometer-abnormal.png"
         }
     },
-    seismometer: {
+    st002: {
         name: "Seismometer",
         icon: {
             normal: "assets/img/map/sensors/seismometer-normal.png",
@@ -165,7 +166,7 @@ app.constant('MAP_SENSORS', {
             abnormal: "assets/img/map/sensors/seismometer-abnormal.png"
         }
     },
-    pluviometer: {
+    st003: {
         name: "Pluviometer",
         icon: {
             normal: "assets/img/map/sensors/pluviometer-normal.png",
@@ -173,7 +174,7 @@ app.constant('MAP_SENSORS', {
             abnormal: "assets/img/map/sensors/pluviometer-abnormal.png"
         }
     },
-    anemometer: {
+    st004: {
         name: "Anemometer",
         icon: {
             normal: "assets/img/map/sensors/anemometer-normal.png",
@@ -181,7 +182,7 @@ app.constant('MAP_SENSORS', {
             abnormal: "assets/img/map/sensors/anemometer-abnormal.png"
         }
     },
-    mobile: {
+    st005: {
         name: "Mobile",
         icon: {
             normal: "assets/img/map/sensors/mobile-normal.png",

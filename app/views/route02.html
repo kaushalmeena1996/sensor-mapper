@@ -74,7 +74,7 @@
                             <div class="cell">
                                 <strong ng-bind="item.name"></strong><br>
                                 <strong><small ng-bind="item.category"></small></strong><br>
-                                <small ng-bind="item.type"></small>
+                                <small ng-bind="item.typeName"></small>
                             </div>
                             <div class="cell-md-2 text-right pr-0">
                                 <button type="button" class="button square secondary outline small" ng-click="selectSensor(item)">
@@ -117,7 +117,7 @@
                     <div class="cell">
                         <strong ng-bind="item.name"></strong><br>
                         <strong><small ng-bind="item.category"></small></strong><br>
-                        <small ng-bind="item.type"></small>
+                        <small ng-bind="item.typeName"></small>
                     </div>
                     <div class="cell-md-2 text-right pr-0">
                         <button type="button" class="button square secondary outline small" ng-click="removeSensor(item)">
