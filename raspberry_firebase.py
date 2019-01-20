@@ -77,7 +77,7 @@ while True:
     # Get ending time
     time2 = time.time()
 
-    # Calucate time difference in seconds
+    # Calculate time difference in seconds
     seconds = time2 - time1
 
     if seconds > 1800:
