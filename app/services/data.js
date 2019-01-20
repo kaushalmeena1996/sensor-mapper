@@ -5,7 +5,8 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, MA
 
     var nodeData = {},
         nodeRef,
-        nodeDataLoaded = false;
+        nodeDataLoaded = false,
+        valueRef;
 
     function fetchNodeData() {
         nodeRef = firebase.database().ref().child('nodes');
@@ -14,18 +15,39 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, MA
             nodeData = snapshot.val();
             updateNodeData();
             nodeDataLoaded = true;
-            $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged, { changeCode: STATUS_CODES.dataLoaded });
+            $rootScope.$emit(SERVICE_EVENTS.nodeData, { statusCode: STATUS_CODES.dataLoadSuccess });
         }, function (error) {
-            Metro.infobox.create('' + error + '', 'alert');
+            $rootScope.$emit(SERVICE_EVENTS.nodeData, { statusCode: STATUS_CODES.dataLoadFailed, message: error });
         });
 
         nodeRef.on("child_changed", function (snapshot) {
             var item = snapshot.val();
             nodeData[item.id] = item;
             updateSensorItem(item);
-            $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged, { changeCode: STATUS_CODES.dataUpdated, nodeItem: nodeData[item.id] });
+            $rootScope.$emit(SERVICE_EVENTS.nodeData, { statusCode: STATUS_CODES.dataUpdateSuccess, nodeItem: nodeData[item.id] });
         }, function (error) {
-            Metro.infobox.create('' + error + '', 'alert');
+            $rootScope.$emit(SERVICE_EVENTS.nodeData, { statusCode: STATUS_CODES.dataUpdateFailed, message: error });
+        });
+    }
+
+    function fetchValueItem(id) {
+        valueRef = firebase.database().ref().child('values').child(id).limitToLast(50);;
+
+        valueRef.once("value", function (snapshot) {
+            var data = [];
+
+            angular.forEach(snapshot.val(), function (item) {
+                data.push({
+                    x: new Date(item.timestamp),
+                    y: item.value
+                });
+            });
+
+            $rootScope.$emit(SERVICE_EVENTS.chartData, { statusCode: STATUS_CODES.dataLoadSuccess, chartData: data });
+            valueRef.off();
+        }, function (error) {
+            $rootScope.$emit(SERVICE_EVENTS.chartData, { statusCode: STATUS_CODES.dataLoadFailed, message: error });
+            valueRef.off();
         });
     }
 
@@ -73,10 +95,18 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, MA
         var handler = $rootScope.$on(event, callback);
 
         if (nodeDataLoaded) {
-            $rootScope.$emit(SERVICE_EVENTS.nodeDataChanged, { changeCode: STATUS_CODES.dataLoaded });
+            $rootScope.$emit(SERVICE_EVENTS.nodeData, { statusCode: STATUS_CODES.dataLoadSuccess });
         } else {
             fetchNodeData();
         }
+
+        scope.$on('$destroy', handler);
+    };
+
+    dataService.subscribeChartData = function (id, scope, event, callback) {
+        var handler = $rootScope.$on(event, callback);
+
+        fetchValueItem(id);
 
         scope.$on('$destroy', handler);
     };

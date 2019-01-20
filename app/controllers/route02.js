@@ -31,22 +31,31 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, MAP_CATE
     $scope.getSensorDataAsArray = function () {
         $scope.$parent.showLoadingOverlay();
 
-        DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeDataChanged, function (event, data) {
-            switch (data.changeCode) {
-                case STATUS_CODES.dataLoaded:
+        DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeData, function (event, data) {
+            switch (data.statusCode) {
+                case STATUS_CODES.dataLoadSuccess:
                     $scope.$parent.safeApply(function () {
                         $scope.sensorData = DataService.getSensorDataAsArray();
                         $scope.changePage(1);
                         $scope.$parent.hideLoadingOverlay();
                     });
                     break;
-                case STATUS_CODES.dataUpdated:
+                case STATUS_CODES.dataUpdateSuccess:
                     if (data.nodeItem.sensor == MAP_CATEGORIES.sensor) {
                         $scope.$parent.safeApply(function () {
                             $scope.sensorData = DataService.getSensorDataAsArray();
                             $scope.changePage(1);
                         });
                     }
+                    break;
+                case STATUS_CODES.dataLoadFailed:
+                    $scope.$parent.safeApply(function () {
+                        $scope.$parent.hideLoadingOverlay();
+                    });
+                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.<span>', 'alert');
+                    break;
+                case STATUS_CODES.dataUpdateFailed:
+                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.<span>', 'alert');
                     break;
             }
         });
@@ -89,7 +98,7 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, MAP_CATE
 
             $location.url('/route/result');
         } else {
-            Metro.infobox.create('Atleast one sensor must be selected.', 'default');
+            Metro.infobox.create('<h5>Info</h5><span>Atleast one sensor must be selected.</span>', 'default');
         }
     };
 
@@ -131,7 +140,7 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, MAP_CATE
     $scope.$on('$viewContentLoaded', function () {
         switch (RouteService.getCustomRouteStep()) {
             case 1:
-                Metro.infobox.create('Please select a centre first.', 'warning');
+                Metro.infobox.create('<h5>Error</h5><span>Please select a centre first.</span>', 'warning');
                 $location.url('/route/step-1');
                 break;
             default:

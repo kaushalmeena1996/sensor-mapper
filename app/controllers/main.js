@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 
-app.controller('MainCtrl', function ($scope, PAGES) {
+app.controller('MainCtrl', function ($scope, $location, PAGES, AUTH_EVENTS, STATUS_CODES, AuthService) {
     $scope.pageLoading = false;
 
     $scope.pages = PAGES;
@@ -11,6 +11,50 @@ app.controller('MainCtrl', function ($scope, PAGES) {
 
     $scope.hideLoadingOverlay = function () {
         $scope.pageLoading = false;
+    };
+
+    $scope.signIn = function (credentials) {
+        $scope.showLoadingOverlay();
+
+        AuthService.signIn(credentials, $scope, AUTH_EVENTS.signIn, function (event, data) {
+            $scope.safeApply(function () {
+                $scope.hideLoadingOverlay();
+            });
+
+            switch (data.statusCode) {
+                case STATUS_CODES.signInSuccess:
+                    Metro.toast.create("Successfully logged in.", null, 5000, "bg-green fg-white");
+                    $scope.safeApply(function () {
+                        $location.url('/');
+                    });
+                    break;
+                case STATUS_CODES.signInFailed:
+                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.</span>', 'alert');
+                    break;
+            }
+        });
+    };
+
+    $scope.signOut = function () {
+        $scope.showLoadingOverlay();
+
+        AuthService.signOut($scope, AUTH_EVENTS.signOut, function (event, data) {
+            $scope.safeApply(function () {
+                $scope.hideLoadingOverlay();
+            });
+
+            switch (data.statusCode) {
+                case STATUS_CODES.signOutSuccess:
+                    Metro.toast.create("Successfully logged out.", null, 5000, "bg-green fg-white");
+                    $scope.safeApply(function () {
+                        $location.url('/login');
+                    });
+                    break;
+                case STATUS_CODES.signOutFailed:
+                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.</span>', 'alert');
+                    break;
+            }
+        });
     };
 
     $scope.safeApply = function (func) {

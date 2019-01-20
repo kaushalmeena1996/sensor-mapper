@@ -14,20 +14,20 @@
         </ul>
         <div class="content-holder">
             <div class="section" id="section-1-1">
-                    <button class="ribbon-button" ng-click="toogleSensorDivision()">
-                        <div class="ribbon-container" ng-if="!visibleDivision">
-                            <span class="icon">
-                                <span class="mif-folder-open"></span>
-                            </span>
-                            <span class="caption">Open</span>
-                        </div>
-                        <div class="ribbon-container" ng-if="visibleDivision">
-                            <span class="icon">
-                                <span class="mif-cancel"></span>
-                            </span>
-                            <span class="caption">Close</span>
-                        </div>
-                    </button>
+                <button type="button" class="ribbon-button" ng-click="toogleSensorDivision()">
+                    <div class="ribbon-container" ng-if="!visibleDivision">
+                        <span class="icon">
+                            <span class="mif-folder-open"></span>
+                        </span>
+                        <span class="caption">Open</span>
+                    </div>
+                    <div class="ribbon-container" ng-if="visibleDivision">
+                        <span class="icon">
+                            <span class="mif-cancel"></span>
+                        </span>
+                        <span class="caption">Close</span>
+                    </div>
+                </button>
             </div>
         </div>
     </nav>
@@ -132,11 +132,11 @@
         </div>
     </div>
     <div class="text-right mt-4">
-        <a role="button" href="#!/route/step-1" class="button square secondary outline button-min-width">
-            <span class="mif-arrow-left"></span>
+        <a role="button" href="#!/route/step-1" class="button square secondary outline w-25-md">
+            <span class="mif-arrow-left mif-2x"></span>
         </a>
-        <button class="button square secondary outline button-min-width" type="button" ng-click="nextStep()">
-            <span class="mif-arrow-right"></span>
+        <button type="button" class="button square secondary outline w-25-md" type="button" ng-click="nextStep()">
+            <span class="mif-arrow-right mif-2x"></span>
         </button>
     </div>
 </div>

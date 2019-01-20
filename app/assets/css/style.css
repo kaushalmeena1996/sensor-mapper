@@ -43,8 +43,8 @@ body {
   vertical-align: middle;
 }
 
-.button-min-width {
-  min-width: 100px;
+.login-icon {
+  margin-top: -10px;
 }
 
 .map-container-1 {
@@ -106,6 +106,12 @@ body {
 .map-info-window .address {
   font-size: 12px;
   font-weight: 300;
+  margin-bottom: 3px;
+}
+
+.map-info-window .action {
+  text-align: center;
+  margin-left: 24px;
 }
 
 .fade-animation.ng-move,

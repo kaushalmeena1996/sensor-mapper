@@ -31,6 +31,11 @@
                         <span class="icon mif-info"></span>
                     </a>
                 </li>
+                <li title="Logout&#013;Logs out the application." class="c-pointer">
+                    <a ng-click="signOut()">
+                        <span class="icon mif-switch"></span>
+                    </a>
+                </li>
             </ul>
         </li>
     </ul>
@@ -89,15 +94,16 @@
                 <strong ng-bind="charmBarTitle">Centre</strong>
             </div>
             <div class="cell-4 my-1 text-right">
-                <button class="button flat-button" type="button" ng-click="closeCharmsBar()">
+                <button type="button" class="button flat-button" type="button" ng-click="closeCharmsBar()">
                     <span class="mif-arrow-left"></span>
                 </button>
             </div>
         </div>
         <hr class="bg-lightGray mt-0">
-        <div class="marker-division" ng-show="!emergencyRouteMode &amp;&amp; !customRouteMode">
+        <div class="marker-division" ng-show="charmBarMode == modes.marker">
             <div class="mt-2 mb-3 mx-2">
-                <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>" ng-model="search" ng-change="applyFilter()">
+                <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>" ng-model="search"
+                    ng-change="applyFilter()">
             </div>
             <div class="map-overflow-content">
                 <div class="card fade-animation bg-light c-pointer my-1" ng-click="moveMapTo(item)" ng-repeat="item in tableData track by $index">
@@ -123,8 +129,9 @@
                 </div>
             </div>
         </div>
-        <div class="map-overflow-content" ng-if="emergencyRouteMode">
-            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0])" ng-repeat="item in emergencyRouteData track by $index">
+        <div class="map-overflow-content" ng-if="charmBarMode == modes.emergencyRoute">
+            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0])"
+                ng-repeat="item in emergencyRouteData track by $index">
                 <div class="card-content p-1">
                     <div class="row no-gap">
                         <div class="cell-md-2 fg-red text-center px-1">
@@ -156,8 +163,9 @@
                 <small>No results to display.</small>
             </div>
         </div>
-        <div class="map-overflow-content" ng-if="customRouteMode">
-            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0])" ng-repeat="item in customRouteData track by $index">
+        <div class="map-overflow-content" ng-if="charmBarMode == modes.customRoute">
+            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0])"
+                ng-repeat="item in customRouteData track by $index">
                 <div class="card-content p-1">
                     <div class="row no-gap">
                         <div class="cell-md-2 text-center px-1">
@@ -189,5 +197,11 @@
                 <small>No results to display.</small>
             </div>
         </div>
+    </div>
+</div>
+<div id="chartBox" class="info-box" data-role="infobox" data-width="800">
+    <span class="button square closer"></span>
+    <div class="info-box-content">
+        <canvas id="chartCanvas"></canvas>
     </div>
 </div>

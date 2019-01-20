@@ -7,6 +7,7 @@ app.config(['$compileProvider', function ($compileProvider) {
 app.constant('PAGES', {
     home: {
         title: "Home",
+        masterPage: true,
         data: {
             bgColor: {
                 light: "bg-lightGrayBlue",
@@ -17,6 +18,7 @@ app.constant('PAGES', {
     },
     map: {
         title: "Map",
+        masterPage: true,
         data: {
             bgColor: {
                 light: "bg-lightcobalt",
@@ -27,6 +29,7 @@ app.constant('PAGES', {
     },
     search: {
         title: "Search",
+        masterPage: true,
         data: {
             bgColor: {
                 light: "bg-lightEmerald",
@@ -37,16 +40,18 @@ app.constant('PAGES', {
     },
     route: {
         title: "Route",
+        masterPage: true,
         data: {
             bgColor: {
-                light: "bg-lightCrimson",
-                normal: "bg-crimson",
-                dark: "bg-darkCrimson"
+                light: "bg-lightBrown",
+                normal: "bg-brown",
+                dark: "bg-darkBrown"
             }
         }
     },
     view: {
         title: "View",
+        masterPage: true,
         data: {
             bgColor: {
                 light: "bg-lightBlue",
@@ -57,6 +62,7 @@ app.constant('PAGES', {
     },
     about: {
         title: "About",
+        masterPage: true,
         data: {
             bgColor: {
                 light: "bg-lightAmber",
@@ -64,11 +70,28 @@ app.constant('PAGES', {
                 dark: "bg-darkAmber"
             }
         }
+    },
+    login: {
+        title: "Login",
+        masterPage: false,
+        data: {
+            bgColor: {
+                light: "bg-lightMagenta",
+                normal: "bg-magenta",
+                dark: "bg-darkMagenta"
+            }
+        }
     }
 });
 
 app.constant('SERVICE_EVENTS', {
-    nodeDataChanged: "event-node-data-loaded"
+    nodeData: "event-node-data",
+    chartData: "event-chart-data"
+});
+
+app.constant('AUTH_EVENTS', {
+    signIn: "event-sign-in",
+    signOut: "event-sign-out",
 });
 
 app.constant('CHARMS_BAR_CODES', {
@@ -81,14 +104,26 @@ app.constant('CHARMS_BAR_CODES', {
     customRoutes: 6
 });
 
-app.constant('STATUS_CODES', {
-    dataLoaded: 0,
-    dataUpdated: 1
+app.constant('CHARMS_BAR_MODES', {
+    marker: 0,
+    emergencyRoute: 1,
+    customRoute: 2
 });
 
-app.constant('ACTION_CODES', {
-    showNodeItemOnMap: '0',
-    showRouteOnMap: '1'
+app.constant('STATUS_CODES', {
+    dataLoadSuccess: 0,
+    dataLoadFailed: 1,
+    dataUpdateSuccess: 2,
+    dataUpdateFailed: 3,
+    signInSuccess: 4,
+    signInFailed: 5,
+    signOutSuccess: 6,
+    signOutFailed: 7
+});
+
+app.constant('PLOT_CODES', {
+    nodeItem: 0,
+    route: 1
 });
 
 app.constant('MAP_CATEGORIES', {

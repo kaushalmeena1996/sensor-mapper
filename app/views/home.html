@@ -1,5 +1,14 @@
 <div class="container bg-lightGray p-4">
   <div class="tiles-grid">
+    <div data-size="large" data-role="tile" data-effect="hover-slide-left">
+      <div class="slide-front bg-orange">
+        <span class="mif-user icon"></span>
+      </div>
+      <div class="slide-back bg-lightOrange d-flex flex-justify-center flex-align-center p-4 op-mauve">
+        <p class="text-center h4" ng-bind="email"></p>
+      </div>
+      <span class="branding-bar">Welcome</span>
+    </div>
     <a href="#!/map" class="fg-white" data-size="large" data-role="tile" data-effect="hover-slide-left">
       <div class="slide-front {{::pages.map.data.bgColor.normal}}">
         <span class="mif-map icon"></span>
@@ -44,6 +53,17 @@
       </div>
       <span class="branding-bar">About</span>
     </a>
+    <div data-role="tile" data-effect="hover-slide-left" ng-click="signOut()">
+      <div class="slide-front bg-crimson">
+        <span class="mif-switch icon"></span>
+      </div>
+      <div class="slide-back bg-lightCrimson d-flex flex-justify-center flex-align-center p-4 op-mauve">
+        <p class="text-center h4">
+          Logs out the application.
+        </p>
+      </div>
+      <span class="branding-bar">Logout</span>
+    </div>
     <div data-role="tile" data-effect="hover-slide-left">
       <div class="slide-front bg-indigo">
         <span class="mif-tools icon"></span>

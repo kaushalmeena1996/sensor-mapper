@@ -13,6 +13,7 @@
       "rating": 4.7,
       "level": 1,
       "display": true,
+      "zoom": 15,
       "bounds": null,
       "color": null,
       "dynamicCoordinates": false,
@@ -34,6 +35,7 @@
       "rating": 4.5,
       "level": 1,
       "display": true,
+      "zoom": 15,
       "bounds": null,
       "color": null,
       "dynamicCoordinates": false,
@@ -54,6 +56,7 @@
       "description": "Surat is a large city beside the Tapi River in the west Indian state of Gujarat. Once known for silk weaving, Surat remains a commercial center for textiles, and the New Textile Market area is lined with fabric shops. Overlooking the river, Surat Castle was built in the 1500s to defend the city against Portuguese colonists. Nearby, the Dutch, Armenian and English cemeteries contain elaborate colonial-era tombs.",
       "level": 0,
       "display": false,
+      "zoom": 11,
       "bounds": null,
       "color": null,
       "dynamicCoordinates": false,
@@ -74,6 +77,7 @@
       "description": "",
       "level": 1,
       "display": true,
+      "zoom": 17,
       "bounds": "21.165702,72.781551;21.168643,72.788053;21.168463,72.788225;21.165202,72.788976;21.163561,72.789662;21.163401,72.790628;21.16264,72.790907;21.160559,72.790885;21.157978,72.785714;21.157538,72.784405;21.157177,72.781594;21.16128,72.779599;21.1619,72.780629;21.163,72.780285;21.163361,72.781122;21.164701,72.781873;21.165522,72.78153",
       "color": "#0000FF",
       "dynamicCoordinates": false,
@@ -94,6 +98,7 @@
       "description": "",
       "level": 1,
       "display": true,
+      "zoom": 19,
       "bounds": "21.153361,72.782539;21.153831,72.783735;21.152751,72.784154;21.152295,72.782984",
       "color": "#0000FF",
       "dynamicCoordinates": false,
@@ -114,6 +119,7 @@
       "description": "",
       "level": 1,
       "display": true,
+      "zoom": 19,
       "bounds": "21.22938,72.896353;21.229388,72.896382;21.22949,72.896465;21.229595,72.896825;21.229565,72.896844;21.229595,72.896919;21.22925,72.897066;21.22904,72.896503",
       "color": "#0000FF",
       "dynamicCoordinates": false,
@@ -136,6 +142,7 @@
       "description": "",
       "level": 2,
       "display": true,
+      "zoom": 17,
       "bounds": null,
       "color": null,
       "value": 37,
@@ -156,18 +163,19 @@
       "address": "Ichchhanath, Surat, Gujarat 395007, India",
       "model": "A000",
       "manufacturer": "XYZ",
-      "typeId": "st005",
-      "typeName": "Mobile",
+      "typeId": "st001",
+      "typeName": "Thermometer",
       "photo": "assets/img/default_image.png",
       "description": "",
       "level": 2,
       "display": true,
+      "zoom": 16,
       "bounds": null,
       "color": null,
       "value": 42,
       "upperLimit": 100,
       "lowerLimit": 0,
-      "unit": "lx",
+      "unit": "°C",
       "dynamicCoordinates": true,
       "latitude": 21.162769,
       "longitude": 72.790081,
@@ -188,6 +196,7 @@
       "description": "",
       "level": 2,
       "display": true,
+      "zoom": 16,
       "bounds": null,
       "color": null,
       "value": 36,
@@ -214,6 +223,7 @@
       "description": "",
       "level": 2,
       "display": true,
+      "zoom": 19,
       "bounds": null,
       "color": null,
       "value": 36,
@@ -240,6 +250,7 @@
       "description": "",
       "level": 2,
       "display": true,
+      "zoom": 18,
       "bounds": null,
       "color": null,
       "value": 36,
@@ -266,6 +277,7 @@
       "description": "",
       "level": 2,
       "display": true,
+      "zoom": 20,
       "bounds": null,
       "color": null,
       "value": 36,
@@ -277,6 +289,140 @@
       "longitude": 72.896519,
       "modified": 1518244200000,
       "created": 1518244200000
+    }
+  },
+  "values": {
+    "s001": {
+      "-LWfL3L9kQsCl8zqqp8L": {
+        "timestamp": 1547996010000,
+        "value": 28
+      },
+      "-LWfL4fB4bXhonRxVvXH": {
+        "timestamp": 1547996015000,
+        "value": 30
+      },
+      "-LWfL5duIIJNkFSnam1d": {
+        "timestamp": 1547996020000,
+        "value": 27
+      },
+      "-LWfL7YW4JRQioDeyIUk": {
+        "timestamp": 1547996025000,
+        "value": 26
+      },
+      "-LWfYASYU-O_EWodKrpK": {
+        "timestamp": 1547996030000,
+        "value": 29
+      }
+    },
+    "s002": {
+      "-LWfL2fB4bXhonRxVvXH": {
+        "timestamp": 1547996010000,
+        "value": 28
+      },
+      "-LWfL3L9kQsCl1zqqp8L": {
+        "timestamp": 1547996015000,
+        "value": 29
+      },
+      "-LWfL5du5IJNkFSnam1d": {
+        "timestamp": 1547996020000,
+        "value": 27
+      },
+      "-LWfL7YW4JRQioDeyIUk": {
+        "timestamp": 1547996025000,
+        "value": 26
+      },
+      "-LWfYASYUgO_EWodKrpK": {
+        "timestamp": 1547996030000,
+        "value": 29
+      }
+    },
+    "s003": {
+      "-LWfL3L9kQsCl8zxqp8L": {
+        "timestamp": 1547996010000,
+        "value": 29
+      },
+      "-LWfL4fB4bXhonfxVvXH": {
+        "timestamp": 1547996015000,
+        "value": 30
+      },
+      "-LWfL5wuIIJNkFSnam1d": {
+        "timestamp": 1547996020000,
+        "value": 27
+      },
+      "-LWfL7YW4JRQioDyyIUk": {
+        "timestamp": 1547996025000,
+        "value": 29
+      },
+      "-LWfYASYU-O_EgodKrpK": {
+        "timestamp": 1547996030000,
+        "value": 30
+      }
+    },
+    "s004": {
+      "-LWfL4fB4bXhonfxbvXH": {
+        "timestamp": 1547996010000,
+        "value": 26
+      },
+      "-LWfL5luIIJNkFSnam1d": {
+        "timestamp": 1547996015000,
+        "value": 27
+      },
+      "-LWfL7YW4JRQioDyyaUk": {
+        "timestamp": 1547996020000,
+        "value": 29
+      },
+      "-LWfYcSYU-O_EgodKrpK": {
+        "timestamp": 1547996025000,
+        "value": 30
+      },
+      "-LWfs3L9kQsCo8zxqp8L": {
+        "timestamp": 1547996030000,
+        "value": 28
+      }
+    },
+    "s005": {
+      "-LWfL4fB4bXhnnfxbvXH": {
+        "timestamp": 1547996010000,
+        "value": 26
+      },
+      "-LWfL5kuIIJNkFSnam1d": {
+        "timestamp": 1547996015000,
+        "value": 27
+      },
+      "-LWfL7YW4JRQifgyyaUk": {
+        "timestamp": 1547996020000,
+        "value": 29
+      },
+      "-LWfYcSYU-l_EgodKrpK": {
+        "timestamp": 1547996025000,
+        "value": 29
+      },
+      "-LWfs3L9kgsCo8zxqp8L": {
+        "timestamp": 1547996030000,
+        "value": 27
+      }
+    },
+    "s006": {
+      "-LWfL4fBcbXhonfxbvXH": {
+        "timestamp": 1547996010000,
+        "value": 26
+      },
+      "-LWfL5luIIJNkFSnaj1d": {
+        "timestamp": 1547996015000,
+        "value": 27
+      },
+      "-LWfL7sW4JRQioDyyaUk": {
+        "timestamp": 1547996020000,
+        "value": 29
+      },
+      "-LWfYcSYU-O_EgodKrhK": {
+        "timestamp": 1547996025000,
+        "value": 30
+      },
+      "-LWfs3L9kQsCo8zxtp8L": {
+        "timestamp": 1547996030000,
+        "value": 29
+      }
     }
   }
 }

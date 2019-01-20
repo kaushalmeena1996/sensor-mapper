@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <header class="{{bgColor}} fg-white" data-role="appbar" data-expand-point="md">
+    <header class="{{bgColor}} fg-white" data-role="appbar" data-expand-point="md" ng-show="masterPage">
         <a href="#!/" class="brand">
             <span class="mif-location mif-3x"></span>
         </a>
@@ -54,6 +54,11 @@
                     <span class="mif-info mif-3x"></span>
                 </a>
             </li>
+            <li title="Logout&#013;Logs out the application." class="c-pointer">
+                <a ng-click="signOut()">
+                    <span class="mif-switch mif-3x"></span>
+                </a>
+            </li>
         </ul>
     </header>
 
@@ -71,8 +76,10 @@
     <script src="assets/js/angular.min.js"></script>
     <script src="assets/js/angular-route.min.js"></script>
     <script src="assets/js/angular-animate.min.js"></script>
-    <!-- Metro UI library -->
+    <!-- MetroUI library -->
     <script src="assets/js/metro.min.js"></script>
+    <!-- ChartJS library -->
+    <script src="assets/js/chart.min.js"></script>
     <!-- External scripts -->
     <!-- MODULES -->
     <script src="app.js"></script>
@@ -80,7 +87,6 @@
     <script src="app.routes.js"></script>
     <!-- CONTROLLERS -->
     <script src="controllers/main.js"></script>
-    <script src="controllers/home.js"></script>
     <script src="controllers/map.js"></script>
     <script src="controllers/search.js"></script>
     <script src="controllers/view01.js"></script>
@@ -89,11 +95,12 @@
     <script src="controllers/route01.js"></script>
     <script src="controllers/route02.js"></script>
     <script src="controllers/route03.js"></script>
-    <script src="controllers/about.js"></script>
+    <script src="controllers/login.js"></script>
     <!-- SERVICES -->
     <script src="services/pager.js"></script>
     <script src="services/route.js"></script>
     <script src="services/data.js"></script>
+    <script src="services/auth.js"></script>
     <!-- Custom script -->
     <script src="assets/js/script.js"></script>
 </body>

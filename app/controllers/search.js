@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 
-app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, CATEGORY_TYPES, CENTRE_TYPES, LOCATION_TYPES, SENSOR_TYPES, STATUS_TYPES, STATUS_CODES, SERVICE_EVENTS, PagerService, DataService) {
+app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, CATEGORY_TYPES, CENTRE_TYPES, LOCATION_TYPES, SENSOR_TYPES, STATUS_TYPES, STATUS_CODES, PLOT_CODES, SERVICE_EVENTS, PagerService, DataService) {
     $scope.nodeData = [];
     $scope.tableData = [];
 
@@ -32,20 +32,29 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
     $scope.getNodeDataAsArray = function () {
         $scope.$parent.showLoadingOverlay();
 
-        DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeDataChanged, function (event, data) {
-            switch (data.changeCode) {
-                case STATUS_CODES.dataLoaded:
+        DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeData, function (event, data) {
+            switch (data.statusCode) {
+                case STATUS_CODES.dataLoadSuccess:
                     $scope.$parent.safeApply(function () {
                         $scope.nodeData = DataService.getNodeDataAsArray();
                         $scope.changePage(1);
                         $scope.$parent.hideLoadingOverlay();
                     });
                     break;
-                case STATUS_CODES.dataUpdated:
+                case STATUS_CODES.dataUpdateSuccess:
                     $scope.$parent.safeApply(function () {
                         $scope.nodeData = DataService.getNodeDataAsArray();
                         $scope.changePage(1);
                     });
+                    break;
+                case STATUS_CODES.dataLoadFailed:
+                    $scope.$parent.safeApply(function () {
+                        $scope.$parent.hideLoadingOverlay();
+                    });
+                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.<span>', 'alert');
+                    break;
+                case STATUS_CODES.dataUpdateFailed:
+                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.<span>', 'alert');
                     break;
             }
         });
@@ -98,16 +107,16 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
         $scope.changePage(1);
     };
 
-    $scope.showNodeItemOnMap = function (id) {
-        $location.url('/map?action_code=0&node_id=' + id);
+    $scope.plotNodeItem = function (id) {
+        $location.url('/map?action_code=' + PLOT_CODES.nodeItem + '&node_id=' + id);
     };
 
-    $scope.showNodeItem = function (node_category, node_id) {
+    $scope.showNodeItem = function (id, category) {
         var link = '/view',
-            category = node_category.toLowerCase();
+            category = category.toLowerCase();
 
         link += '/' + category;
-        link += '?' + category + '_id=' + node_id;
+        link += '?' + category + '_id=' + id;
 
         $location.url(link);
     };

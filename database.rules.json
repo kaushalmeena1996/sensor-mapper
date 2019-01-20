@@ -1,6 +1,6 @@
 {
   "rules": {
-    ".read": true,
-    ".write": true
+    ".read": "auth !== null && auth.provider === 'password'",
+    ".write": "auth !== null && auth.provider === 'password'"
   }
 }

@@ -44,22 +44,31 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
     $scope.getCentreDataAsArray = function () {
         $scope.$parent.showLoadingOverlay();
 
-        DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeDataChanged, function (event, data) {
-            switch (data.changeCode) {
-                case STATUS_CODES.dataLoaded:
+        DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeData, function (event, data) {
+            switch (data.statusCode) {
+                case STATUS_CODES.dataLoadSuccess:
                     $scope.$parent.safeApply(function () {
                         $scope.centreData = DataService.getCentreDataAsArray();
                         $scope.changePage(1);
                         $scope.$parent.hideLoadingOverlay();
                     });
                     break;
-                case STATUS_CODES.dataUpdated:
+                case STATUS_CODES.dataUpdateSuccess:
                     if (data.nodeItem.category == MAP_CATEGORIES.centre) {
                         $scope.$parent.safeApply(function () {
                             $scope.centreData = DataService.getCentreDataAsArray();
                             $scope.changePage(1);
                         });
                     }
+                    break;
+                case STATUS_CODES.dataLoadFailed:
+                    $scope.$parent.safeApply(function () {
+                        $scope.$parent.hideLoadingOverlay();
+                    });
+                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.<span>', 'alert');
+                    break;
+                case STATUS_CODES.dataUpdateFailed:
+                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.<span>', 'alert');
                     break;
             }
         });
@@ -127,10 +136,10 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
                             $scope.changePage($scope.currentPage);
                         });
                     } else {
-                        Metro.infobox.create('Geocoder ended with no results.', 'default');
+                        Metro.infobox.create('<h5>Error</h5><span>Geocoder ended with no results.</span>', 'warning');
                     }
                 } else {
-                    Metro.infobox.create('Geocoder failed due to: ' + status, 'default');
+                    Metro.infobox.create('<h5>Error</h5><span>Geocoder failed due to: ' + status + '.</span>', 'warning');
                 }
 
                 $scope.$parent.safeApply(function () {
@@ -138,7 +147,7 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
                 });
             });
         } else {
-            Metro.infobox.create('Please enter the name of centre and then select a location by right clicking on map.', 'default');
+            Metro.infobox.create('<h5>Info</h5><span>Please enter the name of centre and then select a location by right clicking on map.</span>', 'default');
         }
     };
 
@@ -154,7 +163,7 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
 
             $location.url('/route/step-2');
         } else {
-            Metro.infobox.create('Atleast one centre must be selected.', 'default');
+            Metro.infobox.create('<h5>Info</h5><span>Atleast one centre must be selected.</span>', 'default');
         }
     };
 

@@ -4,17 +4,19 @@ var map,
     routeData = {
         emergency: [],
         custom: []
-    };
+    },
+    chart = null;
 
-app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, MAP_CENTRES, SENSOR_STATUSES, MAP_ROUTES, STATUS_CODES, CHARMS_BAR_CODES, ACTION_CODES, SERVICE_EVENTS, RouteService, DataService) {
+app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CATEGORIES, MAP_CENTRES, SENSOR_STATUSES, MAP_ROUTES, STATUS_CODES, CHARMS_BAR_CODES, CHARMS_BAR_MODES, PLOT_CODES, SERVICE_EVENTS, RouteService, DataService) {
     $scope.nodeData = [];
     $scope.tableData = [];
 
     $scope.emergencyRouteData = [];
-    $scope.emergencyRouteMode = false;
-
     $scope.customRouteData = [];
-    $scope.customRouteMode = false;
+
+    $scope.modes = CHARMS_BAR_MODES;
+
+    $scope.charmBarMode = CHARMS_BAR_MODES.marker;
 
     $scope.search = '';
 
@@ -31,20 +33,29 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
     $scope.getNodeDataAsArray = function () {
         $scope.$parent.showLoadingOverlay();
 
-        DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeDataChanged, function (event, data) {
-            switch (data.changeCode) {
-                case STATUS_CODES.dataLoaded:
+        DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeData, function (event, data) {
+            switch (data.statusCode) {
+                case STATUS_CODES.dataLoadSuccess:
                     $scope.$parent.safeApply(function () {
                         $scope.nodeData = DataService.getNodeDataAsArray();
                         $scope.createMap();
                         $scope.$parent.hideLoadingOverlay();
                     });
                     break;
-                case STATUS_CODES.dataUpdated:
+                case STATUS_CODES.dataUpdateSuccess:
                     if ($scope.mapLoaded) {
                         $scope.nodeData = DataService.getNodeDataAsArray();
                         $scope.updateMap(data.nodeItem);
                     }
+                    break;
+                case STATUS_CODES.dataLoadFailed:
+                    $scope.$parent.safeApply(function () {
+                        $scope.$parent.hideLoadingOverlay();
+                    });
+                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.<span>', 'alert');
+                    break;
+                case STATUS_CODES.dataUpdateFailed:
+                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.<span>', 'alert');
                     break;
             }
         });
@@ -57,6 +68,14 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
                 .find(".content")
                 .eq(0)
                 .html(nodeItem.value + ' ' + nodeItem.unit)
+
+            if ($('#chartBox').data('infobox').isOpen() && chart) {
+                chart.data.datasets[0].data.push({
+                    x: new Date(),
+                    y: nodeItem.value
+                });
+                chart.update();
+            }
 
             if (nodeItem.dynamicCoordinates) {
                 markerData[nodeItem.id].setPosition({
@@ -182,8 +201,6 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
             counter++;
 
             if (counter >= nodeData.length) {
-                var markerCluster = new MarkerClusterer(map, markerData, { imagePath: '../assets/img/clusterer/' });
-
                 var emergencyRouteData = RouteService.getEmergencyRouteData();
 
                 if (emergencyRouteData.length > 0) {
@@ -192,8 +209,10 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
                 }
 
                 if ('action_code' in $location.search()) {
-                    switch ($location.search().action_code) {
-                        case ACTION_CODES.showNodeItemOnMap:
+                    var action_code = parseInt($location.search().action_code, 10);
+
+                    switch (action_code) {
+                        case PLOT_CODES.nodeItem:
                             var nodeItem = DataService.getNodeItem($location.search().node_id);
 
                             if (nodeItem) {
@@ -201,7 +220,7 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
                             }
 
                             break;
-                        case ACTION_CODES.showRouteOnMap:
+                        case PLOT_CODES.route:
                             var customRouteData = [];
 
                             if (RouteService.getCustomRouteStep() == 3) {
@@ -225,6 +244,8 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
                         $scope.moveMapTo(emergencyRouteData[0].routeArray[0]);
                     }
                 }
+
+                var markerCluster = new MarkerClusterer(map, markerData, { imagePath: '../assets/img/clusterer/' });
 
                 $scope.failedSensorCount = DataService.getFailedSensorCount();
                 $scope.abnormalSensorCount = DataService.getAbnormalSensorCount();
@@ -252,9 +273,24 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
         }
 
         content += '<div class="address">' + nodeItem.address + '</div>';
+
+        content += '<div class="action">';
+        content += '<button type="button" class="button square secondary outline small" ng-click="showNodeItem(\'' + nodeItem.id + '\',\'' + nodeItem.category + '\')">';
+        content += '<span class="mif-folder-open mif-2x"></span>';
+        content += '</button>';
+
+        if (nodeItem.category == MAP_CATEGORIES.sensor) {
+            content += '<button type="button" class="button square secondary outline small" ng-click="openSensorChart(\'' + nodeItem.id + '\',\'' + nodeItem.unit + '\')">';
+            content += '<span class="mif-chart-dots mif-2x"></span>';
+            content += '</button>';
+        }
+
+        content += '</div>';
         content += '</div>';
 
-        return content;
+        content = $compile(content)($scope);
+
+        return content[0];
     };
 
     $scope.generateRouteRequests = function (routes) {
@@ -378,15 +414,14 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
     };
 
     $scope.moveMapTo = function (nodeItem) {
+        map.setZoom(nodeItem.zoom);
+
         map.panTo({
             lat: nodeItem.latitude,
             lng: nodeItem.longitude
         });
 
-        google
-            .maps
-            .event
-            .trigger(markerData[nodeItem.id], 'click');
+        google.maps.event.trigger(markerData[nodeItem.id], 'click');
     };
 
     $scope.openCharmsBar = function (openCode) {
@@ -394,43 +429,38 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
             case CHARMS_BAR_CODES.centres:
                 $scope.filter1 = MAP_CATEGORIES.centre;
                 $scope.charmBarTitle = 'Centres';
-                $scope.emergencyRouteMode = false;
-                $scope.customRouteMode = false;
+                $scope.charmBarMode = CHARMS_BAR_MODES.marker;
                 break;
             case CHARMS_BAR_CODES.locations:
                 $scope.filter1 = MAP_CATEGORIES.location;
                 $scope.charmBarTitle = 'Locations';
-                $scope.emergencyRouteMode = false;
-                $scope.customRouteMode = false;
+                $scope.charmBarMode = CHARMS_BAR_MODES.marker;
                 break;
             case CHARMS_BAR_CODES.normalSensors:
                 $scope.filter1 = MAP_CATEGORIES.sensor;
                 $scope.filter2 = SENSOR_STATUSES.normal;
                 $scope.charmBarTitle = 'Normal Sensors';
-                $scope.emergencyRouteMode = false;
-                $scope.customRouteMode = false;
+                $scope.charmBarMode = CHARMS_BAR_MODES.marker;
                 break;
             case CHARMS_BAR_CODES.failedSensors:
                 $scope.filter1 = MAP_CATEGORIES.sensor;
                 $scope.filter2 = SENSOR_STATUSES.failure;
                 $scope.charmBarTitle = 'Failed Sensors';
-                $scope.emergencyRouteMode = false;
-                $scope.customRouteMode = false;
+                $scope.charmBarMode = CHARMS_BAR_MODES.marker;
                 break;
             case CHARMS_BAR_CODES.abnormalSensors:
                 $scope.filter1 = MAP_CATEGORIES.sensor;
                 $scope.filter2 = SENSOR_STATUSES.abnormal;
                 $scope.charmBarTitle = 'Abnormal Sensors';
-                $scope.emergencyRouteMode = false;
-                $scope.customRouteMode = false;
+                $scope.charmBarMode = CHARMS_BAR_MODES.marker;
                 break;
             case CHARMS_BAR_CODES.emergencyRoutes:
                 $scope.charmBarTitle = 'Emergency Routes';
-                $scope.emergencyRouteMode = true;
+                $scope.charmBarMode = CHARMS_BAR_MODES.emergencyRoute;
                 break;
             case CHARMS_BAR_CODES.customRoutes:
                 $scope.charmBarTitle = 'Custom Routes';
-                $scope.customRouteMode = true;
+                $scope.charmBarMode = CHARMS_BAR_MODES.customRoute;
                 break;
         }
 
@@ -465,6 +495,84 @@ app.controller('MapCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, 
         }
 
         $scope.tableData = nodeData;
+    };
+
+    $scope.openSensorChart = function (sensorId, sensorUnit) {
+        $scope.$parent.showLoadingOverlay();
+
+        DataService.subscribeChartData(sensorId, $scope, SERVICE_EVENTS.chartData, function (event, data) {
+            switch (data.statusCode) {
+                case STATUS_CODES.dataLoadSuccess:
+                    if (chart) {
+                        chart.data.datasets[0].data = data.chartData
+                        chart.update();
+                    } else {
+                        chart = new Chart($("#chartCanvas"), {
+                            type: 'line',
+                            data: {
+                                datasets: [{
+                                    data: data.chartData,
+                                    borderColor: 'rgba(255,99,132,1)',
+                                    fill: false,
+                                    borderWidth: 2,
+                                    pointRadius: 5,
+                                    pointHoverRadius: 10
+                                }]
+                            },
+                            options: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltips: {
+                                    callbacks: {
+                                        label: function (tooltipItems, data) {
+                                            return tooltipItems.yLabel + sensorUnit;
+                                        }
+                                    }
+                                },
+                                scales: {
+                                    xAxes: [{
+                                        type: 'time',
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: 'Time'
+                                        }
+                                    }],
+                                    yAxes: [{
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: sensorUnit
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+                    }
+
+                    $scope.$parent.safeApply(function () {
+                        $scope.$parent.hideLoadingOverlay();
+                    });
+
+                    $('#chartBox').data('infobox').open();
+                    break;
+                case STATUS_CODES.dataLoadFailed:
+                    $scope.$parent.safeApply(function () {
+                        $scope.$parent.hideLoadingOverlay();
+                    });
+                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.<span>', 'alert');
+                    break;
+            }
+        });
+    }
+
+    $scope.showNodeItem = function (id, category) {
+        var link = '/view',
+            category = category.toLowerCase();
+
+        link += '/' + category;
+        link += '?' + category + '_id=' + id;
+
+        $location.url(link);
     };
 
     $scope.$on('$viewContentLoaded', function () {
