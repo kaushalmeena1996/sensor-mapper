@@ -1,9 +1,9 @@
 var app = angular.module('sensorApp');
 
-app.controller('MainCtrl', function ($scope, $location, PAGES, AUTH_EVENTS, STATUS_CODES, AuthService) {
+app.controller('MainCtrl', function ($scope, $location, PAGE_DATA, AUTH_EVENTS, STATUS_CODES, AuthService) {
     $scope.pageLoading = false;
 
-    $scope.pages = PAGES;
+    $scope.pages = PAGE_DATA;
 
     $scope.showLoadingOverlay = function () {
         $scope.pageLoading = true;

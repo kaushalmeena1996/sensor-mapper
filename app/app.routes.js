@@ -1,88 +1,88 @@
 var app = angular.module('sensorApp');
 
-app.config(function ($routeProvider, PAGES) {
+app.config(function ($routeProvider, PAGE_DATA) {
     $routeProvider
         .when("/", {
             templateUrl: "views/home.html",
-            title: PAGES.home.title,
-            masterPage: PAGES.home.masterPage,
-            data: PAGES.home.data
+            title: PAGE_DATA.home.title,
+            masterPage: PAGE_DATA.home.masterPage,
+            data: PAGE_DATA.home.data
         })
         .when("/map", {
             templateUrl: "views/map.html",
             controller: "MapCtrl",
-            title: PAGES.map.title,
-            masterPage: PAGES.map.masterPage,
-            data: PAGES.map.data
+            title: PAGE_DATA.map.title,
+            masterPage: PAGE_DATA.map.masterPage,
+            data: PAGE_DATA.map.data
         })
         .when("/search", {
             templateUrl: "views/search.html",
             controller: "SearchCtrl",
-            title: PAGES.search.title,
-            masterPage: PAGES.search.masterPage,
-            data: PAGES.search.data
+            title: PAGE_DATA.search.title,
+            masterPage: PAGE_DATA.search.masterPage,
+            data: PAGE_DATA.search.data
         })
         .when("/view/centre", {
             templateUrl: "views/view01.html",
             controller: "ViewCentreCtrl",
-            title: PAGES.view.title,
-            masterPage: PAGES.view.masterPage,
-            data: PAGES.view.data
+            title: PAGE_DATA.view.title,
+            masterPage: PAGE_DATA.view.masterPage,
+            data: PAGE_DATA.view.data
         })
         .when("/view/location", {
             templateUrl: "views/view02.html",
             controller: "ViewLocationCtrl",
-            title: PAGES.view.title,
-            masterPage: PAGES.view.masterPage,
-            data: PAGES.view.data
+            title: PAGE_DATA.view.title,
+            masterPage: PAGE_DATA.view.masterPage,
+            data: PAGE_DATA.view.data
 
         })
         .when("/view/sensor", {
             templateUrl: "views/view03.html",
             controller: "ViewSensorCtrl",
-            title: PAGES.view.title,
-            masterPage: PAGES.view.masterPage,
-            data: PAGES.view.data
+            title: PAGE_DATA.view.title,
+            masterPage: PAGE_DATA.view.masterPage,
+            data: PAGE_DATA.view.data
         })
         .when("/route/step-1", {
             templateUrl: "views/route01.html",
             controller: "RouteCentreCtrl",
-            title: PAGES.route.title,
-            masterPage: PAGES.route.masterPage,
-            data: PAGES.route.data
+            title: PAGE_DATA.route.title,
+            masterPage: PAGE_DATA.route.masterPage,
+            data: PAGE_DATA.route.data
         })
         .when("/route/step-2", {
             templateUrl: "views/route02.html",
             controller: "RouteSensorCtrl",
-            title: PAGES.route.title,
-            masterPage: PAGES.route.masterPage,
-            data: PAGES.route.data
+            title: PAGE_DATA.route.title,
+            masterPage: PAGE_DATA.route.masterPage,
+            data: PAGE_DATA.route.data
 
         })
         .when("/route/result", {
             templateUrl: "views/route03.html",
             controller: "RouteResultCtrl",
-            title: PAGES.route.title,
-            masterPage: PAGES.route.masterPage,
-            data: PAGES.route.data
+            title: PAGE_DATA.route.title,
+            masterPage: PAGE_DATA.route.masterPage,
+            data: PAGE_DATA.route.data
         })
         .when("/about", {
             templateUrl: "views/about.html",
-            title: PAGES.about.title,
-            masterPage: PAGES.about.masterPage,
-            data: PAGES.about.data
+            title: PAGE_DATA.about.title,
+            masterPage: PAGE_DATA.about.masterPage,
+            data: PAGE_DATA.about.data
         })
         .when("/login", {
             templateUrl: "views/login.html",
-            title: PAGES.login.title,
-            masterPage: PAGES.login.masterPage,
+            title: PAGE_DATA.login.title,
+            masterPage: PAGE_DATA.login.masterPage,
             controller: "LoginCtrl",
-            data: PAGES.login.data
+            data: PAGE_DATA.login.data
         })
         .otherwise("/", {
             templateUrl: "views/home.html",
-            title: PAGES.home.title,
-            masterPage: PAGES.home.masterPage,
-            data: PAGES.home.data
+            title: PAGE_DATA.home.title,
+            masterPage: PAGE_DATA.home.masterPage,
+            data: PAGE_DATA.home.data
         });
 });

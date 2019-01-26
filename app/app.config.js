@@ -4,7 +4,7 @@ app.config(['$compileProvider', function ($compileProvider) {
     $compileProvider.debugInfoEnabled(false);
 }]);
 
-app.constant('PAGES', {
+app.constant('PAGE_DATA', {
     home: {
         title: "Home",
         masterPage: true,
@@ -84,6 +84,49 @@ app.constant('PAGES', {
     }
 });
 
+app.constant('CHARMS_BAR_DATA', {
+    sd000: {
+        title: "Centres",
+        mode: 0,
+        filter1: "Centre"
+    },
+    sd001: {
+        title: "Location",
+        mode: 0,
+        filter1: "Location"
+    },
+    sd002: {
+        title: "Normal Sensors",
+        mode: 0,
+        filter1: "Sensor",
+        filter2: "Normal"
+    },
+    sd003: {
+        title: "Failed Sensors",
+        mode: 0,
+        filter1: "Sensor",
+        filter2: "Failure"
+    },
+    sd004: {
+        title: "Abnormal Sensors",
+        mode: 0,
+        filter1: "Sensor",
+        filter2: "Abnormal"
+    },
+    sd005: {
+        title: "Emergency Routes",
+        mode: 3
+    },
+    sd006: {
+        title: "Custom Routes",
+        mode: 4
+    },
+    sd007: {
+        title: "Information",
+        mode: 2
+    }
+});
+
 app.constant('SERVICE_EVENTS', {
     nodeData: "event-node-data",
     chartData: "event-chart-data"
@@ -94,20 +137,12 @@ app.constant('AUTH_EVENTS', {
     signOut: "event-sign-out",
 });
 
-app.constant('CHARMS_BAR_CODES', {
-    centres: 0,
-    locations: 1,
-    normalSensors: 2,
-    failedSensors: 3,
-    abnormalSensors: 4,
-    emergencyRoutes: 5,
-    customRoutes: 6
-});
 
 app.constant('CHARMS_BAR_MODES', {
-    marker: 0,
-    emergencyRoute: 1,
-    customRoute: 2
+    markerList: 0,
+    markerInformation: 2,
+    emergencyRouteList: 3,
+    customRouteList: 4
 });
 
 app.constant('STATUS_CODES', {
@@ -139,11 +174,19 @@ app.constant('CATEGORY_TYPES', [
 ]);
 
 app.constant('MAP_CENTRES', {
+    ct000: {
+        name: "Centre",
+        icon: "assets/img/map/centres/centre.png"
+    },
     ct001: {
         name: "Fire Station",
         icon: "assets/img/map/centres/fire-station.png"
     },
     ct002: {
+        name: "Police Station",
+        icon: "assets/img/map/centres/police-station.png"
+    },
+    ct003: {
         name: "Hospital",
         icon: "assets/img/map/centres/hospital.png"
     },
@@ -159,21 +202,33 @@ app.constant('CENTRE_TYPES', [
 ]);
 
 app.constant('MAP_LOCATIONS', {
-    lt001: {
+    lt000: {
         name: "Location",
         icon: "assets/img/map/locations/location.png",
     },
+    lt001: {
+        name: "City",
+        icon: "assets/img/map/locations/city.png",
+    },
     lt002: {
-        name: "Cinema",
-        icon: "assets/img/map/locations/cinema.png",
+        name: "Zone",
+        icon: "assets/img/map/locations/zone.png",
     },
     lt003: {
+        name: "Cluster",
+        icon: "assets/img/map/locations/cluster.png",
+    },
+    lt004: {
         name: "College",
         icon: "assets/img/map/locations/college.png",
     },
-    lt004: {
+    lt005: {
         name: "School",
         icon: "assets/img/map/locations/school.png",
+    },
+    lt006: {
+        name: "Cinema",
+        icon: "assets/img/map/locations/cinema.png",
     },
 });
 
@@ -185,6 +240,14 @@ app.constant('LOCATION_TYPES', [
 ]);
 
 app.constant('MAP_SENSORS', {
+    st000: {
+        name: "Sensor",
+        icon: {
+            normal: "assets/img/map/sensors/sensor-normal.png",
+            failure: "assets/img/map/sensors/sensor-failure.png",
+            abnormal: "assets/img/map/sensors/sensor-abnormal.png"
+        }
+    },
     st001: {
         name: "Thermometer",
         icon: {
@@ -194,19 +257,19 @@ app.constant('MAP_SENSORS', {
         }
     },
     st002: {
-        name: "Seismometer",
+        name: "Hygrometer",
         icon: {
-            normal: "assets/img/map/sensors/seismometer-normal.png",
-            failure: "assets/img/map/sensors/seismometer-failure.png",
-            abnormal: "assets/img/map/sensors/seismometer-abnormal.png"
+            normal: "assets/img/map/sensors/hygrometer-normal.png",
+            failure: "assets/img/map/sensors/hygrometer-failure.png",
+            abnormal: "assets/img/map/sensors/hygrometer-abnormal.png"
         }
     },
     st003: {
-        name: "Pluviometer",
+        name: "Udometer",
         icon: {
-            normal: "assets/img/map/sensors/pluviometer-normal.png",
-            failure: "assets/img/map/sensors/pluviometer-failure.png",
-            abnormal: "assets/img/map/sensors/pluviometer-abnormal.png"
+            normal: "assets/img/map/sensors/udometer-normal.png",
+            failure: "assets/img/map/sensors/udometer-failure.png",
+            abnormal: "assets/img/map/sensors/udometer-abnormal.png"
         }
     },
     st004: {
@@ -215,14 +278,6 @@ app.constant('MAP_SENSORS', {
             normal: "assets/img/map/sensors/anemometer-normal.png",
             failure: "assets/img/map/sensors/anemometer-failure.png",
             abnormal: "assets/img/map/sensors/anemometer-abnormal.png"
-        }
-    },
-    st005: {
-        name: "Mobile",
-        icon: {
-            normal: "assets/img/map/sensors/mobile-normal.png",
-            failure: "assets/img/map/sensors/mobile-failure.png",
-            abnormal: "assets/img/map/sensors/mobile-abnormal.png"
         }
     }
 });

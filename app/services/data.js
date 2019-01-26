@@ -121,6 +121,30 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, MA
         return data;
     };
 
+    dataService.getNodeChildrenAsArray = function (id) {
+        var data = [];
+
+        angular.forEach(nodeData, function (item) {
+            if (item.parentId == id) {
+                data.push(item);
+            }
+        });
+
+        return data;
+    };
+
+    dataService.getNodeChildrenAsObject = function (id) {
+        var data = {};
+
+        angular.forEach(nodeData, function (item, key) {
+            if (item.parentId == id) {
+                data[key] = item;
+            }
+        });
+
+        return data;
+    };
+
     dataService.getNodeDataAsObject = function () {
         return nodeData;
     };

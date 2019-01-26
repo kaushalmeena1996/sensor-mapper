@@ -7,7 +7,7 @@ var map,
     },
     chart = null;
 
-app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CATEGORIES, MAP_CENTRES, SENSOR_STATUSES, MAP_ROUTES, STATUS_CODES, CHARMS_BAR_CODES, CHARMS_BAR_MODES, PLOT_CODES, SERVICE_EVENTS, RouteService, DataService) {
+app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CATEGORIES, MAP_CENTRES, SENSOR_STATUSES, MAP_ROUTES, STATUS_CODES, CHARMS_BAR_DATA, CHARMS_BAR_MODES, PLOT_CODES, SERVICE_EVENTS, RouteService, DataService) {
     $scope.nodeData = [];
     $scope.tableData = [];
 
@@ -16,7 +16,11 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
 
     $scope.modes = CHARMS_BAR_MODES;
 
-    $scope.charmBarMode = CHARMS_BAR_MODES.marker;
+    $scope.charmBarTitle = '';
+
+    $scope.charmBarMode = 0;
+
+    $scope.charmBarNodeItem = {};
 
     $scope.search = '';
 
@@ -25,8 +29,6 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
 
     $scope.failedSensorCount = 0;
     $scope.abnormalSensorCount = 0;
-
-    $scope.charmBarTitle = '';
 
     $scope.mapLoaded = false;
 
@@ -96,7 +98,7 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
                     i;
 
                 markerData[nodeItem.id].setIcon({
-                    labelOrigin: new google.maps.Point(15, -5),
+                    labelOrigin: new google.maps.Point(15, -8),
                     url: nodeItem.icon
                 });
 
@@ -108,7 +110,7 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
 
                 if (emergencyRouteData.length > 0) {
                     $scope.generateRouteRequests(emergencyRouteData);
-                    $scope.moveMapTo(emergencyRouteData[0].routeArray[0]);
+                    $scope.moveMapTo(emergencyRouteData[0].routeArray[0], false);
                 }
 
                 $scope.$parent.safeApply(function () {
@@ -137,60 +139,51 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
 
     $scope.createMap = function () {
         var nodeData = $scope.nodeData,
-            counter = 0,
-            i;
+            counter = 0;
 
         function plotMarkers() {
             if (nodeData[counter].display) {
                 var marker = new google.maps.Marker({
+                    id: nodeData[counter].id,
                     label: nodeData[counter].name,
                     position: {
                         lat: nodeData[counter].latitude,
                         lng: nodeData[counter].longitude
                     },
                     icon: {
-                        labelOrigin: new google.maps.Point(15, -5),
-                        url: nodeData[counter].icon
+                        labelOrigin: new google.maps.Point(15, -8),
+                        url: nodeData[counter].icon,
+                        scaledSize: new google.maps.Size(32, 32),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(0, 0)
                     },
                     status: nodeData[counter].status,
                     map: map
                 });
 
-                var content = $scope.generateContent(nodeData[counter]);
-
-                marker.infoWindow = new google.maps.InfoWindow({
-                    maxWidth: 200,
-                    content: content
-                });
-
-                marker.addListener('click', function () {
-                    marker.infoWindow.open(map, this);
-                });
+                google.maps.event.addListener(marker, 'click', (function (marker, scope) {
+                    return function () {
+                        scope.$parent.safeApply(function () {
+                            scope.openCharmsBar('sd007', marker.id);
+                        });
+                    };
+                })(marker, $scope));
 
                 markerData[nodeData[counter].id] = marker;
 
                 if (nodeData[counter].bounds) {
-                    var bounds = nodeData[counter].bounds.split(";"),
-                        polygon,
-                        paths = [];
-
-                    for (i = 0; i < bounds.length; i++) {
-                        paths.push({
-                            lat: parseFloat(bounds[i].split(',')[0]),
-                            lng: parseFloat(bounds[i].split(',')[1])
+                    angular.forEach(nodeData[counter].bounds, function (item) {
+                        polygon = new google.maps.Polygon({
+                            paths: item,
+                            strokeColor: nodeData[counter].color,
+                            strokeOpacity: 0.3,
+                            strokeWeight: 2,
+                            fillColor: nodeData[counter].color,
+                            fillOpacity: 0.1,
                         });
-                    }
 
-                    polygon = new google.maps.Polygon({
-                        paths: paths,
-                        strokeColor: nodeData[counter].color,
-                        strokeOpacity: 0.3,
-                        strokeWeight: 1,
-                        fillColor: nodeData[counter].color,
-                        fillOpacity: 0.2,
+                        polygon.setMap(map);
                     });
-
-                    polygon.setMap(map);
                 }
             }
 
@@ -216,7 +209,7 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
                             var nodeItem = DataService.getNodeItem($location.search().node_id);
 
                             if (nodeItem) {
-                                $scope.moveMapTo(nodeItem);
+                                $scope.moveMapTo(nodeItem, true);
                             }
 
                             break;
@@ -228,7 +221,7 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
 
                                 $scope.generateRouteRequests(customRouteData);
 
-                                $scope.moveMapTo(customRouteData[0].routeArray[0]);
+                                $scope.moveMapTo(customRouteData[0].routeArray[0], false);
 
                                 RouteService.setCustomCentreData([]);
                                 RouteService.setCustomSensorData([]);
@@ -241,7 +234,7 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
                     }
                 } else {
                     if (emergencyRouteData.length > 0) {
-                        $scope.moveMapTo(emergencyRouteData[0].routeArray[0]);
+                        $scope.moveMapTo(emergencyRouteData[0].routeArray[0], false);
                     }
                 }
 
@@ -413,7 +406,7 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
         submitRequest();
     };
 
-    $scope.moveMapTo = function (nodeItem) {
+    $scope.moveMapTo = function (nodeItem, trigger) {
         map.setZoom(nodeItem.zoom);
 
         map.panTo({
@@ -421,56 +414,48 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
             lng: nodeItem.longitude
         });
 
-        google.maps.event.trigger(markerData[nodeItem.id], 'click');
+        if (trigger) {
+            google.maps.event.trigger(markerData[nodeItem.id], 'click');
+        }
     };
 
-    $scope.openCharmsBar = function (openCode) {
-        switch (openCode) {
-            case CHARMS_BAR_CODES.centres:
-                $scope.filter1 = MAP_CATEGORIES.centre;
-                $scope.charmBarTitle = 'Centres';
-                $scope.charmBarMode = CHARMS_BAR_MODES.marker;
+    $scope.openCharmsBar = function (charmBarId, nodeId) {
+        $scope.charmBarMode = CHARMS_BAR_DATA[charmBarId].mode;
+
+        switch ($scope.charmBarMode) {
+            case CHARMS_BAR_MODES.markerList:
+                if (CHARMS_BAR_DATA[charmBarId].filter1) {
+                    $scope.filter1 = CHARMS_BAR_DATA[charmBarId].filter1;
+                }
+                if (CHARMS_BAR_DATA[charmBarId].filter2) {
+                    $scope.filter2 = CHARMS_BAR_DATA[charmBarId].filter2;
+                }
+                $scope.applyFilter();
                 break;
-            case CHARMS_BAR_CODES.locations:
-                $scope.filter1 = MAP_CATEGORIES.location;
-                $scope.charmBarTitle = 'Locations';
-                $scope.charmBarMode = CHARMS_BAR_MODES.marker;
-                break;
-            case CHARMS_BAR_CODES.normalSensors:
-                $scope.filter1 = MAP_CATEGORIES.sensor;
-                $scope.filter2 = SENSOR_STATUSES.normal;
-                $scope.charmBarTitle = 'Normal Sensors';
-                $scope.charmBarMode = CHARMS_BAR_MODES.marker;
-                break;
-            case CHARMS_BAR_CODES.failedSensors:
-                $scope.filter1 = MAP_CATEGORIES.sensor;
-                $scope.filter2 = SENSOR_STATUSES.failure;
-                $scope.charmBarTitle = 'Failed Sensors';
-                $scope.charmBarMode = CHARMS_BAR_MODES.marker;
-                break;
-            case CHARMS_BAR_CODES.abnormalSensors:
-                $scope.filter1 = MAP_CATEGORIES.sensor;
-                $scope.filter2 = SENSOR_STATUSES.abnormal;
-                $scope.charmBarTitle = 'Abnormal Sensors';
-                $scope.charmBarMode = CHARMS_BAR_MODES.marker;
-                break;
-            case CHARMS_BAR_CODES.emergencyRoutes:
-                $scope.charmBarTitle = 'Emergency Routes';
-                $scope.charmBarMode = CHARMS_BAR_MODES.emergencyRoute;
-                break;
-            case CHARMS_BAR_CODES.customRoutes:
-                $scope.charmBarTitle = 'Custom Routes';
-                $scope.charmBarMode = CHARMS_BAR_MODES.customRoute;
+            case CHARMS_BAR_MODES.markerInformation:
+                $scope.setCharmBarNodeInfo(nodeId);
                 break;
         }
 
-        $scope.applyFilter();
+        $scope.charmBarTitle = CHARMS_BAR_DATA[charmBarId].title;
 
         $('#charmsBar').data('charms').open();
     };
 
     $scope.closeCharmsBar = function () {
         $('#charmsBar').data('charms').close();
+    };
+
+    $scope.setCharmBarNodeInfo = function (id) {
+        var nodeData = $scope.nodeData;
+
+        $scope.charmBarNodeItem = $filter('filter')(nodeData, {
+            'id': id
+        }, true)[0];
+
+        $scope.tableData = $filter('filter')(nodeData, {
+            'parentId': id
+        }, true);
     };
 
     $scope.applyFilter = function () {

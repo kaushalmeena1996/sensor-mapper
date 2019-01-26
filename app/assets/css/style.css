@@ -47,6 +47,10 @@ body {
   margin-top: -10px;
 }
 
+.card-image {
+  height: 59px;
+}
+
 .map-container-1 {
   margin-top: -38px;
   height: calc(100% + 38px);
@@ -80,8 +84,13 @@ body {
   width: 300px;
 }
 
-.map-overflow-content {
-  max-height: 600px;
+.map-overflow-content-1 {
+  max-height: calc(100% - 106px);
+  overflow: auto;
+}
+
+.map-overflow-content-2 {
+  max-height: calc(100% - 248px);
   overflow: auto;
 }
 

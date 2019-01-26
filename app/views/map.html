@@ -42,44 +42,49 @@
 </div>
 <div class="map-action-menu-2">
     <ul class="t-menu open compact">
-        <li class="c-pointer" ng-click="openCharmsBar(0)" title="Centres&#013;Displays list of relief centres.">
+        <li class="c-pointer" ng-click="openCharmsBar('sd000', null)" title="Centres&#013;Displays list of relief centres.">
             <a>
                 <span class="mif-bell icon"></span>
             </a>
         </li>
-        <li class="c-pointer" ng-click="openCharmsBar(1)" title="Locations&#013;Displays list of places or regions.">
+        <li class="c-pointer" ng-click="openCharmsBar('sd001', null)" title="Locations&#013;Displays list of places or regions.">
             <a>
                 <span class="mif-location icon"></span>
             </a>
         </li>
-        <li class="c-pointer" ng-click="openCharmsBar(2)" title="Normal Sensors&#013;Displays list of sensors behaving normally.">
+        <li class="c-pointer" ng-click="openCharmsBar('sd002', null)" title="Normal Sensors&#013;Displays list of sensors behaving normally.">
             <a>
                 <span class="mif-wifi-connect icon"></span>
+            </a>
+        </li>
+        <li class="c-pointer" ng-click="openCharmsBar('sd007', 'l001')" title="Information&#013;Displays marker information.">
+            <a>
+                <span class="mif-info icon"></span>
             </a>
         </li>
     </ul>
 </div>
 <div class="map-action-menu-3">
     <ul class="t-menu open">
-        <li class="c-pointer" ng-click="openCharmsBar(3)" ng-if="failedSensorCount" title="Failed Sensors&#013;Displays list sensors which stopped working or have technical problems.">
+        <li class="c-pointer" ng-click="openCharmsBar('sd003', null)" ng-if="failedSensorCount" title="Failed Sensors&#013;Displays list sensors which stopped working or have technical problems.">
             <a>
                 <span class="mif-wifi-connect fg-orange icon"></span>
                 <span class="badge bg-transparent" ng-bind="failedSensorCount"></span>
             </a>
         </li>
-        <li class="c-pointer" ng-click="openCharmsBar(4)" ng-if="abnormalSensorCount" title="Abnormal Sensors&#013;Displays list of sensors behaving abnormally.">
+        <li class="c-pointer" ng-click="openCharmsBar('sd004', null)" ng-if="abnormalSensorCount" title="Abnormal Sensors&#013;Displays list of sensors behaving abnormally.">
             <a>
                 <span class="mif-wifi-connect fg-red icon"></span>
                 <span class="badge bg-transparent" ng-bind="abnormalSensorCount"></span>
             </a>
         </li>
-        <li class="c-pointer" ng-click="openCharmsBar(5)" ng-if="emergencyRouteData.length" title="Emergency Routes&#013;Displays list of routes from relief centres to abnormal sensors.">
+        <li class="c-pointer" ng-click="openCharmsBar('sd005', null)" ng-if="emergencyRouteData.length" title="Emergency Routes&#013;Displays list of routes from relief centres to abnormal sensors.">
             <a>
                 <span class="mif-flow-branch fg-red icon"></span>
                 <span class="badge bg-transparent" ng-bind="emergencyRouteData.length"></span>
             </a>
         </li>
-        <li class="c-pointer" ng-click="openCharmsBar(6)" ng-if="customRouteData.length" title="Custom Routes&#013;Displays list of user defined generated routes.">
+        <li class="c-pointer" ng-click="openCharmsBar('sd006', null)" ng-if="customRouteData.length" title="Custom Routes&#013;Displays list of user defined generated routes.">
             <a>
                 <span class="mif-flow-branch icon"></span>
                 <span class="badge bg-transparent" ng-bind="customRouteData.length"></span>
@@ -91,7 +96,7 @@
     <div class="map-charms-bar-width">
         <div class="row no-gap">
             <div class="cell my-1 my-2 mx-3">
-                <strong ng-bind="charmBarTitle">Centre</strong>
+                <strong ng-bind="charmBarTitle"></strong>
             </div>
             <div class="cell-4 my-1 text-right">
                 <button type="button" class="button flat-button" type="button" ng-click="closeCharmsBar()">
@@ -100,17 +105,17 @@
             </div>
         </div>
         <hr class="bg-lightGray mt-0">
-        <div class="marker-division" ng-show="charmBarMode == modes.marker">
+        <div class="marker-division" ng-show="charmBarMode == modes.markerList">
             <div class="mt-2 mb-3 mx-2">
                 <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>" ng-model="search"
                     ng-change="applyFilter()">
             </div>
-            <div class="map-overflow-content">
-                <div class="card fade-animation bg-light c-pointer my-1" ng-click="moveMapTo(item)" ng-repeat="item in tableData track by $index">
+            <div class="map-overflow-content-1">
+                <div class="card fade-animation bg-light c-pointer my-1" ng-click="moveMapTo(item, false)" ng-repeat="item in tableData track by $index">
                     <div class="card-content p-1">
                         <div class="row no-gap">
                             <div class="cell-3 text-center px-1">
-                                <img class="py-3" ng-src="{{item.icon}}" alt="map-icon">
+                                <img class="card-image py-3" ng-src="{{item.icon}}" alt="map-icon">
                             </div>
                             <div class="cell">
                                 <strong ng-bind="item.name"></strong>
@@ -129,8 +134,8 @@
                 </div>
             </div>
         </div>
-        <div class="map-overflow-content" ng-if="charmBarMode == modes.emergencyRoute">
-            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0])"
+        <div class="map-overflow-content-1" ng-if="charmBarMode == modes.emergencyRouteList">
+            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0], false)"
                 ng-repeat="item in emergencyRouteData track by $index">
                 <div class="card-content p-1">
                     <div class="row no-gap">
@@ -163,8 +168,8 @@
                 <small>No results to display.</small>
             </div>
         </div>
-        <div class="map-overflow-content" ng-if="charmBarMode == modes.customRoute">
-            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0])"
+        <div class="map-overflow-content-1" ng-if="charmBarMode == modes.customRouteList">
+            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" ng-click="moveMapTo(item.routeArray[0], flase)"
                 ng-repeat="item in customRouteData track by $index">
                 <div class="card-content p-1">
                     <div class="row no-gap">
@@ -195,6 +200,48 @@
             </div>
             <div class="text-center" ng-if="!customRouteData.length">
                 <small>No results to display.</small>
+            </div>
+        </div>
+        <div class="node-info-division" ng-if="charmBarMode == modes.markerInformation">
+            <div class="text-center mb-4">
+                <span class="h4" ng-bind="charmBarNodeItem.name"></span><br>
+                <strong class="small" ng-bind="charmBarNodeItem.category"></strong><br>
+                <small ng-bind="charmBarNodeItem.typeName"></small>
+            </div>
+            <div class="text-center mb-4">
+                <img ng-src="{{charmBarNodeItem.icon}}">
+            </div>
+            <div class="text-center mb-4" ng-if="charmBarNodeItem.category == 'Sensor'">
+                <span class="h3" ng-bind="charmBarNodeItem.value"></span>
+                <span class="h3" ng-bind="charmBarNodeItem.unit"></span>
+            </div>
+            <div class="node-children-division" ng-if="!charmBarNodeItem.leafNode">
+                <div class="pl-2">
+                    <strong class="small">Children</strong>
+                </div>
+                <div class="map-overflow-content-2">
+                    <div class="card fade-animation bg-light c-pointer my-1" ng-click="moveMapTo(item, true)" ng-repeat="item in tableData track by $index">
+                        <div class="card-content p-1">
+                            <div class="row no-gap">
+                                <div class="cell-3 text-center px-1">
+                                    <img class="card-image py-3" ng-src="{{item.icon}}" alt="map-icon">
+                                </div>
+                                <div class="cell">
+                                    <strong ng-bind="item.name"></strong>
+                                    <br>
+                                    <strong>
+                                        <small ng-bind="item.category"></small>
+                                    </strong>
+                                    <br>
+                                    <small ng-bind="item.typeName"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center" ng-if="!tableData.length">
+                        <small>No results to display.</small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
