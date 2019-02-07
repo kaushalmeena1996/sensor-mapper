@@ -13,7 +13,7 @@ app.factory('AuthService', function ($rootScope, AUTH_EVENTS, STATUS_CODES) {
                 userSignedIn = true;
                 $rootScope.email = userData.email;
                 $rootScope.$emit(AUTH_EVENTS.signIn, {
-                    statusCode: STATUS_CODES.signInSuccess,
+                    statusCode: STATUS_CODES.signInSuccessful,
                     userData: userData
                 });
             })
@@ -32,7 +32,7 @@ app.factory('AuthService', function ($rootScope, AUTH_EVENTS, STATUS_CODES) {
                 userSignedIn = false;
                 $rootScope.email = '';
                 $rootScope.$emit(AUTH_EVENTS.signOut, {
-                    statusCode: STATUS_CODES.signOutSuccess
+                    statusCode: STATUS_CODES.signOutSuccessful
                 });
             })
             .catch(function (error) {
@@ -47,7 +47,7 @@ app.factory('AuthService', function ($rootScope, AUTH_EVENTS, STATUS_CODES) {
         var handler = $rootScope.$on(event, callback);
 
         if (userSignedIn == true) {
-            $rootScope.$emit(AUTH_EVENTS.signIn, { statusCode: STATUS_CODES.signInSuccess, userData: userData });
+            $rootScope.$emit(AUTH_EVENTS.signIn, { statusCode: STATUS_CODES.signInSuccessful, userData: userData });
         } else {
             login(credentials);
         }
@@ -59,7 +59,7 @@ app.factory('AuthService', function ($rootScope, AUTH_EVENTS, STATUS_CODES) {
         var handler = $rootScope.$on(event, callback);
 
         if (userSignedIn == false) {
-            $rootScope.$emit(AUTH_EVENTS.signOut, { statusCode: STATUS_CODES.signOutSuccess });
+            $rootScope.$emit(AUTH_EVENTS.signOut, { statusCode: STATUS_CODES.signOutSuccessful });
         } else {
             logout();
         }

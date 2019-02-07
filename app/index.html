@@ -1,70 +1,72 @@
-<html lang="en" ng-app="sensorApp">
+<!DOCTYPE html>
+<html lang="en" data-ng-app="sensorApp">
 
 <head>
+    <!-- Meta Data -->
     <meta charset="utf-8">
+    <meta name="description" content="A web application that displays sensors, places and locations on maps and calculates optimal route to relief centres in case of emergency.">
+    <meta name="keywords" content="mapmysensor,angularjs,firebase,jquery,metro4,googlemaps,html,css,js">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Title -->
     <title>MapMySensor : {{title}}</title>
     <!-- Metro UI stylesheet -->
-    <link href="assets/css/metro-all.min.css" rel="stylesheet">
+    <link href="assets/css/metro.min.css" rel="stylesheet">
     <!-- Custom stylesheet   -->
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- Google maps script -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYi5xP_G2X2ZN1GFwT7siOyCf12HXpeKQ"></script>
-    <script src="assets/js/marker-clusterer.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYi5xP_G2X2ZN1GFwT7siOyCf12HXpeKQ" defer></script>
+    <script src="assets/js/marker-clusterer.min.js" defer></script>
     <!-- Favicon -->
-    <link rel="shortcut icon" href="assets/icon/favicon.png">
+    <link rel="icon" type="image/png" href="assets/icon/favicon.png">
 </head>
 
-<body ng-class="{'map-mode': title == pages.map.title}" ng-controller="MainCtrl">
-    <div class="ploader"></div>
-    <div class="cloader" ng-if="pageLoading">
-        <div class="content">
+<body data-ng-class="{'map-mode': title == pageData.pd002.title}" data-ng-controller="MainController">
+    <div class="loader-1"></div>
+    <div class="loader-2" data-ng-if="pageLoading">
+        <div class="pos-fixed pos-center">
             <span class="mif-spinner3 mif-5x ani-spin"></span>
         </div>
     </div>
 
-    <header class="{{bgColor}} fg-white" data-role="appbar" data-expand-point="md" ng-show="masterPage">
+    <header class="{{bgColor}} fg-white" data-role="appbar" data-expand-point="md" data-ng-show="masterPage">
         <a href="#!/" class="brand">
             <span class="mif-location mif-3x"></span>
         </a>
         <ul class="app-bar-menu ml-auto">
-            <li title="Home&#013;Home page of application.">
+            <li title="Display home page of application.">
                 <a href="#!/">
                     <span class="mif-home mif-3x"></span>
                 </a>
             </li>
-            <li title="Map&#013;Displays centres, locations and sensors on map.">
+            <li title="Display centres, locations and sensors on map.">
                 <a href="#!/map">
                     <span class="mif-map mif-3x"></span>
                 </a>
             </li>
-            <li title="Search&#013;Search centres, location or sensor by text or apply filter.">
+            <li title="Search centres, location or sensor by text or by applying filters.">
                 <a href="#!/search">
                     <span class="mif-search mif-3x"></span>
                 </a>
             </li>
-            <li title="Route&#013;Generates route between selected centres and sensors.">
+            <li title="Generate route between selected centres and sensors.">
                 <a href="#!/route/step-1">
                     <span class="mif-flow-branch mif-3x"></span>
                 </a>
             </li>
-            <li title="About&#013;Displays information about application.">
+            <li title="Display information about application.">
                 <a href="#!/about">
                     <span class="mif-info mif-3x"></span>
                 </a>
             </li>
-            <li title="Logout&#013;Logs out the application." class="c-pointer">
-                <a ng-click="signOut()">
+            <li title="Log-out from application." class="c-pointer">
+                <a data-ng-click="signOut()">
                     <span class="mif-switch mif-3x"></span>
                 </a>
             </li>
         </ul>
     </header>
 
-    <div ng-class="container">
-        <ng-view></ng-view>
-    </div>
+    <ng-view></ng-view>
 
     <!-- jQuery library -->
     <script src="assets/js/jquery-3.3.1.min.js"></script>

@@ -11,22 +11,22 @@
     </div>
     <hr class="bg-gray">
     <div class="mt-4" data-role="panel" data-title-icon="&lt;span class='mif-flow-branch'>&lt;/span>">
-        <div class="card fade-animation bg-light border bd-gray my-1" ng-repeat="routeItem in customRouteData track by $index">
+        <div class="card fade-animation bg-light border bd-gray my-1" data-ng-repeat="routeItem in customRouteData track by $index">
             <div class="card-content p-1">
-                <div class="card fade-animation bg-light my-1" ng-repeat="item in routeItem.routeArray track by $index">
+                <div class="card fade-animation bg-light my-1" data-ng-repeat="item in routeItem.routeArray track by $index">
                     <div class="card-content p-1">
                         <div class="row no-gap">
                             <div class="cell-md-1 text-center px-1">
-                                <img class="card-image py-3" ng-src="{{item.icon}}" alt="map-icon">
+                                <img class="card-image py-3" data-ng-src="{{item.icon}}" alt="map-icon">
                             </div>
                             <div class="cell">
-                                <strong ng-bind="item.name"></strong>
+                                <strong data-ng-bind="item.name"></strong>
                                 <br>
                                 <strong>
-                                    <small ng-bind="item.category"></small>
+                                    <small data-ng-bind="item.category"></small>
                                 </strong>
                                 <br>
-                                <small ng-bind="item.typeName"></small>
+                                <small data-ng-bind="item.type.name"></small>
                             </div>
                         </div>
                     </div>
@@ -35,29 +35,29 @@
                     <div class="row flex-justify-end">
                         <div class="cell-md-2">
                             <strong>Nodes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</strong>
-                            <span ng-bind="routeItem.routeInfo.totalNodes"></span>
+                            <span data-ng-bind="routeItem.routeInfo.totalNodes"></span>
                             <br>
                             <strong>Distance :</strong>
-                            <span ng-bind="routeItem.routeInfo.totalDistance"></span>
+                            <span data-ng-bind="routeItem.routeInfo.totalDistance"></span>
                             <span>km</span>
                             <br>
                             <strong>Score&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</strong>
-                            <span ng-bind="routeItem.routeInfo.totalScore"></span>
+                            <span data-ng-bind="routeItem.routeInfo.totalScore"></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="text-center" ng-if="!customRouteData.length">
+        <div class="text-center" data-ng-if="!customRouteData.length">
             [Empty]
         </div>
     </div>
     <div class="text-right mt-4">
-        <a role="button" href="#!/route/step-2" class="button square secondary outline w-25-md">
+        <a role="button" href="#!/route/step-2" class="button square secondary outline w-25-md" title="Go to previous step.">
             <span class="mif-arrow-left mif-2x"></span>
         </a>
-        <button type="button" class="button square secondary outline w-25-md" ng-click="plotRoute()">
+        <button type="button" class="button square secondary outline w-25-md" title="Plot route on map." data-ng-click="plotRoute()">
             <span class="mif-map mif-2x"></span>
-            </butoon>
+        </button>
     </div>
 </div>

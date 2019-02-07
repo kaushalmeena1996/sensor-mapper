@@ -7,47 +7,43 @@ var map,
     },
     chart = null;
 
-app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CATEGORIES, MAP_CENTRES, SENSOR_STATUSES, MAP_ROUTES, STATUS_CODES, CHARMS_BAR_DATA, CHARMS_BAR_MODES, PLOT_CODES, SERVICE_EVENTS, RouteService, DataService) {
-    $scope.nodeData = [];
+app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGORIES, MAP_CENTRES, SENSOR_STATUSES, MAP_ROUTES, STATUS_CODES, CHARMS_BAR_DATA, CHARMS_BAR_MODES, PLOT_CODES, SERVICE_EVENTS, RouteService, DataService) {
     $scope.tableData = [];
 
     $scope.emergencyRouteData = [];
     $scope.customRouteData = [];
 
-    $scope.modes = CHARMS_BAR_MODES;
-
     $scope.charmBarTitle = '';
-
     $scope.charmBarMode = 0;
-
     $scope.charmBarNodeItem = {};
 
-    $scope.search = '';
+    $scope.moderateSensorCount = 0;
+    $scope.severeSensorCount = 0;
+
+    $scope.mapLoaded = false;
+
+    $scope.query = '';
 
     $scope.filter1 = '*';
     $scope.filter2 = '*';
 
-    $scope.failedSensorCount = 0;
-    $scope.abnormalSensorCount = 0;
+    $scope.modes = CHARMS_BAR_MODES;
+    $scope.categories = MAP_CATEGORIES;
 
-    $scope.mapLoaded = false;
-
-    $scope.getNodeDataAsArray = function () {
+    $scope.getNodeData = function () {
         $scope.$parent.showLoadingOverlay();
 
         DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeData, function (event, data) {
             switch (data.statusCode) {
-                case STATUS_CODES.dataLoadSuccess:
+                case STATUS_CODES.dataLoadSuccessful:
                     $scope.$parent.safeApply(function () {
-                        $scope.nodeData = DataService.getNodeDataAsArray();
                         $scope.createMap();
                         $scope.$parent.hideLoadingOverlay();
                     });
                     break;
-                case STATUS_CODES.dataUpdateSuccess:
+                case STATUS_CODES.dataUpdateSuccessful:
                     if ($scope.mapLoaded) {
-                        $scope.nodeData = DataService.getNodeDataAsArray();
-                        $scope.updateMap(data.nodeItem);
+                        $scope.updateMap(data.nodeItem, data.sensorStatusChanged);
                     }
                     break;
                 case STATUS_CODES.dataLoadFailed:
@@ -63,43 +59,51 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
         });
     };
 
-    $scope.updateMap = function (nodeItem) {
+    $scope.updateMap = function (nodeItem, sensorStatusChanged) {
         if (nodeItem.category == MAP_CATEGORIES.sensor) {
 
-            $("#info-window-" + nodeItem.id)
-                .find(".content")
-                .eq(0)
-                .html(nodeItem.value + ' ' + nodeItem.unit)
+            if ($scope.charmBarMode == CHARMS_BAR_MODES.markerInformation) {
+                if ($scope.charmBarNodeItem.id == nodeItem.id) {
+                    $scope.$parent.safeApply(function () {
+                        $scope.charmBarNodeItem = nodeItem;
+                    });
 
-            if ($('#chartBox').data('infobox').isOpen() && chart) {
-                chart.data.datasets[0].data.push({
-                    x: new Date(),
-                    y: nodeItem.value
-                });
-                chart.update();
+                    if ($('#chartBox').data('infobox').isOpen() && chart) {
+                        chart.data.datasets[0].data.push({
+                            x: new Date(),
+                            y: nodeItem.value
+                        });
+
+                        chart.update();
+                    }
+                }
+
+                if ($scope.charmBarNodeItem.id == nodeItem.parentId) {
+                    $scope.$parent.safeApply(function () {
+                        $scope.tableData = DataService.getNodeChildren(nodeItem.id);
+                    });
+                }
             }
 
             if (nodeItem.dynamicCoordinates) {
                 markerData[nodeItem.id].setPosition({
-                    lat: nodeItem.latitude,
-                    lng: nodeItem.longitude
+                    lat: nodeItem.coordinates.lat,
+                    lng: nodeItem.coordinates.lng
                 });
-
-                $("#info-window-" + nodeItem.id)
-                    .find(".address")
-                    .eq(0)
-                    .html(nodeItem.address)
             }
 
-            if (nodeItem.status != markerData[nodeItem.id].status) {
+            if (sensorStatusChanged) {
                 var emergencyRouteData = RouteService.getEmergencyRouteData(),
-                    failedCount = DataService.getFailedSensorCount(),
-                    abnormalCount = DataService.getAbnormalSensorCount(),
+                    moderateSensorCount = DataService.getModerateSensorCount(),
+                    severeSensorCount = DataService.getSevereSensorCount(),
                     i;
 
                 markerData[nodeItem.id].setIcon({
                     labelOrigin: new google.maps.Point(15, -8),
-                    url: nodeItem.icon
+                    url: nodeItem.icon,
+                    scaledSize: new google.maps.Size(32, 32),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(0, 0)
                 });
 
                 for (i = 0; i < routeData.emergency.length; i++) {
@@ -115,30 +119,28 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
 
                 $scope.$parent.safeApply(function () {
                     $scope.emergencyRouteData = emergencyRouteData;
-                    $scope.failedSensorCount = failedCount;
-                    $scope.abnormalSensorCount = abnormalCount;
+                    $scope.moderateSensorCount = moderateSensorCount;
+                    $scope.severeSensorCount = severeSensorCount;
                 });
 
                 switch (nodeItem.status) {
-                    case SENSOR_STATUSES.failure:
+                    case SENSOR_STATUSES.sst002.name:
                         Metro.notify.create("Sensor " + nodeItem.name + " failed.", "Alert", {
                             cls: "warning"
                         });
                         break;
-                    case SENSOR_STATUSES.abnormal:
+                    case SENSOR_STATUSES.sst003.name:
                         Metro.notify.create("Sensor " + nodeItem.name + " is behaving abnormally.", "Alert", {
                             cls: "alert"
                         });
                         break;
                 }
-
-                markerData[nodeItem.id].status = nodeItem.status;
             }
         }
     };
 
     $scope.createMap = function () {
-        var nodeData = $scope.nodeData,
+        var nodeData = DataService.getNodeData(),
             counter = 0;
 
         function plotMarkers() {
@@ -147,8 +149,8 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
                     id: nodeData[counter].id,
                     label: nodeData[counter].name,
                     position: {
-                        lat: nodeData[counter].latitude,
-                        lng: nodeData[counter].longitude
+                        lat: nodeData[counter].coordinates.lat,
+                        lng: nodeData[counter].coordinates.lng
                     },
                     icon: {
                         labelOrigin: new google.maps.Point(15, -8),
@@ -157,33 +159,35 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
                         origin: new google.maps.Point(0, 0),
                         anchor: new google.maps.Point(0, 0)
                     },
-                    status: nodeData[counter].status,
                     map: map
                 });
 
                 google.maps.event.addListener(marker, 'click', (function (marker, scope) {
                     return function () {
                         scope.$parent.safeApply(function () {
-                            scope.openCharmsBar('sd007', marker.id);
+                            scope.openCharmsBar('sd008', marker.id);
                         });
                     };
                 })(marker, $scope));
 
                 markerData[nodeData[counter].id] = marker;
 
-                if (nodeData[counter].bounds) {
-                    angular.forEach(nodeData[counter].bounds, function (item) {
+                if (nodeData[counter].boundary) {
+                    var polygon,
+                        i;
+
+                    for (i = 0; i < nodeData[counter].boundary.bounds.length; i++) {
                         polygon = new google.maps.Polygon({
-                            paths: item,
+                            paths: nodeData[counter].boundary.bounds[i],
                             strokeColor: nodeData[counter].color,
                             strokeOpacity: 0.3,
                             strokeWeight: 2,
-                            fillColor: nodeData[counter].color,
+                            fillColor: nodeData[counter].boundary.color,
                             fillOpacity: 0.1,
                         });
 
                         polygon.setMap(map);
-                    });
+                    }
                 }
             }
 
@@ -201,17 +205,14 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
                     $scope.emergencyRouteData = emergencyRouteData;
                 }
 
-                if ('action_code' in $location.search()) {
-                    var action_code = parseInt($location.search().action_code, 10);
+                if ('plot_code' in $location.search()) {
+                    var plotCode = parseInt($location.search().plot_code, 10);
 
-                    switch (action_code) {
+                    switch (plotCode) {
                         case PLOT_CODES.nodeItem:
-                            var nodeItem = DataService.getNodeItem($location.search().node_id);
+                            var item = DataService.getNodeItem($location.search().node_id);
 
-                            if (nodeItem) {
-                                $scope.moveMapTo(nodeItem, true);
-                            }
-
+                            $scope.moveMapTo(item, true);
                             break;
                         case PLOT_CODES.route:
                             var customRouteData = [];
@@ -229,7 +230,6 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
                             }
 
                             $scope.customRouteData = customRouteData;
-
                             break;
                     }
                 } else {
@@ -240,8 +240,8 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
 
                 var markerCluster = new MarkerClusterer(map, markerData, { imagePath: '../assets/img/clusterer/' });
 
-                $scope.failedSensorCount = DataService.getFailedSensorCount();
-                $scope.abnormalSensorCount = DataService.getAbnormalSensorCount();
+                $scope.moderateSensorCount = DataService.getModerateSensorCount();
+                $scope.severeSensorCount = DataService.getSevereSensorCount();
 
                 $scope.mapLoaded = true;
 
@@ -254,38 +254,6 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
         plotMarkers();
     };
 
-    $scope.generateContent = function (nodeItem) {
-        var content = '';
-
-        content += '<div class="map-info-window" id="info-window-' + nodeItem.id + '">';
-        content += '<div class="name">' + nodeItem.name + '</h5>';
-        content += '<div class="type">' + nodeItem.typeName + '</div>';
-
-        if (nodeItem.category == MAP_CATEGORIES.sensor) {
-            content += '<div class="content">' + nodeItem.value + ' ' + nodeItem.unit + '</div>';
-        }
-
-        content += '<div class="address">' + nodeItem.address + '</div>';
-
-        content += '<div class="action">';
-        content += '<button type="button" class="button square secondary outline small" ng-click="showNodeItem(\'' + nodeItem.id + '\',\'' + nodeItem.category + '\')">';
-        content += '<span class="mif-folder-open mif-2x"></span>';
-        content += '</button>';
-
-        if (nodeItem.category == MAP_CATEGORIES.sensor) {
-            content += '<button type="button" class="button square secondary outline small" ng-click="openSensorChart(\'' + nodeItem.id + '\',\'' + nodeItem.unit + '\')">';
-            content += '<span class="mif-chart-dots mif-2x"></span>';
-            content += '</button>';
-        }
-
-        content += '</div>';
-        content += '</div>';
-
-        content = $compile(content)($scope);
-
-        return content[0];
-    };
-
     $scope.generateRouteRequests = function (routes) {
         var requests = [],
             requestObject,
@@ -295,41 +263,41 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
         for (i = 0; i < routes.length; i++) {
             requestObject = {
                 origin: {
-                    lat: routes[i].routeArray[0].latitude,
-                    lng: routes[i].routeArray[0].longitude
+                    lat: routes[i].routeArray[0].coordinates.lat,
+                    lng: routes[i].routeArray[0].coordinates.lng
                 },
                 destination: {
-                    lat: routes[i].routeArray[routes[i].routeArray.length - 1].latitude,
-                    lng: routes[i].routeArray[routes[i].routeArray.length - 1].longitude
+                    lat: routes[i].routeArray[routes[i].routeArray.length - 1].coordinates.lat,
+                    lng: routes[i].routeArray[routes[i].routeArray.length - 1].coordinates.lng
                 },
                 travelMode: 'DRIVING'
             };
 
-            if (routes[i].routeArray[0].typeName == MAP_CENTRES.ct00x.name) {
+            if (routes[i].routeArray[0].type.name == MAP_CENTRES.ct006.name) {
                 var marker = new google.maps.Marker({
+                    id: routes[i].routeArray[0].id,
                     label: routes[i].routeArray[0].name,
                     position: {
-                        lat: routes[i].routeArray[0].latitude,
-                        lng: routes[i].routeArray[0].longitude
+                        lat: routes[i].routeArray[0].coordinates.lat,
+                        lng: routes[i].routeArray[0].coordinates.lng
                     },
                     icon: {
-                        labelOrigin: new google.maps.Point(15, -5),
-                        url: routes[i].routeArray[0].icon
+                        labelOrigin: new google.maps.Point(15, -8),
+                        url: routes[i].routeArray[0].icon,
+                        scaledSize: new google.maps.Size(32, 32),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(0, 0)
                     },
-                    status: routes[i].routeArray[0].status,
                     map: map
                 });
 
-                var content = $scope.generateContent(routes[i].routeArray[0]);
-
-                marker.infoWindow = new google.maps.InfoWindow({
-                    maxWidth: 200,
-                    content: content
-                });
-
-                marker.addListener('click', function () {
-                    marker.infoWindow.open(map, this);
-                });
+                google.maps.event.addListener(marker, 'click', (function (marker, scope) {
+                    return function () {
+                        scope.$parent.safeApply(function () {
+                            scope.openCharmsBar('sd008', marker.id);
+                        });
+                    };
+                })(marker, $scope));
 
                 markerData[routes[i].routeArray[0].id] = marker;
             }
@@ -340,8 +308,8 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
                 for (j = 1; j < routes[i].routeArray.length - 1; j++) {
                     requestObject.waypoints.push({
                         location: {
-                            lat: routes[i].routeArray[j].latitude,
-                            lng: routes[i].routeArray[j].longitude
+                            lat: routes[i].routeArray[j].coordinates.lat,
+                            lng: routes[i].routeArray[j].coordinates.lng
                         },
                         stopover: true
                     });
@@ -407,12 +375,14 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
     };
 
     $scope.moveMapTo = function (nodeItem, trigger) {
-        map.setZoom(nodeItem.zoom);
+        if (nodeItem) {
+            map.setZoom(nodeItem.zoom);
 
-        map.panTo({
-            lat: nodeItem.latitude,
-            lng: nodeItem.longitude
-        });
+            map.panTo({
+                lat: nodeItem.coordinates.lat,
+                lng: nodeItem.coordinates.lng
+            });
+        }
 
         if (trigger) {
             google.maps.event.trigger(markerData[nodeItem.id], 'click');
@@ -443,51 +413,53 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
     };
 
     $scope.closeCharmsBar = function () {
+        $scope.charmBarMode = 0;
+
         $('#charmsBar').data('charms').close();
     };
 
-    $scope.setCharmBarNodeInfo = function (id) {
-        var nodeData = $scope.nodeData;
+    $scope.setCharmBarNodeInfo = function (nodeId) {
+        $scope.charmBarNodeItem = DataService.getNodeItem(nodeId);
+        $scope.tableData = DataService.getNodeChildren(nodeId);
+    };
 
-        $scope.charmBarNodeItem = $filter('filter')(nodeData, {
-            'id': id
-        }, true)[0];
+    $scope.setParentNodeInfo = function () {
+        var item = DataService.getNodeItem($scope.charmBarNodeItem.parentId);
 
-        $scope.tableData = $filter('filter')(nodeData, {
-            'parentId': id
-        }, true);
+        $scope.moveMapTo(item, true);
     };
 
     $scope.applyFilter = function () {
-        var nodeData = $scope.nodeData;
+        var nodeData = DataService.getNodeData();
 
-        if ($scope.search) {
+        if ($scope.query) {
             nodeData = $filter('filter')(nodeData, {
-                'name': $scope.search
+                name: $scope.query
             });
         }
 
         if ($scope.filter1 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                'category': $scope.filter1
+                category: $scope.filter1
             }, true);
         }
 
-        if ($scope.filter1 == MAP_CATEGORIES.sensor && $scope.filter2 !== '*') {
+        if ($scope.filter2 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                'status': $scope.filter2
+                status: { name: $scope.filter2 }
             }, true);
         }
 
         $scope.tableData = nodeData;
     };
 
-    $scope.openSensorChart = function (sensorId, sensorUnit) {
+    $scope.openSensorChart = function () {
         $scope.$parent.showLoadingOverlay();
 
-        DataService.subscribeChartData(sensorId, $scope, SERVICE_EVENTS.chartData, function (event, data) {
+        DataService.subscribeChartData($scope.charmBarNodeItem.id, $scope, SERVICE_EVENTS.chartData, function (event, data) {
             switch (data.statusCode) {
-                case STATUS_CODES.dataLoadSuccess:
+                case STATUS_CODES.dataLoadSuccessful:
+
                     if (chart) {
                         chart.data.datasets[0].data = data.chartData
                         chart.update();
@@ -511,7 +483,7 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
                                 tooltips: {
                                     callbacks: {
                                         label: function (tooltipItems, data) {
-                                            return tooltipItems.yLabel + sensorUnit;
+                                            return tooltipItems.yLabel + $scope.charmBarNodeItem.reading.unit;
                                         }
                                     }
                                 },
@@ -526,7 +498,7 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
                                     yAxes: [{
                                         scaleLabel: {
                                             display: true,
-                                            labelString: sensorUnit
+                                            labelString: $scope.charmBarNodeItem.reading.unit
                                         }
                                     }]
                                 }
@@ -550,9 +522,12 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
         });
     }
 
-    $scope.showNodeItem = function (id, category) {
-        var link = '/view',
-            category = category.toLowerCase();
+    $scope.showNodeItem = function () {
+        var id = $scope.charmBarNodeItem.id,
+            category = $scope.charmBarNodeItem.category,
+            link = '/view';
+
+        category = category.toLowerCase();
 
         link += '/' + category;
         link += '?' + category + '_id=' + id;
@@ -563,16 +538,16 @@ app.controller('MapCtrl', function ($scope, $compile, $location, $filter, MAP_CA
     $scope.$on('$viewContentLoaded', function () {
         map = new google.maps.Map(document.getElementById('map1'), {
             center: {
-                lat: 21.1654031,
-                lng: 72.7833882
+                lat: 21.170240,
+                lng: 72.831062
             },
-            zoom: 16,
+            zoom: 11,
             mapTypeControl: false,
             streetViewControl: false,
             fullscreenControl: false
         });
 
-        $scope.getNodeDataAsArray();
+        $scope.getNodeData();
     });
 
 });

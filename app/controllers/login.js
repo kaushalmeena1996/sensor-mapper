@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 
-app.controller('LoginCtrl', function ($scope) {
+app.controller('LoginController', function ($scope) {
     $scope.credentials = {
         email: '',
         password: ''

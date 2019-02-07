@@ -1,7 +1,7 @@
 var app = angular.module('sensorApp'),
     chart = null;
 
-app.controller('ViewSensorCtrl', function ($scope, $location, STATUS_CODES, SERVICE_EVENTS, DataService) {
+app.controller('ViewSensorController', function ($scope, $location, STATUS_CODES, SERVICE_EVENTS, DataService) {
     $scope.sensorItem = {};
     $scope.sensorItemLoaded = false;
 
@@ -12,15 +12,15 @@ app.controller('ViewSensorCtrl', function ($scope, $location, STATUS_CODES, SERV
 
         DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeData, function (event, data) {
             switch (data.statusCode) {
-                case STATUS_CODES.dataLoadSuccess:
+                case STATUS_CODES.dataLoadSuccessful:
                     $scope.$parent.safeApply(function () {
                         $scope.sensorItem = DataService.getNodeItem($scope.sensorId);
                         $scope.sensorItemLoaded = true;
                         $scope.$parent.hideLoadingOverlay();
                     });
                     break;
-                case STATUS_CODES.dataUpdateSuccess:
-                    if (data.nodeItem.id == $scope.sensorId) {
+                case STATUS_CODES.dataUpdateSuccessful:
+                    if ($scope.sensorId == data.nodeItem.id) {
                         $scope.$parent.safeApply(function () {
                             $scope.sensorItem = data.nodeItem;
                         });
@@ -30,6 +30,7 @@ app.controller('ViewSensorCtrl', function ($scope, $location, STATUS_CODES, SERV
                                 x: new Date(),
                                 y: data.nodeItem.value
                             });
+
                             chart.update();
                         }
                     }
@@ -52,7 +53,7 @@ app.controller('ViewSensorCtrl', function ($scope, $location, STATUS_CODES, SERV
 
         DataService.subscribeChartData($scope.sensorId, $scope, SERVICE_EVENTS.chartData, function (event, data) {
             switch (data.statusCode) {
-                case STATUS_CODES.dataLoadSuccess:
+                case STATUS_CODES.dataLoadSuccessful:
                     if (chart) {
                         chart.data.datasets[0].data = data.chartData
                         chart.update();
@@ -76,7 +77,7 @@ app.controller('ViewSensorCtrl', function ($scope, $location, STATUS_CODES, SERV
                                 tooltips: {
                                     callbacks: {
                                         label: function (tooltipItems, data) {
-                                            return tooltipItems.yLabel + ' ' + $scope.sensorItem.unit;
+                                            return tooltipItems.yLabel + ' ' + $scope.sensorItem.reading.unit;
                                         }
                                     }
                                 },
@@ -91,7 +92,7 @@ app.controller('ViewSensorCtrl', function ($scope, $location, STATUS_CODES, SERV
                                     yAxes: [{
                                         scaleLabel: {
                                             display: true,
-                                            labelString: $scope.sensorItem.unit
+                                            labelString: $scope.sensorItem.reading.unit
                                         }
                                     }]
                                 }

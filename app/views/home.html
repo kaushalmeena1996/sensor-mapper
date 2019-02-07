@@ -5,61 +5,61 @@
         <span class="mif-user icon"></span>
       </div>
       <div class="slide-back bg-lightOrange d-flex flex-justify-center flex-align-center p-4 op-mauve">
-        <p class="text-center h4" ng-bind="email"></p>
+        <p class="text-center h4" data-ng-bind="email"></p>
       </div>
       <span class="branding-bar">Welcome</span>
     </div>
     <a href="#!/map" class="fg-white" data-size="large" data-role="tile" data-effect="hover-slide-left">
-      <div class="slide-front {{::pages.map.data.bgColor.normal}}">
+      <div class="slide-front {{::pageData.pd002.data.bgColor.normal}}">
         <span class="mif-map icon"></span>
       </div>
-      <div class="slide-back {{::pages.map.data.bgColor.light}} d-flex flex-justify-center flex-align-center p-4 op-mauve">
+      <div class="slide-back {{::pageData.pd002.data.bgColor.light}} d-flex flex-justify-center flex-align-center p-4 op-mauve">
         <p class="text-center h4">
-          Displays centres, locations and sensors on map.
+          Display centres, locations and sensors on map.
         </p>
       </div>
       <span class="branding-bar">Map</span>
     </a>
     <a href="#!/search" class="fg-white" data-size="wide" data-role="tile" data-effect="hover-slide-left">
-      <div class="slide-front {{::pages.search.data.bgColor.normal}}">
+      <div class="slide-front {{::pageData.pd003.data.bgColor.normal}}">
         <span class="mif-search icon"></span>
       </div>
-      <div class="slide-back {{::pages.search.data.bgColor.light}} d-flex flex-justify-center flex-align-center p-4 op-mauve">
+      <div class="slide-back {{::pageData.pd003.data.bgColor.light}} d-flex flex-justify-center flex-align-center p-4 op-mauve">
         <p class="text-center h4">
-          Search centres, location or sensor by text or apply filter.
+          Search centres, location or sensor by text or applying filter.
         </p>
       </div>
       <span class="branding-bar">Search</span>
     </a>
     <a href="#!/route/step-1" class="fg-white" data-size="wide" data-role="tile" data-effect="hover-slide-left">
-      <div class="slide-front {{::pages.route.data.bgColor.normal}}">
+      <div class="slide-front {{::pageData.pd004.data.bgColor.normal}}">
         <span class="mif-flow-branch icon"></span>
       </div>
-      <div class="slide-back {{::pages.route.data.bgColor.light}} d-flex flex-justify-center flex-align-center p-4 op-mauve">
+      <div class="slide-back {{::pageData.pd004.data.bgColor.light}} d-flex flex-justify-center flex-align-center p-4 op-mauve">
         <p class="text-center h4">
-          Generates route between selected centres and sensors.
+          Generate route between selected centres and sensors.
         </p>
       </div>
       <span class="branding-bar">Route</span>
     </a>
     <a href="#!/about" class="fg-white" data-size="wide" data-role="tile" data-effect="hover-slide-left">
-      <div class="slide-front {{::pages.about.data.bgColor.normal}}">
+      <div class="slide-front {{::pageData.pd006.data.bgColor.normal}}">
         <span class="mif-info icon"></span>
       </div>
-      <div class="slide-back {{::pages.about.data.bgColor.light}} d-flex flex-justify-center flex-align-center p-4 op-mauve">
+      <div class="slide-back {{::pageData.pd006.data.bgColor.light}} d-flex flex-justify-center flex-align-center p-4 op-mauve">
         <p class="text-center h4">
-          Displays information about application.
+          Display information about application.
         </p>
       </div>
       <span class="branding-bar">About</span>
     </a>
-    <div data-role="tile" data-effect="hover-slide-left" ng-click="signOut()">
+    <div data-role="tile" data-effect="hover-slide-left" data-ng-click="signOut()">
       <div class="slide-front bg-crimson">
         <span class="mif-switch icon"></span>
       </div>
       <div class="slide-back bg-lightCrimson d-flex flex-justify-center flex-align-center p-4 op-mauve">
         <p class="text-center h4">
-          Logs out the application.
+          Log-out from application.
         </p>
       </div>
       <span class="branding-bar">Logout</span>
@@ -70,7 +70,7 @@
       </div>
       <div class="slide-back bg-lightIndigo d-flex flex-justify-center flex-align-center p-4 op-mauve">
         <p class="text-center h4">
-          v2.1.1
+          v2.2.1
         </p>
       </div>
       <span class="branding-bar">Version</span>

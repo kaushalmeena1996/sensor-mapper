@@ -1,17 +1,16 @@
 var app = angular.module('sensorApp');
 
-app.controller('RouteSensorCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, SENSOR_TYPES, STATUS_TYPES, STATUS_CODES, SERVICE_EVENTS, PagerService, RouteService, DataService) {
-    $scope.sensorData = [];
+app.controller('RouteSensorController', function ($scope, $location, $filter, MAP_CATEGORIES, SENSOR_TYPES, SENSOR_STATUS_TYPES, STATUS_CODES, SERVICE_EVENTS, PagerService, RouteService, DataService) {
     $scope.tableData = [];
 
     $scope.selectedSensors = [];
 
     $scope.sensorTypes = SENSOR_TYPES;
-    $scope.statusTypes = STATUS_TYPES;
+    $scope.sensorStatusTypes = SENSOR_STATUS_TYPES;
 
     $scope.visibleDivision = false;
 
-    $scope.search = '';
+    $scope.query = '';
 
     $scope.filter1 = '*';
     $scope.filter2 = '*';
@@ -28,24 +27,30 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, MAP_CATE
         pages: []
     };
 
-    $scope.getSensorDataAsArray = function () {
+    $scope.getSensorData = function () {
         $scope.$parent.showLoadingOverlay();
 
         DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeData, function (event, data) {
             switch (data.statusCode) {
-                case STATUS_CODES.dataLoadSuccess:
+                case STATUS_CODES.dataLoadSuccessful:
                     $scope.$parent.safeApply(function () {
-                        $scope.sensorData = DataService.getSensorDataAsArray();
                         $scope.changePage(1);
                         $scope.$parent.hideLoadingOverlay();
                     });
                     break;
-                case STATUS_CODES.dataUpdateSuccess:
-                    if (data.nodeItem.sensor == MAP_CATEGORIES.sensor) {
-                        $scope.$parent.safeApply(function () {
-                            $scope.sensorData = DataService.getSensorDataAsArray();
-                            $scope.changePage(1);
-                        });
+                case STATUS_CODES.dataUpdateSuccessful:
+                    if (data.nodeItem.category == MAP_CATEGORIES.sensor) {
+                        var index = $scope.tableData.findIndex(
+                            function (tableItem) {
+                                return tableItem.id == data.nodeItem.id;
+                            }
+                        );
+
+                        if (index > -1) {
+                            $scope.$parent.safeApply(function () {
+                                $scope.tableData[index] = data.nodeItem;
+                            });
+                        }
                     }
                     break;
                 case STATUS_CODES.dataLoadFailed:
@@ -103,32 +108,34 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, MAP_CATE
     };
 
     $scope.changePage = function (page) {
-        var selectedIds = $scope.selectedSensors.map(
-            function (e) {
-                return e.id;
-            }
-        ),
-            sensorData = $scope.sensorData.filter(
-                function (e) {
-                    return selectedIds.indexOf(e.id) == -1;
+        var sensorData = DataService.getSensorData(),
+            selectedIds = $scope.selectedSensors.map(
+                function (sensorItem) {
+                    return sensorItem.id;
                 }
             );
 
-        if ($scope.search) {
+        sensorData = sensorData.filter(
+            function (sensorItem) {
+                return selectedIds.indexOf(sensorItem.id) == -1;
+            }
+        );
+
+        if ($scope.query) {
             sensorData = $filter('filter')(sensorData, {
-                'name': $scope.search
+                name: $scope.query
             });
         }
 
         if ($scope.filter1 !== '*') {
             sensorData = $filter('filter')(sensorData, {
-                'type': $scope.filter1
+                type: { name: $scope.filter1 }
             }, true);
         }
 
         if ($scope.filter2 !== '*') {
             sensorData = $filter('filter')(sensorData, {
-                'status': $scope.filter2
+                status: { name: $scope.filter2 }
             }, true);
         }
 
@@ -145,7 +152,7 @@ app.controller('RouteSensorCtrl', function ($scope, $location, $filter, MAP_CATE
                 break;
             default:
                 $scope.selectedSensors = RouteService.getCustomSensorData();
-                $scope.getSensorDataAsArray();
+                $scope.getSensorData();
         }
     });
 });

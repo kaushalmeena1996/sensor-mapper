@@ -1,21 +1,26 @@
 {
   "name": "myapp-mapmysensor",
-  "version": "2.1.1",
+  "version": "2.2.1",
+  "private": true,
   "description": "A web application that displays sensors, places and locations on maps and calculates optimal route to relief centres in case of emergency.",
   "main": "index.html",
   "scripts": {
     "start": "http-server -a localhost -p 8000 ./app -o"
   },
   "keywords": [
+    "mapmysensor",
     "angularjs",
     "firebase",
     "jquery",
     "metro4",
-    "googlemaps"
+    "googlemaps",
+    "html",
+    "css",
+    "js"
   ],
   "author": "Kaushal Meena",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "http-server": "^0.11.1"
   }
 }

@@ -9,5 +9,5 @@ firebase
     });
 
 $(window).on('load', function () {
-    $(".ploader").fadeOut("fast");
+    $(".loader-1").fadeOut("fast");
 });

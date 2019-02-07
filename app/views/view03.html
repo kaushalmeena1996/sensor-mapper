@@ -1,49 +1,66 @@
-<div class="container bg-lightGray p-4" ng-if="sensorItemLoaded">
+<div class="container bg-lightGray p-4" data-ng-if="sensorItemLoaded">
     <div class="row">
         <div class="cell-md-4 mb-4">
-            <img ng-src="{{sensorItem.photo}}" onerror="this.src='assets/img/default_image.png'" alt="sensor-img" class="img-thumbnail mx-auto">
+            <img data-ng-src="{{sensorItem.photo}}" onerror="this.src='assets/img/default_image.png'" alt="sensor-img"
+                class="img-thumbnail mx-auto">
         </div>
         <div class="cell-md-6">
-            <h2 ng-bind="::sensorItem.name"></h2>
-            <h5 ng-bind="::sensorItem.typeName"></h5>
+            <h2 data-ng-bind="::sensorItem.name"></h2>
+            <h5 data-ng-bind="::sensorItem.type.name"></h5>
             <div class="mt-2">
-                <i class="fas fa-map-marker-alt"></i>
-                <span ng-bind="sensorItem.address"></span>
+                <span class="mif-location"></span>
+                <span data-ng-bind="sensorItem.address"></span>
             </div>
-            <div class="mt-2">
-                <strong>Status :</strong>
-                <span ng-bind="sensorItem.status"></span>
-            </div>
-            <div class="display3 mt-2">
-                <span ng-bind="sensorItem.value"></span>
-                <span ng-bind="sensorItem.unit"></span>
+            <div class="row flex-justify-center my-2">
+                <div class="cell-md-3 text-center">
+                    <img data-ng-src="{{sensorItem.icon}}">
+                </div>
+                <div class="cell-md-1 text-center d-none d-block-md">
+                    <span class="h1">|</span>
+                </div>
+                <div class="cell-5 cell-md-4 text-center">
+                    <span class="h1" data-ng-bind="sensorItem.reading.value"></span>
+                    <span class="h1" data-ng-bind="sensorItem.reading.unit"></span>
+                </div>
+                <div class="cell-2 cell-md-1 text-center">
+                    <span class="h1">|</span>
+                </div>
+                <div class="cell-5 cell-md-3">
+                    <div class="text-center">
+                        <img data-ng-src="{{sensorItem.status.icon}}">
+                    </div>
+                    <div class="text-center line-height-1">
+                        <span class="text-small" data-ng-bind="sensorItem.status.name"></span>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="cell-md-2 text-center text-right-md">
-            <button type="button" class="button square secondary outline large" ng-click="openSensorChart()">
+            <button type="button" class="button square secondary outline large" title="Display sensor chart."
+                data-ng-click="openSensorChart()">
                 <span class="mif-chart-dots mif-2x"></span>
             </button>
         </div>
     </div>
-    <div class="mt-2" ng-if="::sensorItem.description">
-        <h3>Description</h3>
-        <p ng-bind="sensorItem.description"></p>
+    <div class="mt-2" data-ng-if="::sensorItem.description">
+        <h4>Description</h4>
+        <p data-ng-bind="sensorItem.description"></p>
     </div>
     <div class="mt-2">
         <strong>Model :</strong>
-        <span ng-bind="::sensorItem.model"></span>
+        <span data-ng-bind="::sensorItem.model"></span>
     </div>
     <div class="mt-2">
         <strong>Manufacturer :</strong>
-        <span ng-bind="::sensorItem.manufacturer"></span>
+        <span data-ng-bind="::sensorItem.manufacturer"></span>
     </div>
     <div class="mt-2">
         <strong>Modified :</strong>
-        <span ng-bind="::sensorItem.modified | date:'medium'"></span>
+        <span data-ng-bind="::sensorItem.modified | date:'medium'"></span>
     </div>
     <div class="mt-2">
         <strong>Created :</strong>
-        <span ng-bind="::sensorItem.created | date:'medium'"></span>
+        <span data-ng-bind="::sensorItem.created | date:'medium'"></span>
     </div>
 </div>
 <div id="chartBox" class="info-box" data-role="infobox" data-width="800">

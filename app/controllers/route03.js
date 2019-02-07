@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 
-app.controller('RouteResultCtrl', function ($scope, $location, PLOT_CODES, RouteService) {
+app.controller('RouteResultController', function ($scope, $location, PLOT_CODES, RouteService) {
     $scope.customRouteData = [];
 
     $scope.getCustomRouteData = function () {
@@ -8,7 +8,7 @@ app.controller('RouteResultCtrl', function ($scope, $location, PLOT_CODES, Route
     };
 
     $scope.plotRoute = function () {
-        $location.url('/map?action_code=' + PLOT_CODES.route);
+        $location.url('/map?plot_code=' + PLOT_CODES.route);
     };
 
     $scope.$on('$viewContentLoaded', function () {
@@ -21,8 +21,9 @@ app.controller('RouteResultCtrl', function ($scope, $location, PLOT_CODES, Route
                 Metro.infobox.create('<h5>Error</h5><span>Please select a sensor first.</span>', 'warning');
                 $location.url('/route/step-2');
                 break;
-            default:
+            case 3:
                 $scope.getCustomRouteData();
+                break;
         }
     });
 });

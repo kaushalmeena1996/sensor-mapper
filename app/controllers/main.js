@@ -1,9 +1,9 @@
 var app = angular.module('sensorApp');
 
-app.controller('MainCtrl', function ($scope, $location, PAGE_DATA, AUTH_EVENTS, STATUS_CODES, AuthService) {
+app.controller('MainController', function ($scope, $location, PAGE_DATA, AUTH_EVENTS, STATUS_CODES, AuthService) {
     $scope.pageLoading = false;
 
-    $scope.pages = PAGE_DATA;
+    $scope.pageData = PAGE_DATA;
 
     $scope.showLoadingOverlay = function () {
         $scope.pageLoading = true;
@@ -22,7 +22,7 @@ app.controller('MainCtrl', function ($scope, $location, PAGE_DATA, AUTH_EVENTS, 
             });
 
             switch (data.statusCode) {
-                case STATUS_CODES.signInSuccess:
+                case STATUS_CODES.signInSuccessful:
                     Metro.toast.create("Successfully logged in.", null, 5000, "bg-green fg-white");
                     $scope.safeApply(function () {
                         $location.url('/');
@@ -44,7 +44,7 @@ app.controller('MainCtrl', function ($scope, $location, PAGE_DATA, AUTH_EVENTS, 
             });
 
             switch (data.statusCode) {
-                case STATUS_CODES.signOutSuccess:
+                case STATUS_CODES.signOutSuccessful:
                     Metro.toast.create("Successfully logged out.", null, 5000, "bg-green fg-white");
                     $scope.safeApply(function () {
                         $location.url('/login');

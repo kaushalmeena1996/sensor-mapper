@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 
-app.controller('ViewCentreCtrl', function ($scope, $location, STATUS_CODES, SERVICE_EVENTS, DataService) {
+app.controller('ViewCentreController', function ($scope, $location, STATUS_CODES, SERVICE_EVENTS, DataService) {
     $scope.centreItem = {};
     $scope.centreItemLoaded = false;
 
@@ -9,17 +9,17 @@ app.controller('ViewCentreCtrl', function ($scope, $location, STATUS_CODES, SERV
     $scope.getCentreItem = function () {
         $scope.$parent.showLoadingOverlay();
 
-        DataService.subscribeNodeData($scope, SERVICE_EVENTS.dataLoad, function (event, data) {
+        DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeData, function (event, data) {
             switch (data.statusCode) {
-                case STATUS_CODES.dataLoadSuccess:
+                case STATUS_CODES.dataLoadSuccessful:
                     $scope.$parent.safeApply(function () {
                         $scope.centreItem = DataService.getNodeItem($scope.centreId);
                         $scope.centreItemLoaded = true;
                         $scope.$parent.hideLoadingOverlay();
                     });
                     break;
-                case STATUS_CODES.dataUpdateSuccess:
-                    if (data.nodeItem.id == $scope.centreId) {
+                case STATUS_CODES.dataUpdateSuccessful:
+                    if ($scope.centreId == data.nodeItem.id) {
                         $scope.$parent.safeApply(function () {
                             $scope.centreItem = data.nodeItem;
                         });

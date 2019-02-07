@@ -1,10 +1,9 @@
 var app = angular.module('sensorApp');
 
-app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, CATEGORY_TYPES, CENTRE_TYPES, LOCATION_TYPES, SENSOR_TYPES, STATUS_TYPES, STATUS_CODES, PLOT_CODES, SERVICE_EVENTS, PagerService, DataService) {
-    $scope.nodeData = [];
+app.controller('SearchController', function ($scope, $location, $filter, MAP_CATEGORIES, CATEGORY_TYPES, CENTRE_TYPES, LOCATION_TYPES, SENSOR_TYPES, CENTRE_STATUS_TYPES, LOCATION_STATUS_TYPES, SENSOR_STATUS_TYPES, STATUS_CODES, PLOT_CODES, SERVICE_EVENTS, PagerService, DataService) {
     $scope.tableData = [];
 
-    $scope.search = '';
+    $scope.query = '';
 
     $scope.filter1 = '*';
     $scope.filter2 = '*';
@@ -15,7 +14,9 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
     $scope.centreTypes = CENTRE_TYPES;
     $scope.locationTypes = LOCATION_TYPES;
     $scope.sensorTypes = SENSOR_TYPES;
-    $scope.statusTypes = STATUS_TYPES;
+    $scope.centreStatusTypes = CENTRE_STATUS_TYPES;
+    $scope.locationStatusTypes = LOCATION_STATUS_TYPES;
+    $scope.sensorStatusTypes = SENSOR_STATUS_TYPES;
 
     $scope.pager = {
         totalItems: 1,
@@ -29,23 +30,29 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
         pages: []
     };
 
-    $scope.getNodeDataAsArray = function () {
+    $scope.getNodeData = function () {
         $scope.$parent.showLoadingOverlay();
 
         DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeData, function (event, data) {
             switch (data.statusCode) {
-                case STATUS_CODES.dataLoadSuccess:
+                case STATUS_CODES.dataLoadSuccessful:
                     $scope.$parent.safeApply(function () {
-                        $scope.nodeData = DataService.getNodeDataAsArray();
                         $scope.changePage(1);
                         $scope.$parent.hideLoadingOverlay();
                     });
                     break;
-                case STATUS_CODES.dataUpdateSuccess:
-                    $scope.$parent.safeApply(function () {
-                        $scope.nodeData = DataService.getNodeDataAsArray();
-                        $scope.changePage(1);
-                    });
+                case STATUS_CODES.dataUpdateSuccessful:
+                    var index = $scope.tableData.findIndex(
+                        function (tableItem) {
+                            return tableItem.id == data.nodeItem.id;
+                        }
+                    );
+
+                    if (index > -1) {
+                        $scope.$parent.safeApply(function () {
+                            $scope.tableData[index] = data.nodeItem;
+                        });
+                    }
                     break;
                 case STATUS_CODES.dataLoadFailed:
                     $scope.$parent.safeApply(function () {
@@ -61,29 +68,29 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
     };
 
     $scope.changePage = function (page) {
-        var nodeData = $scope.nodeData;
+        var nodeData = DataService.getNodeData();
 
-        if ($scope.search) {
+        if ($scope.query) {
             nodeData = $filter('filter')(nodeData, {
-                'name': $scope.search
+                name: $scope.query
             });
         }
 
         if ($scope.filter1 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                'category': $scope.filter1
+                category: $scope.filter1
             }, true);
         }
 
         if ($scope.filter2 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                'type': $scope.filter2
+                type: { name: $scope.filter2 }
             }, true);
         }
 
-        if ($scope.filter1 == MAP_CATEGORIES.sensor && $scope.filter3 !== '*') {
+        if ($scope.filter3 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                'status': $scope.filter3
+                status: { name: $scope.filter3 }
             }, true);
         }
 
@@ -108,7 +115,7 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
     };
 
     $scope.plotNodeItem = function (id) {
-        $location.url('/map?action_code=' + PLOT_CODES.nodeItem + '&node_id=' + id);
+        $location.url('/map?plot_code=' + PLOT_CODES.nodeItem + '&node_id=' + id);
     };
 
     $scope.showNodeItem = function (id, category) {
@@ -122,6 +129,6 @@ app.controller('SearchCtrl', function ($scope, $location, $filter, MAP_CATEGORIE
     };
 
     $scope.$on('$viewContentLoaded', function () {
-        $scope.getNodeDataAsArray();
+        $scope.getNodeData();
     });
 });

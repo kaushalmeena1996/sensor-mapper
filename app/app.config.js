@@ -5,7 +5,7 @@ app.config(['$compileProvider', function ($compileProvider) {
 }]);
 
 app.constant('PAGE_DATA', {
-    home: {
+    pd001: {
         title: "Home",
         masterPage: true,
         data: {
@@ -16,7 +16,7 @@ app.constant('PAGE_DATA', {
             }
         }
     },
-    map: {
+    pd002: {
         title: "Map",
         masterPage: true,
         data: {
@@ -27,7 +27,7 @@ app.constant('PAGE_DATA', {
             }
         }
     },
-    search: {
+    pd003: {
         title: "Search",
         masterPage: true,
         data: {
@@ -38,7 +38,7 @@ app.constant('PAGE_DATA', {
             }
         }
     },
-    route: {
+    pd004: {
         title: "Route",
         masterPage: true,
         data: {
@@ -49,7 +49,7 @@ app.constant('PAGE_DATA', {
             }
         }
     },
-    view: {
+    pd005: {
         title: "View",
         masterPage: true,
         data: {
@@ -60,7 +60,7 @@ app.constant('PAGE_DATA', {
             }
         }
     },
-    about: {
+    pd006: {
         title: "About",
         masterPage: true,
         data: {
@@ -71,7 +71,7 @@ app.constant('PAGE_DATA', {
             }
         }
     },
-    login: {
+    pd007: {
         title: "Login",
         masterPage: false,
         data: {
@@ -85,45 +85,45 @@ app.constant('PAGE_DATA', {
 });
 
 app.constant('CHARMS_BAR_DATA', {
-    sd000: {
+    sd001: {
         title: "Centres",
         mode: 0,
         filter1: "Centre"
     },
-    sd001: {
+    sd002: {
         title: "Location",
         mode: 0,
         filter1: "Location"
     },
-    sd002: {
+    sd003: {
         title: "Normal Sensors",
         mode: 0,
         filter1: "Sensor",
         filter2: "Normal"
     },
-    sd003: {
+    sd004: {
         title: "Failed Sensors",
         mode: 0,
         filter1: "Sensor",
         filter2: "Failure"
     },
-    sd004: {
+    sd005: {
         title: "Abnormal Sensors",
         mode: 0,
         filter1: "Sensor",
         filter2: "Abnormal"
     },
-    sd005: {
-        title: "Emergency Routes",
-        mode: 3
-    },
     sd006: {
-        title: "Custom Routes",
-        mode: 4
+        title: "Emergency Routes",
+        mode: 2
     },
     sd007: {
+        title: "Custom Routes",
+        mode: 3
+    },
+    sd008: {
         title: "Information",
-        mode: 2
+        mode: 1
     }
 });
 
@@ -140,19 +140,19 @@ app.constant('AUTH_EVENTS', {
 
 app.constant('CHARMS_BAR_MODES', {
     markerList: 0,
-    markerInformation: 2,
-    emergencyRouteList: 3,
-    customRouteList: 4
+    markerInformation: 1,
+    emergencyRouteList: 2,
+    customRouteList: 3
 });
 
 app.constant('STATUS_CODES', {
-    dataLoadSuccess: 0,
+    dataLoadSuccessful: 0,
     dataLoadFailed: 1,
-    dataUpdateSuccess: 2,
+    dataUpdateSuccessful: 2,
     dataUpdateFailed: 3,
-    signInSuccess: 4,
+    signInSuccessful: 4,
     signInFailed: 5,
-    signOutSuccess: 6,
+    signOutSuccessful: 6,
     signOutFailed: 7
 });
 
@@ -174,135 +174,350 @@ app.constant('CATEGORY_TYPES', [
 ]);
 
 app.constant('MAP_CENTRES', {
-    ct000: {
-        name: "Centre",
-        icon: "assets/img/map/centres/centre.png"
-    },
     ct001: {
-        name: "Fire Station",
-        icon: "assets/img/map/centres/fire-station.png"
+        name: "Centre",
+        icon: {
+            cst001: "assets/img/map/centres/open-centre.png",
+            cst002: "assets/img/map/centres/busy-centre.png",
+            cst003: "assets/img/map/centres/closed-centre.png",
+        }
     },
     ct002: {
-        name: "Police Station",
-        icon: "assets/img/map/centres/police-station.png"
+        name: "Fire Station",
+        icon: {
+            cst001: "assets/img/map/centres/open-fire-station.png",
+            cst002: "assets/img/map/centres/busy-fire-station.png",
+            cst003: "assets/img/map/centres/closed-fire-station.png",
+        }
     },
     ct003: {
-        name: "Hospital",
-        icon: "assets/img/map/centres/hospital.png"
+        name: "Police Station",
+        icon: {
+            cst001: "assets/img/map/centres/open-police-station.png",
+            cst002: "assets/img/map/centres/busy-police-station.png",
+            cst003: "assets/img/map/centres/closed-police-station.png",
+        }
     },
-    ct00x: {
-        name: "Custom Centre",
-        icon: "assets/img/map/centres/custom-centre.png"
+    ct004: {
+        name: "Hospital",
+        icon: {
+            cst001: "assets/img/map/centres/open-hospital.png",
+            cst002: "assets/img/map/centres/busy-hospital.png",
+            cst003: "assets/img/map/centres/closed-hospital.png",
+        }
+    }
+});
+
+app.constant('CUSTOM_CENTRE', {
+    name: "Custom Centre",
+    icon: {
+        cst001: "assets/img/map/centres/open-custom-centre.png",
+        cst002: "assets/img/map/centres/busy-custom-centre.png",
+        cst003: "assets/img/map/centres/closed-custom-centre.png",
     }
 });
 
 app.constant('CENTRE_TYPES', [
     "Fire Station",
+    "Police Station",
     "Hospital"
 ]);
 
-app.constant('MAP_LOCATIONS', {
-    lt000: {
-        name: "Location",
-        icon: "assets/img/map/locations/location.png",
+app.constant('CENTRE_STATUSES', {
+    cst001: {
+        name: "Open",
+        icon: "assets/img/map/centre-statuses/open.png"
     },
+    cst002: {
+        name: "Busy",
+        icon: "assets/img/map/centre-statuses/busy.png"
+    },
+    cst003: {
+        name: "Closed",
+        icon: "assets/img/map/centre-statuses/closed.png"
+    }
+});
+
+app.constant('CENTRE_STATUS_TYPES', [
+    "Open",
+    "Busy",
+    "Closed"
+]);
+
+
+app.constant('MAP_LOCATIONS', {
     lt001: {
-        name: "City",
-        icon: "assets/img/map/locations/city.png",
+        name: "Location",
+        icon: {
+            lst001: "assets/img/map/locations/normal-location.png",
+            lst002: "assets/img/map/locations/moderate-location.png",
+            lst003: "assets/img/map/locations/severe-location.png"
+        }
     },
     lt002: {
-        name: "Zone",
-        icon: "assets/img/map/locations/zone.png",
+        name: "City",
+        icon: {
+            lst001: "assets/img/map/locations/normal-city.png",
+            lst002: "assets/img/map/locations/moderate-city.png",
+            lst003: "assets/img/map/locations/severe-city.png"
+        }
     },
     lt003: {
-        name: "Cluster",
-        icon: "assets/img/map/locations/cluster.png",
+        name: "Zone",
+        icon: {
+            lst001: "assets/img/map/locations/normal-zone.png",
+            lst002: "assets/img/map/locations/moderate-zone.png",
+            lst003: "assets/img/map/locations/severe-zone.png"
+        }
     },
     lt004: {
-        name: "College",
-        icon: "assets/img/map/locations/college.png",
+        name: "Cluster",
+        icon: {
+            lst001: "assets/img/map/locations/normal-cluster.png",
+            lst002: "assets/img/map/locations/moderate-cluster.png",
+            lst003: "assets/img/map/locations/severe-cluster.png"
+        }
     },
     lt005: {
-        name: "School",
-        icon: "assets/img/map/locations/school.png",
+        name: "College",
+        icon: {
+            lst001: "assets/img/map/locations/normal-college.png",
+            lst002: "assets/img/map/locations/moderate-college.png",
+            lst003: "assets/img/map/locations/severe-college.png"
+        }
     },
     lt006: {
-        name: "Cinema",
-        icon: "assets/img/map/locations/cinema.png",
+        name: "School",
+        icon: {
+            lst001: "assets/img/map/locations/normal-school.png",
+            lst002: "assets/img/map/locations/moderate-school.png",
+            lst003: "assets/img/map/locations/severe-school.png"
+        }
     },
+    lt007: {
+        name: "Theater",
+        icon: {
+            lst001: "assets/img/map/locations/normal-theatre.png",
+            lst002: "assets/img/map/locations/moderate-theatre.png",
+            lst003: "assets/img/map/locations/severe-theatre.png"
+        }
+    },
+    lt007: {
+        name: "Bank",
+        icon: {
+            lst001: "assets/img/map/locations/normal-bank.png",
+            lst002: "assets/img/map/locations/moderate-bank.png",
+            lst003: "assets/img/map/locations/severe-cinema.png"
+        }
+    },
+    lt008: {
+        name: "Hotel",
+        icon: {
+            lst001: "assets/img/map/locations/normal-hotel.png",
+            lst002: "assets/img/map/locations/moderate-hotel.png",
+            lst003: "assets/img/map/locations/severe-Hotel.png"
+        }
+    },
+    lt009: {
+        name: "Restaurant",
+        icon: {
+            lst001: "assets/img/map/locations/normal-restaurant.png",
+            lst002: "assets/img/map/locations/moderate-restaurant.png",
+            lst003: "assets/img/map/locations/severe-restaurant.png"
+        }
+    },
+    lt010: {
+        name: "Store",
+        icon: {
+            lst001: "assets/img/map/locations/normal-store.png",
+            lst002: "assets/img/map/locations/moderate-store.png",
+            lst003: "assets/img/map/locations/severe-store.png"
+        }
+    }
 });
 
 app.constant('LOCATION_TYPES', [
-    "Location",
-    "Cinema",
+    "City",
+    "Zone",
+    "Cluster",
     "College",
-    "School"
+    "School",
+    "Theatre",
+    "Bank",
+    "Hotel",
+    "Restaurant",
+    "Store"
+]);
+
+app.constant('DISASTER_TYPES', {
+    dt001: {
+        name: "Fire",
+        haveLevels: true,
+        icon: {
+            lst002: "assets/img/map/location-statuses/moderate-fire.png",
+            lst003: "assets/img/map/location-statuses/severe-fire.png",
+        }
+    },
+    dt002: {
+        name: "Flood",
+        haveLevels: true,
+        icon: {
+            lst002: "assets/img/map/location-statuses/moderate-flood.png",
+            lst003: "assets/img/map/location-statuses/severe-flood.png",
+        }
+    },
+    dt003: {
+        name: "Cyclone",
+        haveLevels: true,
+        icon: {
+            lst002: "assets/img/map/location-statuses/moderate-cyclone.png",
+            lst003: "assets/img/map/location-statuses/severe-cyclone.png",
+        }
+    },
+    dt004: {
+        name: "Earthquake",
+        haveLevels: true,
+        icon: {
+            lst002: "assets/img/map/location-statuses/moderate-earthquake.png",
+            lst003: "assets/img/map/location-statuses/severe-earthquake.png",
+        }
+    },
+    dt005: {
+        name: "Burglary",
+        haveLevels: false,
+        icon: "assets/img/map/location-statuses/burglary.png"
+    },
+    dt006: {
+        name: "Robbery",
+        haveLevels: false,
+        icon: "assets/img/map/location-statuses/robbery.png"
+    }
+});
+
+app.constant('LOCATION_STATUSES', {
+    lst001: {
+        name: "Normal",
+        icon: "assets/img/map/location-statuses/normal.png"
+    },
+    lst002: {
+        name: "Moderate"
+    },
+    lst003: {
+        name: "Severe"
+    }
+});
+
+app.constant('LOCATION_STATUS_TYPES', [
+    "Normal",
+    "Moderate",
+    "Severe"
 ]);
 
 app.constant('MAP_SENSORS', {
-    st000: {
+    st001: {
         name: "Sensor",
         icon: {
-            normal: "assets/img/map/sensors/sensor-normal.png",
-            failure: "assets/img/map/sensors/sensor-failure.png",
-            abnormal: "assets/img/map/sensors/sensor-abnormal.png"
-        }
-    },
-    st001: {
-        name: "Thermometer",
-        icon: {
-            normal: "assets/img/map/sensors/thermometer-normal.png",
-            failure: "assets/img/map/sensors/thermometer-failure.png",
-            abnormal: "assets/img/map/sensors/thermometer-abnormal.png"
+            sst001: "assets/img/map/sensors/normal-sensor.png",
+            sst002: "assets/img/map/sensors/moderate-sensor.png",
+            sst003: "assets/img/map/sensors/severe-sensor.png"
         }
     },
     st002: {
-        name: "Hygrometer",
+        name: "Thermometer",
         icon: {
-            normal: "assets/img/map/sensors/hygrometer-normal.png",
-            failure: "assets/img/map/sensors/hygrometer-failure.png",
-            abnormal: "assets/img/map/sensors/hygrometer-abnormal.png"
+            sst001: "assets/img/map/sensors/normal-thermometer.png",
+            sst002: "assets/img/map/sensors/moderate-thermometer.png",
+            sst003: "assets/img/map/sensors/severe-thermometer.png"
         }
     },
     st003: {
-        name: "Udometer",
+        name: "Hygrometer",
         icon: {
-            normal: "assets/img/map/sensors/udometer-normal.png",
-            failure: "assets/img/map/sensors/udometer-failure.png",
-            abnormal: "assets/img/map/sensors/udometer-abnormal.png"
+            sst001: "assets/img/map/sensors/normal-hygrometer.png",
+            sst002: "assets/img/map/sensors/moderate-hygrometer.png",
+            sst003: "assets/img/map/sensors/severe-hygrometer.png"
         }
     },
     st004: {
+        name: "Udometer",
+        icon: {
+            sst001: "assets/img/map/sensors/normal-udometer.png",
+            sst002: "assets/img/map/sensors/moderate-udometer.png",
+            sst003: "assets/img/map/sensors/severe-udometer.png"
+        }
+    },
+    st005: {
         name: "Anemometer",
         icon: {
-            normal: "assets/img/map/sensors/anemometer-normal.png",
-            failure: "assets/img/map/sensors/anemometer-failure.png",
-            abnormal: "assets/img/map/sensors/anemometer-abnormal.png"
+            sst001: "assets/img/map/sensors/normal-anemometer.png",
+            sst002: "assets/img/map/sensors/moderate-anemometer.png",
+            sst003: "assets/img/map/sensors/severe-anemometer.png"
+        }
+    },
+    st006: {
+        name: "Gas-Meter",
+        icon: {
+            sst001: "assets/img/map/sensors/normal-gas-meter.png",
+            sst002: "assets/img/map/sensors/moderate-gas-meter.png",
+            sst003: "assets/img/map/sensors/severe-gas-meter.png"
+        }
+    },
+    st007: {
+        name: "Motion-Detector",
+        icon: {
+            sst001: "assets/img/map/sensors/normal-motion-detector.png",
+            sst004: "assets/img/map/sensors/triggered-motion-detector.png"
+        }
+    },
+    st008: {
+        name: "Alarm",
+        icon: {
+            sst001: "assets/img/map/sensors/normal-alarm.png",
+            sst004: "assets/img/map/sensors/triggered-alarm.png"
         }
     }
 });
 
 app.constant('SENSOR_TYPES', [
     "Thermometer",
-    "Seismometer",
-    "Pluviometer",
+    "Hygrometer",
+    "Udometer",
     "Anemometer",
-    "Mobile"
+    "Gas-Meter",
+    "Motion-Detector",
+    "Alarm"
 ]);
 
 app.constant('SENSOR_STATUSES', {
-    normal: "Normal",
-    failure: "Failure",
-    abnormal: "Abnormal"
+    sst001: {
+        name: "Normal",
+        icon: "assets/img/map/sensor-statuses/normal.png"
+    },
+    sst002: {
+        name: "Moderate",
+        icon: "assets/img/map/sensor-statuses/moderate.png"
+    },
+    sst003: {
+        name: "Severe",
+        icon: "assets/img/map/sensor-statuses/severe.png"
+    },
+    sst004: {
+        name: "Triggered",
+        icon: "assets/img/map/sensor-statuses/triggered.png"
+    }
 });
 
-app.constant('STATUS_TYPES', [
+app.constant('SENSOR_STATUS_TYPES', [
     "Normal",
-    "Failure",
-    "Abnormal"
+    "Moderate",
+    "Severe",
+    "Triggered"
 ]);
 
 app.constant('MAP_ROUTES', {
     emergency: "Emergency Route",
+    hospital: "Hospital Route",
     custom: "Custom Route"
 });
+
+app.constant('DEFAULT_PHOTO_PATH', 'assets/img/default_image.png');

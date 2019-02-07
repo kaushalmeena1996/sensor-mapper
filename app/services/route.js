@@ -32,8 +32,8 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
     };
 
     routeService.getEmergencyRouteData = function () {
-        var centreData = DataService.getCentreDataAsArray(),
-            abnormalSensorData = DataService.getAbnormalSensorDataAsArray(),
+        var centreData = DataService.getCentreData(),
+            abnormalSensorData = DataService.getAbnormalSensorData(),
             selectedCentreData;
 
         if (abnormalSensorData) {
@@ -79,10 +79,10 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
                 for (j = 0; j < centreData.length; j++) {
                     if (selectedCentreIds.includes(centreData[j].id) == false) {
                         distance = computeDistance(
-                            sensorData[i].latitude,
-                            sensorData[i].longitude,
-                            centreData[j].latitude,
-                            centreData[j].longitude,
+                            sensorData[i].coordinates.lat,
+                            sensorData[i].coordinates.lng,
+                            centreData[j].coordinates.lat,
+                            centreData[j].coordinates.lng,
                         );
 
                         rating = centreData[j].rating;
@@ -154,34 +154,34 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
             for (i = 0; i < centreData.length; i++) {
                 for (j = 0; j < sensorData.length; j++) {
                     if (visitedSensors.includes(sensorData[j].id) == false) {
-                        if (centreData[i].typeName == MAP_CENTRES.ct001.name && sensorData[j].typeName != MAP_SENSORS.st001.name) {
+                        if (centreData[i].type.name == MAP_CENTRES.ct004.name && sensorData[j].type.name != MAP_SENSORS.st002.name) {
                             continue;
                         }
 
                         if (routeData[i].routeInfo.previousSensorIndex == -1) {
                             distance = computeDistance(
-                                centreData[i].latitude,
-                                centreData[i].longitude,
-                                sensorData[j].latitude,
-                                sensorData[j].longitude
+                                centreData[i].coordinates.lat,
+                                centreData[i].coordinates.lng,
+                                sensorData[j].coordinates.lat,
+                                sensorData[j].coordinates.lng
                             );
                         } else {
                             distance = computeDistance(
-                                sensorData[routeData[i].routeInfo.previousSensorIndex].latitude,
-                                sensorData[routeData[i].routeInfo.previousSensorIndex].longitude,
-                                sensorData[j].latitude,
-                                sensorData[j].longitude,
+                                sensorData[routeData[i].routeInfo.previousSensorIndex].coordinates.lat,
+                                sensorData[routeData[i].routeInfo.previousSensorIndex].coordinates.lng,
+                                sensorData[j].coordinates.lat,
+                                sensorData[j].coordinates.lng,
                             );
                         }
 
                         switch (sensorData[j].status) {
-                            case SENSOR_STATUSES.normal:
+                            case SENSOR_STATUSES.sst001.name:
                                 priority = 1;
                                 break;
-                            case SENSOR_STATUSES.failure:
+                            case SENSOR_STATUSES.sst002.name:
                                 priority = 5;
                                 break;
-                            case SENSOR_STATUSES.abnormal:
+                            case SENSOR_STATUSES.sst003.name:
                                 priority = 10;
                                 break;
                             default:

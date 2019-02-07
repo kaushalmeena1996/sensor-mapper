@@ -2,31 +2,45 @@ var app = angular.module('sensorApp');
 var map,
     markerObject = null;
 
-app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATEGORIES, CENTRE_TYPES, STATUS_CODES, SERVICE_EVENTS, PagerService, RouteService, DataService) {
-    $scope.centreData = [];
+app.controller('RouteCentreController', function ($scope, $location, $filter, MAP_CATEGORIES, CUSTOM_CENTRE, CENTRE_TYPES, CENTRE_STATUSES, CENTRE_STATUS_TYPES, STATUS_CODES, SERVICE_EVENTS, DEFAULT_PHOTO_PATH, PagerService, RouteService, DataService) {
     $scope.tableData = [];
 
     $scope.selectedCentres = [];
 
     $scope.centreTypes = CENTRE_TYPES;
+    $scope.centreStatusTypes = CENTRE_STATUS_TYPES;
 
     $scope.visibleDivision1 = false;
     $scope.visibleDivision2 = false;
 
-    $scope.search = '';
+    $scope.query = '';
 
-    $scope.filter = '*';
+    $scope.filter1 = '*';
+    $scope.filter2 = '*';
 
     $scope.customCentre = {
         id: '',
-        category: 'Centre',
+        parentId: 'l001',
+        category: MAP_CATEGORIES.centre,
         name: '',
-        type: 'Custom Centre',
-        status: 'Available',
-        icon: 'assets/img/map/centres/custom-centre.png',
+        address: '',
+        icon: CUSTOM_CENTRE.icon.cst001,
+        type: {
+            id: 'ctxxx',
+            name: CUSTOM_CENTRE.name
+        },
+        status: CENTRE_STATUSES.cst001,
+        photo: DEFAULT_PHOTO_PATH,
+        description: '',
         rating: 1.0,
-        latitude: null,
-        longitude: null
+        leafNode: true,
+        display: true,
+        zoom: 20,
+        coordinates: {
+            lat: null,
+            lng: null,
+            dynamic: false
+        }
     };
 
     $scope.pager = {
@@ -41,24 +55,30 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
         pages: []
     };
 
-    $scope.getCentreDataAsArray = function () {
+    $scope.getCentreData = function () {
         $scope.$parent.showLoadingOverlay();
 
         DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeData, function (event, data) {
             switch (data.statusCode) {
-                case STATUS_CODES.dataLoadSuccess:
+                case STATUS_CODES.dataLoadSuccessful:
                     $scope.$parent.safeApply(function () {
-                        $scope.centreData = DataService.getCentreDataAsArray();
                         $scope.changePage(1);
                         $scope.$parent.hideLoadingOverlay();
                     });
                     break;
-                case STATUS_CODES.dataUpdateSuccess:
+                case STATUS_CODES.dataUpdateSuccessful:
                     if (data.nodeItem.category == MAP_CATEGORIES.centre) {
-                        $scope.$parent.safeApply(function () {
-                            $scope.centreData = DataService.getCentreDataAsArray();
-                            $scope.changePage(1);
-                        });
+                        var index = $scope.tableData.findIndex(
+                            function (tableItem) {
+                                return tableItem.id == data.nodeItem.id;
+                            }
+                        );
+
+                        if (index > -1) {
+                            $scope.$parent.safeApply(function () {
+                                $scope.tableData[index] = data.nodeItem;
+                            });
+                        }
                     }
                     break;
                 case STATUS_CODES.dataLoadFailed:
@@ -74,8 +94,12 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
         });
     };
 
-    $scope.setFilter = function (value) {
-        $scope.filter = value;
+    $scope.setFilter1 = function (value) {
+        $scope.filter1 = value;
+        $scope.changePage(1);
+    };
+    $scope.setFilter2 = function (value) {
+        $scope.filter2 = value;
         $scope.changePage(1);
     };
 
@@ -105,14 +129,14 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
     };
 
     $scope.selectLocation = function () {
-        if ($scope.customCentre.name && $scope.customCentre.latitude && $scope.customCentre.longitude) {
+        if ($scope.customCentre.coordinates.lat && $scope.customCentre.coordinates.lng) {
             $scope.$parent.showLoadingOverlay();
 
             $scope.customCentre.id = $scope.generateLocationId();
 
             var geocoder = new google.maps.Geocoder();
 
-            geocoder.geocode({ "location": { lat: $scope.customCentre.latitude, lng: $scope.customCentre.longitude } }, function (results, status) {
+            geocoder.geocode({ "location": { lat: $scope.customCentre.coordinates.lat, lng: $scope.customCentre.coordinates.lng } }, function (results, status) {
                 if (status === 'OK') {
                     if (results[0]) {
                         $scope.$parent.safeApply(function () {
@@ -122,15 +146,27 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
 
                             $scope.customCentre = {
                                 id: '',
-                                category: 'Centre',
+                                parentId: 'l001',
+                                category: MAP_CATEGORIES.centre,
                                 name: '',
-                                type: 'Custom Centre',
-                                status: 'Available',
-                                icon: 'assets/img/map/centres/custom-centre.png',
                                 address: '',
+                                icon: CUSTOM_CENTRE.icon.cst001,
+                                type: {
+                                    id: 'ctxxx',
+                                    name: CUSTOM_CENTRE.name
+                                },
+                                status: CENTRE_STATUSES.cst001,
+                                photo: DEFAULT_PHOTO_PATH,
+                                description: '',
                                 rating: 1.0,
-                                latitude: null,
-                                longitude: null
+                                leafNode: true,
+                                display: true,
+                                zoom: 20,
+                                coordinates: {
+                                    lat: null,
+                                    lng: null,
+                                    dynamic: false
+                                }
                             };
 
                             $scope.changePage($scope.currentPage);
@@ -147,7 +183,7 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
                 });
             });
         } else {
-            Metro.infobox.create('<h5>Info</h5><span>Please enter the name of centre and then select a location by right clicking on map.</span>', 'default');
+            Metro.infobox.create('<h5>Info</h5><span>Please select a location by right clicking on map.</span>', 'default');
         }
     };
 
@@ -168,26 +204,34 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
     };
 
     $scope.changePage = function (page) {
-        var selectedIds = $scope.selectedCentres.map(
-            function (e) {
-                return e.id;
-            }
-        ),
-            centreData = $scope.centreData.filter(
-                function (e) {
-                    return selectedIds.indexOf(e.id) == -1;
+        var centreData = DataService.getCentreData(),
+            selectedIds = $scope.selectedCentres.map(
+                function (centreItem) {
+                    return centreItem.id;
                 }
             );
 
-        if ($scope.search) {
+        centreData = centreData.filter(
+            function (centreItem) {
+                return selectedIds.indexOf(centreItem.id) == -1;
+            }
+        );
+
+        if ($scope.query) {
             centreData = $filter('filter')(centreData, {
-                'name': $scope.search
+                name: $scope.query
             });
         }
 
-        if ($scope.filter !== '*') {
+        if ($scope.filter1 !== '*') {
             centreData = $filter('filter')(centreData, {
-                'type': $scope.filter
+                type: { name: $scope.filter1 }
+            }, true);
+        }
+
+        if ($scope.filter2 !== '*') {
+            centreData = $filter('filter')(centreData, {
+                status: { name: $scope.filter2 }
             }, true);
         }
 
@@ -218,34 +262,42 @@ app.controller('RouteCentreCtrl', function ($scope, $location, $filter, MAP_CATE
         });
 
         map.addListener('rightclick', function (event) {
-            $scope.customCentre.latitude = event.latLng.lat();
-            $scope.customCentre.longitude = event.latLng.lng();
+            $scope.customCentre.coordinates.lat = event.latLng.lat();
+            $scope.customCentre.coordinates.lng = event.latLng.lng();
 
             if (markerObject) {
                 markerObject.setPosition({
-                    lat: $scope.customCentre.latitude,
-                    lng: $scope.customCentre.longitude
+                    lat: $scope.customCentre.coordinates.lat,
+                    lng: $scope.customCentre.coordinates.lng
                 });
+
+                DataService.updateNodeItem($scope.customCentre);
             } else {
                 markerObject = new google.maps.Marker({
+                    id: $scope.customCentre.id,
                     label: $scope.customCentre.name,
                     position: {
-                        lat: $scope.customCentre.latitude,
-                        lng: $scope.customCentre.longitude
+                        lat: $scope.customCentre.coordinates.lat,
+                        lng: $scope.customCentre.coordinates.lng
                     },
                     icon: {
-                        labelOrigin: new google.maps.Point(15, -5),
-                        url: $scope.customCentre.icon
+                        labelOrigin: new google.maps.Point(15, -8),
+                        url: $scope.customCentre.icon,
+                        scaledSize: new google.maps.Size(32, 32),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(0, 0)
                     },
                     map: map
                 });
+
+                DataService.appendNodeItem($scope.customCentre);
             }
 
-            $("#lat").text($scope.customCentre.latitude);
-            $("#lng").text($scope.customCentre.latitude);
+            $("#lat").text($scope.customCentre.coordinates.lat);
+            $("#lng").text($scope.customCentre.coordinates.lat);
         });
 
         $scope.selectedCentres = RouteService.getCustomCentreData();
-        $scope.getCentreDataAsArray();
+        $scope.getCentreData();
     });
 });

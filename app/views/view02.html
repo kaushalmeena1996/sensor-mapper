@@ -1,32 +1,44 @@
-<div class="container bg-lightGray p-4" ng-if="locationItemLoaded">
+<div class="container bg-lightGray p-4" data-ng-if="locationItemLoaded">
   <div class="row">
     <div class="cell-md-4 mb-4">
-      <img ng-src="{{locationItem.photo}}" onerror="this.src='assets/img/default_image.png'" alt="location-img"
+      <img data-ng-src="{{locationItem.photo}}" onerror="this.src='assets/img/default_image.png'" alt="location-img"
         class="img-thumbnail mx-auto">
     </div>
     <div class="cell-md-8">
-      <h2 ng-bind="::locationItem.name"></h2>
-      <h5 ng-bind="::locationItem.typeName"></h5>
+      <h2 data-ng-bind="::locationItem.name"></h2>
+      <h5 data-ng-bind="::locationItem.type.name"></h5>
       <div class="mt-2">
         <span class="mif-location"></span>
-        <span ng-bind="::locationItem.address"></span>
+        <span data-ng-bind="::locationItem.address"></span>
+      </div>
+      <div class="row flex-justify-center my-2">
+        <div class="cell-5 text-center">
+          <img data-ng-src="{{locationItem.icon}}">
+        </div>
+        <div class="cell-2 text-center">
+          <span class="h1">|</span>
+        </div>
+        <div class="cell-5">
+          <div class="text-center">
+            <img data-ng-src="{{locationItem.status.icon}}">
+          </div>
+          <div class="text-center line-height-1">
+            <span class="text-small" data-ng-bind="locationItem.status.name"></span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="mt-2" ng-if="::locationItem.description">
-    <h3>Description</h3>
-    <p ng-bind="locationItem.description"></p>
-  </div>
-  <div class="mt-2" ng-if="locationItem.status">
-    <strong>Status :</strong>
-    <span ng-bind="locationItem.status"></span>
+  <div class="mt-2" data-ng-if="::locationItem.description">
+    <h4>Description</h4>
+    <p data-ng-bind="locationItem.description"></p>
   </div>
   <div class="mt-2">
     <strong>Modified :</strong>
-    <span ng-bind="::locationItem.modified | date:'medium'"></span>
+    <span data-ng-bind="::locationItem.modified | date:'medium'"></span>
   </div>
   <div class="mt-2">
     <strong>Created :</strong>
-    <span ng-bind="::locationItem.created | date:'medium'"></span>
+    <span data-ng-bind="::locationItem.created | date:'medium'"></span>
   </div>
 </div>

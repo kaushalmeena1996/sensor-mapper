@@ -1,35 +1,46 @@
-<div class="container bg-lightGray p-4" ng-if="centreItemLoaded">
+<div class="container bg-lightGray p-4" data-ng-if="centreItemLoaded">
   <div class="row">
     <div class="cell-md-4 mb-4">
-      <img ng-src="{{centreItem.photo}}" onerror="this.src='assets/img/default_image.png'" alt="centre-img" class="img-thumbnail mx-auto">
+      <img data-ng-src="{{centreItem.photo}}" onerror="this.src='assets/img/default_image.png'" alt="centre-img" class="img-thumbnail mx-auto">
     </div>
     <div class="cell-md-8">
-      <h2 ng-bind="::centreItem.name"></h2>
-      <h5 ng-bind="::centreItem.typeName"></h5>
+      <h2 data-ng-bind="::centreItem.name"></h2>
+      <h5 data-ng-bind="::centreItem.type.name"></h5>
       <div class="mt-2">
-        <span class="fas fa-map-marker-alt"></span>
-        <span ng-bind="centreItem.address"></span>
+        <span class="mif-location"></span>
+        <span data-ng-bind="centreItem.address"></span>
       </div>
-      <div class="mt-2">
-        <span class="h2">
-          <span ng-bind="::centreItem.rating"></span>/5</span>
+      <div class="text-center my-2">
+        <span class="h3 {{::bgColor}} fg-white rounded px-2"><span data-ng-bind="::centreItem.rating"></span>/5.0</span>
+      </div>
+      <div class="row flex-justify-center my-2">
+        <div class="cell-5 text-center">
+          <img data-ng-src="{{centreItem.icon}}">
+        </div>
+        <div class="cell-2 text-center">
+          <span class="h1">|</span>
+        </div>
+        <div class="cell-5">
+          <div class="text-center">
+            <img data-ng-src="{{centreItem.status.icon}}">
+          </div>
+          <div class="text-center line-height-1">
+            <span class="text-small" data-ng-bind="centreItem.status.name"></span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="mt-2" ng-if="centreItem.description">
-    <h3>Description</h3>
-    <p ng-bind="::centreItem.description"></p>
-  </div>
-  <div class="mt-2" ng-if="centreItem.status">
-    <strong>Status :</strong>
-    <span ng-bind="centreItem.status"></span>
+  <div class="mt-2" data-ng-if="centreItem.description">
+    <h4>Description</h4>
+    <p data-ng-bind="::centreItem.description"></p>
   </div>
   <div class="mt-2">
     <strong>Modified :</strong>
-    <span ng-bind="::centreItem.modified | date:'medium'"></span>
+    <span data-ng-bind="::centreItem.modified | date:'medium'"></span>
   </div>
   <div class="mt-2">
     <strong>Created :</strong>
-    <span ng-bind="::centreItem.created | date:'medium'"></span>
+    <span data-ng-bind="::centreItem.created | date:'medium'"></span>
   </div>
 </div>

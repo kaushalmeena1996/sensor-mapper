@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 
-app.controller('ViewLocationCtrl', function ($scope, $location, STATUS_CODES, SERVICE_EVENTS, DataService) {
+app.controller('ViewLocationController', function ($scope, $location, STATUS_CODES, SERVICE_EVENTS, DataService) {
     $scope.locationItem = {};
     $scope.locationItemLoaded = false;
 
@@ -11,15 +11,15 @@ app.controller('ViewLocationCtrl', function ($scope, $location, STATUS_CODES, SE
 
         DataService.subscribeNodeData($scope, SERVICE_EVENTS.nodeData, function (event, data) {
             switch (data.statusCode) {
-                case STATUS_CODES.dataLoadSuccess:
+                case STATUS_CODES.dataLoadSuccessful:
                     $scope.$parent.safeApply(function () {
                         $scope.locationItem = DataService.getNodeItem($scope.locationId);
                         $scope.locationItemLoaded = true;
                         $scope.$parent.hideLoadingOverlay();
                     });
                     break;
-                case STATUS_CODES.dataUpdateSuccess:
-                    if (data.nodeItem.id == $scope.locationId) {
+                case STATUS_CODES.dataUpdateSuccessful:
+                    if ($scope.locationId == data.nodeItem.id) {
                         $scope.$parent.safeApply(function () {
                             $scope.locationItem = data.nodeItem;
                         });
