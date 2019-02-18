@@ -1,0 +1,56 @@
+<md-content class="md-padding md-margin" md-whiteframe="1" data-ng-if="centreItemLoaded">
+    <div layout="row" layout-xs="column">
+        <div flex flex-gt-xs="25">
+            <img class="img-thumbnail img-responsive" data-ng-src="{{centreItem.photo}}"
+                onerror="this.src='assets/img/default-photo.png'" alt="Item-Photo">
+        </div>
+        <div flex flex-gt-xs="75" flex-offset-gt-xs="5">
+            <div class="md-display-1">
+                <span data-ng-bind="::centreItem.name"></span>
+            </div>
+            <div class="md-title">
+                <span data-ng-bind="::centreItem.type.name"></span>
+            </div>
+            <div class="md-title">
+                <md-icon class="md-primary" data-ng-repeat="i in [1,2,3,4,5]" data-ng-if="i &lt; centreItem.rating">
+                    start_outline
+                </md-icon>
+            </div>
+            <div class="margin-top-15">
+                <md-icon>place</md-icon>
+                <span data-ng-bind="centreItem.address"></span>
+            </div>
+            <div class="text-align-center margin-top-15" layout="row" layout-xs="column" layout-align="center center">
+                <div flex flex-gt-xs="15">
+                    <img data-ng-src="{{centreItem.icon}}" alt="Item-Icon">
+                </div>
+                <div flex flex-gt-xs="5">
+                    <span class="md-display-2">|</span>
+                </div>
+                <div flex flex-gt-xs="15">
+                    <img data-ng-src="{{centreItem.status.icon}}" alt="Sensor-Status">
+                    <div class="md-caption">
+                        <span data-ng-bind="centreItem.status.name"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="margin-top-15" data-ng-if="centreItem.description">
+        <span class="md-title">Description</span>
+        <p data-ng-bind="::centreItem.description"></p>
+    </div>
+    <div class="margin-top-15" layout="row" layout-xs="column" layout-align="left center">
+        <div flex flex-gt-xs="25">
+            <strong>Updated :</strong>
+            <span data-ng-bind="::centreItem.updated | date:'medium'"></span>
+        </div>
+        <div flex flex-gt-xs="5">
+            <strong>|</strong>
+        </div>
+        <div flex flex-gt-xs="25">
+            <strong>Created :</strong>
+            <span data-ng-bind="::centreItem.created | date:'medium'"></span>
+        </div>
+    </div>
+</md-content>

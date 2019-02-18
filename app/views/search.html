@@ -1,167 +1,138 @@
-<div class="container">
-    <div class="row">
-        <div class="cell-md-4 order-sm-2">
-            <div class="card bg-white mx-0 mt-0 mb-4">
-                <div class="card-header bg-white">
-                    <strong>Category</strong>
+<div layout="row" layout-xs="column">
+    <div flex flex-gt-xs="25" flex-order="1" flex-order-gt-xs="2">
+        <md-card>
+            <md-card-content>
+                <div class="md-title margin-bottom-15">
+                    <span>Category</span>
                 </div>
-                <div class="card-content px-2">
-                    <div class="form-check" data-ng-repeat="type in ::categoryTypes track by $index">
-                        <input type="radio" name="filter1" data-role="radio" data-ng-attr-data-caption="{{type}}"
-                            data-ng-click="setFilter1(type)">
-                    </div>
-                    <div class="form-check text-right mt-2">
-                        <input type="radio" name="filter1" data-role="radio" data-ng-attr-data-caption="View all"
-                            data-ng-click="setFilter1('*')" checked>
-                    </div>
+                <md-radio-group ng-model="filter1" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::item.value"
+                        data-ng-repeat="item in ::categoryTypes track by $index"
+                        data-ng-attr-aria-label="{{::item.name}}">
+                        {{::item.name}}
+                    </md-radio-button>
+                </md-radio-group>
+            </md-card-content>
+        </md-card>
+        <md-card data-ng-show="filter1 == mapCategories.c001.id">
+            <md-card-content>
+                <div class="md-title margin-bottom-15">
+                    <span>Type</span>
                 </div>
+                <md-radio-group ng-model="filter2" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::item.value" data-ng-repeat="item in ::centreTypes track by $index"
+                        data-ng-attr-aria-label="{{::item.name}}">
+                        {{::item.name}}
+                    </md-radio-button>
+                </md-radio-group>
+            </md-card-content>
+        </md-card>
+        <md-card data-ng-show="filter1 == mapCategories.c002.id">
+            <md-card-content>
+                <div class="md-title margin-bottom-15">
+                    <span>Type</span>
+                </div>
+                <md-radio-group ng-model="filter2" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::item.value"
+                        data-ng-repeat="item in ::locationTypes track by $index"
+                        data-ng-attr-aria-label="{{::item.name}}">
+                        {{::item.name}}
+                    </md-radio-button>
+                </md-radio-group>
+            </md-card-content>
+        </md-card>
+        <md-card data-ng-show="filter1 == mapCategories.c003.id">
+            <md-card-content>
+                <div class="md-title margin-bottom-15">
+                    <span>Type</span>
+                </div>
+                <md-radio-group ng-model="filter2" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::item.value" data-ng-repeat="item in ::sensorTypes track by $index"
+                        data-ng-attr-aria-label="{{::item.name}}">
+                        {{::item.name}}
+                    </md-radio-button>
+                </md-radio-group>
+            </md-card-content>
+        </md-card>
+        <md-card data-ng-show="filter1 == mapCategories.c001.id">
+            <md-card-content>
+                <div class="md-title margin-bottom-15">
+                    <span>Status</span>
+                </div>
+                <md-radio-group ng-model="filter3" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::item.value"
+                        data-ng-repeat="item in ::centreStatusTypes track by $index"
+                        data-ng-attr-aria-label="{{::item.name}}">
+                        {{::item.name}}
+                    </md-radio-button>
+                </md-radio-group>
+            </md-card-content>
+        </md-card>
+        <md-card data-ng-show="filter1 == mapCategories.c002.id">
+            <md-card-content>
+                <div class="md-title margin-bottom-15">
+                    <span>Status</span>
+                </div>
+                <md-radio-group ng-model="filter3" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::item.value"
+                        data-ng-repeat="item in ::locationStatusTypes track by $index"
+                        data-ng-attr-aria-label="{{::item.name}}">
+                        {{::item.name}}
+                    </md-radio-button>
+                </md-radio-group>
+            </md-card-content>
+        </md-card>
+        <md-card data-ng-show="filter1 == mapCategories.c003.id">
+            <md-card-content>
+                <div class="md-title margin-bottom-15">
+                    <span>Status</span>
+                </div>
+                <md-radio-group ng-model="filter3" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::item.value"
+                        data-ng-repeat="item in ::sensorStatusTypes track by $index"
+                        data-ng-attr-aria-label="{{::item.name}}">
+                        {{::item.name}}
+                    </md-radio-button>
+                </md-radio-group>
+            </md-card-content>
+        </md-card>
+    </div>
+    <div flex flex-gt-xs="75" flex-order="2" flex-order-gt-xs="1">
+        <md-content class="md-padding md-margin" md-whiteframe="1">
+            <div class="padding-left-5 padding-right-5">
+                <md-input-container md-no-float class="md-icon-float md-block">
+                    <label>Search</label>
+                    <md-icon>search</md-icon>
+                    <input type="search" data-ng-model="query" data-ng-change="applyFilter()">
+                </md-input-container>
             </div>
-            <div class="card bg-white mx-0 mt-0 mb-4" data-ng-if="filter1 == categories.centre">
-                <div class="card-header">
-                    <strong>Type</strong>
-                </div>
-                <div class="card-content px-2">
-                    <div class="form-check" data-ng-repeat="type in ::centreTypes track by $index">
-                        <input type="radio" name="filter2" data-role="radio" data-ng-attr-data-caption="{{type}}"
-                            data-ng-click="setFilter2(type)">
+            <md-card class="fade-animation" data-ng-repeat="item in tableData track by $index">
+                <md-card-content layout="row" layout-xs="column">
+                    <div class="text-align-center padding-right-15">
+                        <img data-ng-src="{{item.icon}}" alt="Item-Icon">
                     </div>
-                    <div class="form-check text-right mt-2">
-                        <input type="radio" name="filter2" data-role="radio" data-ng-attr-data-caption="View all"
-                            data-ng-click="setFilter2('*')" checked>
+                    <div layout="column">
+                        <span class="md-title" data-ng-bind="item.name"></span>
+                        <span class="md-body-1" data-ng-bind="item.category.name"></span>
+                        <span class="md-caption" data-ng-bind="item.type.name"></span>
                     </div>
-                </div>
+                    <div flex md-truncate></div>
+                    <div class="text-align-center padding-left-15">
+                        <md-button class="md-icon-button md-ink-ripple"
+                            data-ng-click="showNodeItem(item.id, item.category.name)" title="Display more information."
+                            aria-label="Info-Button">
+                            <md-icon>folder</md-icon>
+                        </md-button>
+                        <md-button class="md-icon-button md-ink-ripple" data-ng-click="plotNodeItem(item.id)"
+                            title="Plot on map." aria-label="Plot-Button">
+                            <md-icon>map</md-icon>
+                        </md-button>
+                    </div>
+                </md-card-content>
+            </md-card>
+            <div class="text-align-center margin-bottom-15" data-ng-if="!tableData.length">
+                <span>No nodes to display.</span>
             </div>
-            <div class="card bg-white mx-0 mt-0 mb-4" data-ng-if="filter1 == categories.location">
-                <div class="card-header">
-                    <strong>Type</strong>
-                </div>
-                <div class="card-content px-2">
-                    <div class="form-check" data-ng-repeat="type in ::locationTypes track by $index">
-                        <input type="radio" name="filter2" data-role="radio" data-ng-attr-data-caption="{{type}}"
-                            data-ng-click="setFilter2(type)">
-                    </div>
-                    <div class="form-check text-right mt-2">
-                        <input type="radio" name="filter2" data-role="radio" data-ng-attr-data-caption="View all"
-                            data-ng-click="setFilter2('*')" checked>
-                    </div>
-                </div>
-            </div>
-            <div class="card bg-white mx-0 mt-0 mb-4" data-ng-if="filter1 == categories.sensor">
-                <div class="card-header">
-                    <strong>Type</strong>
-                </div>
-                <div class="card-content px-2">
-                    <div class="form-check" data-ng-repeat="type in ::sensorTypes track by $index">
-                        <input type="radio" name="filter2" data-role="radio" data-ng-attr-data-caption="{{type}}"
-                            data-ng-click="setFilter2(type)">
-                    </div>
-                    <div class="form-check text-right mt-2">
-                        <input type="radio" name="filter2" data-role="radio" data-ng-attr-data-caption="View all"
-                            data-ng-click="setFilter2('*')" checked>
-                    </div>
-                </div>
-            </div>
-            <div class="card bg-white mx-0 mt-0 mb-4" data-ng-if="filter1 == categories.centre">
-                <div class="card-header">
-                    <strong>Status</strong>
-                </div>
-                <div class="card-content px-2">
-                    <div class="form-check" data-ng-repeat="type in ::centreStatusTypes track by $index">
-                        <input type="radio" name="filter3" data-role="radio" data-ng-attr-data-caption="{{type}}"
-                            data-ng-click="setFilter3(type)">
-                    </div>
-                    <div class="form-check text-right mt-2">
-                        <input type="radio" name="filter3" data-role="radio" data-ng-attr-data-caption="View all"
-                            data-ng-click="setFilter3('*')" checked>
-                    </div>
-                </div>
-            </div>
-            <div class="card bg-white mx-0 mt-0 mb-4" data-ng-if="filter1 == categories.location">
-                <div class="card-header">
-                    <strong>Status</strong>
-                </div>
-                <div class="card-content px-2">
-                    <div class="form-check" data-ng-repeat="type in ::locationStatusTypes track by $index">
-                        <input type="radio" name="filter3" data-role="radio" data-ng-attr-data-caption="{{type}}"
-                            data-ng-click="setFilter3(type)">
-                    </div>
-                    <div class="form-check text-right mt-2">
-                        <input type="radio" name="filter3" data-role="radio" data-ng-attr-data-caption="View all"
-                            data-ng-click="setFilter3('*')" checked>
-                    </div>
-                </div>
-            </div>
-            <div class="card bg-white mx-0 mt-0 mb-4" data-ng-if="filter1 == categories.sensor">
-                <div class="card-header">
-                    <strong>Status</strong>
-                </div>
-                <div class="card-content px-2">
-                    <div class="form-check" data-ng-repeat="type in ::sensorStatusTypes track by $index">
-                        <input type="radio" name="filter3" data-role="radio" data-ng-attr-data-caption="{{type}}"
-                            data-ng-click="setFilter3(type)">
-                    </div>
-                    <div class="form-check text-right mt-2">
-                        <input type="radio" name="filter3" data-role="radio" data-ng-attr-data-caption="View all"
-                            data-ng-click="setFilter3('*')" checked>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="cell-md-8 order-sm-1">
-            <div class="container bg-lightGray p-4 mb-4">
-                <div class="mt-2 mb-5 mx-2">
-                    <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>"
-                        data-ng-model="query" data-ng-change="changePage(1)">
-                </div>
-                <div class="card fade-animation bg-light my-1" data-ng-repeat="item in tableData track by $index">
-                    <div class="card-content p-1">
-                        <div class="row no-gap">
-                            <div class="cell-md-1 text-center px-1">
-                                <img class="card-image py-3" data-ng-src="{{item.icon}}" alt="map-icon">
-                            </div>
-                            <div class="cell">
-                                <strong data-ng-bind="item.name"></strong>
-                                <br>
-                                <strong>
-                                    <small data-ng-bind="item.category"></small>
-                                </strong>
-                                <br>
-                                <small data-ng-bind="item.type.name"></small>
-                            </div>
-                            <div class="cell-md-2 text-right pr-0">
-                                <button type="button" class="button square secondary outline small" title="Display more information."
-                                    data-ng-click="showNodeItem(item.id, item.category)">
-                                    <span class="mif-folder-open mif-2x"></span>
-                                </button>
-                                <button type="button" class="button square secondary outline small" title="Plot on map."
-                                    data-ng-click="plotNodeItem(item.id, item.zoom)">
-                                    <span class="mif-map mif-2x"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center" data-ng-if="!tableData.length">
-                    No nodes to display.
-                </div>
-                <div class="mt-4">
-                    <ul class="pagination flex-justify-center no-gap">
-                        <li data-ng-class="{'page-item': true, 'disabled': pager.currentPage &lt;= 1}">
-                            <a class="page-link" data-ng-click="changePage(pager.currentPage - 1)">
-                                <span class="mif-chevron-left fg-black"></span>
-                            </a>
-                        </li>
-                        <li data-ng-class="{'page-item': true, 'active': pager.currentPage == page}" data-ng-repeat="page in pager.pages">
-                            <a class="page-link" data-ng-click="changePage(page)" data-ng-bind="page"></a>
-                        </li>
-                        <li data-ng-class="{'page-item': true, 'disabled': pager.currentPage &gt;= pager.totalPages}">
-                            <a class="page-link" data-ng-click="changePage(pager.currentPage + 1)">
-                                <span class="mif-chevron-right fg-black"></span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        </md-content>
     </div>
 </div>

@@ -1,290 +1,289 @@
-<div id="map1" class="map-container-1"></div>
-<div class="map-action-menu-1">
-    <ul class="t-menu horizontal compact open">
-        <li title="Menu">
-            <a href="#" class="dropdown-toggle">
-                <span class="icon mif-menu"></span>
-            </a>
-            <ul class="t-menu compact" data-role="dropdown">
-                <li title="Display home page of application.">
-                    <a href="#!/">
-                        <span class="icon mif-home"></span>
-                    </a>
-                </li>
-                <li title="Display centres, locations and sensors on map.">
-                    <a href="#!/map">
-                        <span class="icon mif-map"></span>
-                    </a>
-                </li>
-                <li title="Search centre, location or sensor by text or applying filter.">
-                    <a href="#!/search">
-                        <span class="icon mif-search"></span>
-                    </a>
-                </li>
-                <li title="Generate route between selected centres and sensors.">
-                    <a href="#!/route/step-1">
-                        <span class="icon mif-flow-branch"></span>
-                    </a>
-                </li>
-                <li title="Display information about application.">
-                    <a href="#!/about">
-                        <span class="icon mif-info"></span>
-                    </a>
-                </li>
-                <li title="Log-out from application." class="c-pointer">
-                    <a data-ng-click="signOut()">
-                        <span class="icon mif-switch"></span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</div>
-<div class="map-action-menu-2">
-    <ul class="t-menu open compact">
-        <li class="c-pointer" data-ng-click="openCharmsBar('sd001', null)" title="Display list of relief centres.">
-            <a>
-                <span class="mif-bell icon"></span>
-            </a>
-        </li>
-        <li class="c-pointer" data-ng-click="openCharmsBar('sd002', null)" title="Display list of locations.">
-            <a>
-                <span class="mif-location icon"></span>
-            </a>
-        </li>
-        <li class="c-pointer" data-ng-click="openCharmsBar('sd003', null)" title="Display list of sensors behaving normally.">
-            <a>
-                <span class="mif-wifi-connect icon"></span>
-            </a>
-        </li>
-        <li class="c-pointer" data-ng-click="openCharmsBar('sd008', 'l001')" title="Display node information.">
-            <a>
-                <span class="mif-info icon"></span>
-            </a>
-        </li>
-    </ul>
-</div>
-<div class="map-action-menu-3">
-    <ul class="t-menu open">
-        <li class="c-pointer" data-ng-click="openCharmsBar('sd004', null)" data-ng-if="moderateSensorCount" title="Display list sensors which stopped working or have technical problems.">
-            <a>
-                <span class="mif-wifi-connect fg-orange icon"></span>
-                <span class="badge bg-transparent" data-ng-bind="moderateSensorCount"></span>
-            </a>
-        </li>
-        <li class="c-pointer" data-ng-click="openCharmsBar('sd005', null)" data-ng-if="severeSensorCount" title="Display list of sensors behaving abnormally.">
-            <a>
-                <span class="mif-wifi-connect fg-red icon"></span>
-                <span class="badge bg-transparent" data-ng-bind="severeSensorCount"></span>
-            </a>
-        </li>
-        <li class="c-pointer" data-ng-click="openCharmsBar('sd006', null)" data-ng-if="emergencyRouteData.length" title="Display list of routes from relief centres to abnormal sensors.">
-            <a>
-                <span class="mif-flow-branch fg-red icon"></span>
-                <span class="badge bg-transparent" data-ng-bind="emergencyRouteData.length"></span>
-            </a>
-        </li>
-        <li class="c-pointer" data-ng-click="openCharmsBar('sd007', null)" data-ng-if="customRouteData.length" title="Display list of user defined generated routes.">
-            <a>
-                <span class="mif-flow-branch icon"></span>
-                <span class="badge bg-transparent" data-ng-bind="customRouteData.length"></span>
-            </a>
-        </li>
-    </ul>
-</div>
-<div class="bg-white fg-black border-right bd-lightGray" id="charmsBar" data-role="charms" data-position="left">
-    <div class="map-charms-bar-width">
-        <div class="row no-gap">
-            <div class="cell my-1 my-2 mx-3">
-                <strong data-ng-bind="charmBarTitle"></strong>
-            </div>
-            <div class="cell-4 my-1 text-right">
-                <button type="button" class="button flat-button" title="Close" type="button" data-ng-click="closeCharmsBar()">
-                    <span class="mif-arrow-left"></span>
-                </button>
-            </div>
+<md-sidenav class="md-sidenav-left" md-component-id="map-sidebar" md-disable-backdrop md-whiteframe="4">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <span data-ng-bind="charmBarTitle"></span>
+            <span flex md-truncate></span>
+            <md-button data-ng-click="closeSidebar()" aria-label="Close-Button" title="Closes the sidebar.">
+                <md-icon>arrow_backward</md-icon>
+            </md-button>
         </div>
-        <hr class="bg-lightGray mt-0">
-        <div class="marker-division" data-ng-show="charmBarMode == modes.markerList">
-            <div class="mt-2 mb-3 mx-2">
-                <input type="text" data-role="input" data-prepend="&lt;span class='mif-search'>&lt;/span>"
-                    data-ng-model="query" data-ng-change="applyFilter()">
+    </md-toolbar>
+    <md-content>
+        <div data-ng-show="charmBarMode == sidebarModes.markerList">
+            <div class="padding-left-5 padding-right-15">
+                <md-input-container md-no-float class="md-icon-float md-block">
+                    <label>Search</label>
+                    <md-icon>search</md-icon>
+                    <input type="search" data-ng-model="query" data-ng-change="applyFilter()">
+                </md-input-container>
             </div>
-            <div class="map-overflow-content-1">
-                <div class="card fade-animation bg-light c-pointer my-1" data-ng-click="moveMapTo(item, false)"
-                    data-ng-repeat="item in tableData track by $index">
-                    <div class="card-content p-1">
-                        <div class="row no-gap">
-                            <div class="cell-3 text-center px-1">
-                                <img class="card-image py-3" data-ng-src="{{item.icon}}" alt="map-icon">
-                            </div>
-                            <div class="cell">
-                                <strong data-ng-bind="item.name"></strong>
-                                <br>
-                                <strong>
-                                    <small data-ng-bind="item.category"></small>
-                                </strong>
-                                <br>
-                                <small data-ng-bind="item.type.name"></small>
-                            </div>
-                        </div>
+            <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item, false)"
+                data-ng-repeat="item in tableData track by $index">
+                <md-card-content layout="row" layout-xs="column">
+                    <div class="text-align-center padding-right-15">
+                        <img class="height-50" data-ng-src="{{item.icon}}" alt="Item-Icon">
                     </div>
-                </div>
-                <div class="text-center" data-ng-if="!tableData.length">
-                    <small>No results to display.</small>
-                </div>
-            </div>
-        </div>
-        <div class="map-overflow-content-1" data-ng-if="charmBarMode == modes.emergencyRouteList">
-            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" data-ng-click="moveMapTo(item.routeArray[0], false)"
-                data-ng-repeat="item in emergencyRouteData track by $index">
-                <div class="card-content p-1">
-                    <div class="row no-gap">
-                        <div class="cell-md-2 fg-red text-center px-1">
-                            <span class="mif-flow-branch mif-3x"></span>
-                        </div>
-                        <div class="cell">
-                            <strong>From :</strong>
-                            <strong data-ng-bind="item.routeInfo.origin"></strong>
-                            <br>
-                            <strong>To :</strong>
-                            <strong data-ng-bind="item.routeInfo.destination"></strong>
-                            <br>
-                            <small>
-                                <span>Nodes :</span>
-                                <span data-ng-bind="item.routeInfo.totalNodes"></span>
-                                <br>
-                                <span>Distance :</span>
-                                <span data-ng-bind="item.routeInfo.totalDistance"></span>
-                                <span>km</span>
-                                <br>
-                                <span>Score :</span>
-                                <span data-ng-bind="item.routeInfo.totalScore"></span>
-                            </small>
-                        </div>
+                    <div layout="column">
+                        <strong data-ng-bind="item.name"></strong>
+                        <span class="md-body-1" data-ng-bind="item.category.name"></span>
+                        <span class="md-caption" data-ng-bind="item.type.name"></span>
                     </div>
-                </div>
-            </div>
-            <div class="text-center" data-ng-if="!emergencyRouteData.length">
-                <small>No results to display.</small>
+                </md-card-content>
+            </md-card>
+            <div class="text-align-center margin-top-15" data-ng-if="!tableData.length">
+                <span>No results to display.</span>
             </div>
         </div>
-        <div class="map-overflow-content-1" data-ng-if="charmBarMode == modes.customRouteList">
-            <div class="card fade-animation bg-light border c-pointer bd-gray my-1" data-ng-click="moveMapTo(item.routeArray[0], flase)"
+        <div data-ng-if="charmBarMode == sidebarModes.customRouteList">
+            <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item.routeArray[0], false)"
                 data-ng-repeat="item in customRouteData track by $index">
-                <div class="card-content p-1">
-                    <div class="row no-gap">
-                        <div class="cell-md-2 text-center px-1">
-                            <span class="mif-flow-branch mif-3x"></span>
-                        </div>
-                        <div class="cell">
+                <md-card-content layout="row" layout-xs="column">
+                    <div class="text-align-center padding-right-15">
+                        <img class="height-50" data-ng-src="{{item.icon}}" alt="Item-Icon">
+                    </div>
+                    <div layout="column">
+                        <div class="text-align-left">
                             <strong>From :</strong>
-                            <strong data-ng-bind="item.routeInfo.origin"></strong>
+                            <span class="md-body-1" data-ng-bind="item.routeInfo.origin"></span>
                             <br>
                             <strong>To :</strong>
-                            <strong data-ng-bind="item.routeInfo.destination"></strong>
+                            <span class="md-body-1" data-ng-bind="item.routeInfo.destination"></span>
+                        </div>
+                        <div class="md-caption">
+                            <span>Nodes :</span>
+                            <span data-ng-bind="item.routeInfo.totalNodes"></span>
                             <br>
-                            <small>
-                                <span>Nodes :</span>
-                                <span data-ng-bind="item.routeInfo.totalNodes"></span>
-                                <br>
-                                <span>Distance :</span>
-                                <span data-ng-bind="item.routeInfo.totalDistance"></span>
-                                <span>km</span>
-                                <br>
-                                <span>Score :</span>
-                                <span data-ng-bind="item.routeInfo.totalScore"></span>
-                            </small>
+                            <span>Distance :</span>
+                            <span data-ng-bind="item.routeInfo.totalDistance"></span>
+                            <span>km</span>
+                            <br>
+                            <span>Score :</span>
+                            <span data-ng-bind="item.routeInfo.totalScore"></span>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="text-center" data-ng-if="!customRouteData.length">
-                <small>No results to display.</small>
+                </md-card-content>
+            </md-card>
+            <div class="text-align-center margin-top-15" data-ng-if="!customRouteData.length">
+                <span>No results to display.</span>
             </div>
         </div>
-        <div class="node-info-division" data-ng-if="charmBarMode == modes.markerInformation">
-            <div class="text-center mb-2">
-                <span class="h4" data-ng-bind="charmBarNodeItem.name"></span><br>
-                <strong class="small" data-ng-bind="charmBarNodeItem.category"></strong><br>
-                <small data-ng-bind="charmBarNodeItem.type.name"></small>
-            </div>
-            <div class="row flex-justify-center mb-1">
-                <div class="cell-5 text-center">
-                    <img data-ng-src="{{charmBarNodeItem.icon}}">
-                </div>
-                <div class="cell-2 text-center">
-                    <span class="h1">|</span>
-                </div>
-                <div class="cell-5">
-                    <div class="text-center">
-                        <img data-ng-src="{{charmBarNodeItem.status.icon}}">
+        <div data-ng-if="charmBarMode == sidebarModes.emergencyRouteList">
+            <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item.routeArray[0], false)"
+                data-ng-repeat="item in emergencyRouteData track by $index">
+                <md-card-content layout="row" layout-xs="column">
+                    <div class="text-align-center padding-right-15">
+                        <img class="height-50" data-ng-src="{{item.icon}}" alt="Item-Icon">
                     </div>
-                    <div class="text-center line-height-1">
-                        <span class="text-small" data-ng-bind="charmBarNodeItem.status.name"></span>
+                    <div layout="column">
+                        <div class="text-align-left">
+                            <strong>From :</strong>
+                            <span class="md-body-1" data-ng-bind="item.routeInfo.origin"></span>
+                            <br>
+                            <strong>To :</strong>
+                            <span class="md-body-1" data-ng-bind="item.routeInfo.destination"></span>
+                        </div>
+                        <div class="md-caption">
+                            <span>Nodes :</span>
+                            <span data-ng-bind="item.routeInfo.totalNodes"></span>
+                            <br>
+                            <span>Distance :</span>
+                            <span data-ng-bind="item.routeInfo.totalDistance"></span>
+                            <span>km</span>
+                            <br>
+                            <span>Score :</span>
+                            <span data-ng-bind="item.routeInfo.totalScore"></span>
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
+            <div class="text-align-center margin-top-15" data-ng-if="!emergencyRouteData.length">
+                <span>No results to display.</span>
+            </div>
+        </div>
+        <div data-ng-if="charmBarMode == sidebarModes.markerInformation">
+            <div class="text-align-center margin-top-15" layout="column">
+                <span class="md-display-1" data-ng-bind="charmBarNodeItem.name"></span>
+                <span class="md-title" data-ng-bind="charmBarNodeItem.category.name"></span>
+                <span class="md-body-1" data-ng-bind="charmBarNodeItem.type.name"></span>
+            </div>
+            <div class="text-align-center margin-top-15" layout="row" layout-align="center center">
+                <div flex>
+                    <img data-ng-src="{{charmBarNodeItem.icon}}" alt="Item-Icon">
+                </div>
+                <div class="md-display-2">
+                    <span>|</span>
+                </div>
+                <div flex>
+                    <img data-ng-src="{{charmBarNodeItem.status.icon}}" alt="Sensor-Status">
+                    <div class="md-caption">
+                        <span data-ng-bind="charmBarNodeItem.status.name"></span>
                     </div>
                 </div>
             </div>
-            <div class="row flex-justify-center no-gap mb-1">
-                <div class="cell-4 text-center" data-ng-if="charmBarNodeItem.parentId">
-                    <button class="button flat-button" title="Go up one level in hierarchy." data-ng-click="setParentNodeInfo()">
-                        <span class="mif-arrow-up mif-2x"></span>
-                    </button>
-                </div>
-                <div class="cell-4 text-center" data-ng-if="charmBarNodeItem.reading">
-                    <button class="button flat-button" title="Display sensor chart." data-ng-click="openSensorChart()">
-                        <span class="mif-chart-dots mif-2x"></span>
-                    </button>
-                </div>
-                <div class="cell-4 text-center">
-                    <button class="button flat-button" title="Display more information." data-ng-click="showNodeItem()">
-                        <span class="mif-folder-open mif-2x"></span>
-                    </button>
-                </div>
+            <div class="text-align-center margin-top-15" layout="row" layout-align="center center">
+                <md-button title="Go up one level." aria-label="Parent-Button" data-ng-click="setParentNodeInfo()"
+                    data-ng-if="charmBarNodeItem.parentId">
+                    <md-icon>arrow_backward</md-icon>
+                </md-button>
+                <md-button title="Show sensor chart." aria-label="Chart-Button" data-ng-click="showChartDialog()"
+                    data-ng-if="charmBarNodeItem.category.id == mapCategories.c003.id">
+                    <md-icon>show_chart</md-icon>
+                </md-button>
+                <md-button title="Display more information." aria-label="Info-Button" data-ng-click="showNodeItem()">
+                    <md-icon>folder</md-icon>
+                </md-button>
             </div>
-            <div class="text-center mb-2" data-ng-if="charmBarNodeItem.reading">
-                <span class="h1" data-ng-bind="charmBarNodeItem.reading.value"></span>
-                <span class="h1" data-ng-bind="charmBarNodeItem.reading.unit"></span>
+            <div class="md-display-1 text-align-center margin-top-15"
+                data-ng-if="charmBarNodeItem.category.id == mapCategories.c003.id">
+                <span data-ng-bind="charmBarNodeItem.reading.value"></span>
+                <span data-ng-bind="charmBarNodeItem.reading.unit"></span>
             </div>
-            <div class="text-center mx-1 my-2" data-ng-if="charmBarNodeItem.leafNode">
-                <span class="mif-location"></span>
+            <div class="text-align-center margin-top-15" data-ng-if="charmBarNodeItem.leafNode">
+                <md-icon>place</md-icon>
                 <span data-ng-bind="charmBarNodeItem.address"></span>
             </div>
-            <div class="node-children-division" data-ng-if="!charmBarNodeItem.leafNode">
-                <div class="pl-2">
-                    <strong class="small">Children</strong>
-                </div>
-                <div class="map-overflow-content-2">
-                    <div class="card fade-animation bg-light c-pointer my-1" data-ng-click="moveMapTo(item, true)"
-                        data-ng-repeat="item in tableData track by $index">
-                        <div class="card-content p-1">
-                            <div class="row no-gap">
-                                <div class="cell-3 text-center px-1">
-                                    <img class="card-image py-3" data-ng-src="{{item.icon}}" alt="map-icon">
-                                </div>
-                                <div class="cell">
-                                    <strong data-ng-bind="item.name"></strong>
-                                    <br>
-                                    <strong>
-                                        <small data-ng-bind="item.category"></small>
-                                    </strong>
-                                    <br>
-                                    <small data-ng-bind="item.type.name"></small>
-                                </div>
-                            </div>
+            <div data-ng-if="!charmBarNodeItem.leafNode">
+                <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item, true)"
+                    data-ng-repeat="item in tableData track by $index">
+                    <md-card-content layout="row" layout-xs="column">
+                        <div class="text-align-center padding-right-15">
+                            <img class="height-50" data-ng-src="{{item.icon}}" alt="Item-Icon">
                         </div>
-                    </div>
-                    <div class="text-center" data-ng-if="!tableData.length">
-                        <small>No results to display.</small>
-                    </div>
-                </div>
+                        <div layout="column">
+                            <strong data-ng-bind="item.name"></strong>
+                            <span class="md-body-1" data-ng-bind="item.category.name"></span>
+                            <span class="md-caption" data-ng-bind="item.type.name"></span>
+                        </div>
+                    </md-card-content>
+                </md-card>
             </div>
         </div>
+    </md-content>
+</md-sidenav>
+<div class="map-container-1"></div>
+<div class="map-action-menu-1">
+    <md-fab-speed-dial md-direction="down" class="md-scale">
+        <md-fab-trigger>
+            <md-button class="md-fab md-raised md-primary" aria-label="menu" title="Opens up menu.">
+                <md-icon>menu</md-icon>
+            </md-button>
+        </md-fab-trigger>
+        <md-fab-actions>
+            <md-button class="md-fab md-raised md-mini" data-ng-href="{{::pageData.pd001.href}}"
+                data-ng-attr-aria-label="{{::pageData.pd001.title}}"
+                data-ng-attr-title="{{::pageData.pd001.description}}">
+                <md-icon data-ng-bind="::pageData.pd001.icon"></md-icon>
+            </md-button>
+            <md-button class="md-fab md-raised md-mini" data-ng-href="{{::pageData.pd002.href}}"
+                data-ng-attr-aria-label="{{::pageData.pd002.title}}"
+                data-ng-attr-title="{{::pageData.pd002.description}}">
+                <md-icon data-ng-bind="::pageData.pd002.icon"></md-icon>
+            </md-button>
+            <md-button class="md-fab md-raised md-mini" data-ng-href="{{::pageData.pd003.href}}"
+                data-ng-attr-aria-label="{{::pageData.pd003.title}}"
+                data-ng-attr-title="{{::pageData.pd003.description}}">
+                <md-icon data-ng-bind="::pageData.pd003.icon"></md-icon>
+            </md-button>
+            <md-button class="md-fab md-raised md-mini" data-ng-href="{{::pageData.pd004.href}}"
+                data-ng-attr-aria-label="{{::pageData.pd004.title}}"
+                data-ng-attr-title="{{::pageData.pd004.description}}">
+                <md-icon data-ng-bind="::pageData.pd004.icon"></md-icon>
+            </md-button>
+            <md-button class="md-fab md-raised md-mini" data-ng-href="{{::pageData.pd010.href}}"
+                data-ng-attr-aria-label="{{::pageData.pd010.title}}"
+                data-ng-attr-title="{{::pageData.pd010.description}}">
+                <md-icon data-ng-bind="::pageData.pd010.icon"></md-icon>
+            </md-button>
+            <md-button class="md-fab md-raised md-mini" data-ng-click="signOut()" aria-label="Logout"
+                title="Logout from application.">
+                <md-icon>power_settings_new</md-icon>
+            </md-button>
+        </md-fab-actions>
+    </md-fab-speed-dial>
+</div>
+<div class="map-action-menu-2" layout="column">
+    <md-button class="md-fab md-raised md-mini" data-ng-click="openSidebar('sd001')"
+        data-ng-attr-aria-label="{{::sidebarData.sd001.title}}"
+        data-ng-attr-title="{{::sidebarData.sd001.description}}">
+        <md-icon data-ng-bind="::sidebarData.sd001.icon"></md-icon>
+    </md-button>
+    <md-button class="md-fab md-raised md-mini" data-ng-click="openSidebar('sd002')"
+        data-ng-attr-aria-label="{{::sidebarData.sd002.title}}"
+        data-ng-attr-title="{{::sidebarData.sd002.description}}">
+        <md-icon data-ng-bind="::sidebarData.sd002.icon"></md-icon>
+    </md-button>
+    <md-button class="md-fab md-raised md-mini" data-ng-click="openSidebar('sd003')"
+        data-ng-attr-aria-label="{{::sidebarData.sd003.title}}"
+        data-ng-attr-title="{{::sidebarData.sd003.description}}">
+        <md-icon data-ng-bind="::sidebarData.sd003.icon"></md-icon>
+    </md-button>
+    <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd004')"
+        data-ng-attr-aria-label="{{::sidebarData.sd004.title}}"
+        data-ng-attr-title="{{::sidebarData.sd004.description}}">
+        <md-icon data-ng-bind="::sidebarData.sd004.icon"></md-icon>
+    </md-button>
+    <md-button class="md-fab md-raised md-mini" data-ng-click="openSidebar('sd005')"
+        data-ng-attr-aria-label="{{::sidebarData.sd005.title}}"
+        data-ng-attr-title="{{::sidebarData.sd005.description}}">
+        <md-icon data-ng-bind="::sidebarData.sd005.icon"></md-icon>
+    </md-button>
+</div>
+<div class="map-action-menu-3" layout="row" layout-align="end end">
+    <div layout="column">
+        <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd007')"
+            data-ng-attr-aria-label="{{::sidebarData.sd007.title}}"
+            data-ng-attr-title="{{::sidebarData.sd007.description}}">
+            <md-icon data-ng-bind="::sidebarData.sd007.icon"></md-icon>
+        </md-button>
+        <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd006')"
+            data-ng-attr-aria-label="{{::sidebarData.sd006.title}}"
+            data-ng-attr-title="{{::sidebarData.sd006.description}}">
+            <md-icon data-ng-bind="::sidebarData.sd006.icon"></md-icon>
+        </md-button>
+    </div>
+    <div layout="column">
+        <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd009')"
+            data-ng-attr-aria-label="{{::sidebarData.sd009.title}}"
+            data-ng-attr-title="{{::sidebarData.sd009.description}}">
+            <md-icon data-ng-bind="::sidebarData.sd009.icon"></md-icon>
+        </md-button>
+        <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd008')"
+            data-ng-attr-aria-label="{{::sidebarData.sd008.title}}"
+            data-ng-attr-title="{{::sidebarData.sd008.description}}">
+            <md-icon data-ng-bind="::sidebarData.sd008.icon"></md-icon>
+        </md-button>
+    </div>
+    <div layout="column">
+        <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd011')"
+            data-ng-attr-aria-label="{{::sidebarData.sd011.title}}"
+            data-ng-attr-title="{{::sidebarData.sd011.description}}">
+            <md-icon data-ng-bind="::sidebarData.sd011.icon"></md-icon>
+        </md-button>
+        <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd010')"
+            data-ng-attr-aria-label="{{::sidebarData.sd010.title}}"
+            data-ng-attr-title="{{::sidebarData.sd010.description}}">
+            <md-icon data-ng-bind="::sidebarData.sd010.icon"></md-icon>
+        </md-button>
+    </div>
+    <div layout="column">
+        <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd012')"
+            data-ng-attr-aria-label="{{::sidebarData.sd012.title}}"
+            data-ng-attr-title="{{::sidebarData.sd012.description}}">
+            <md-icon data-ng-bind="::sidebarData.sd012.icon"></md-icon>
+        </md-button>
     </div>
 </div>
-<div id="chartBox" class="info-box" data-role="infobox" data-width="800">
-    <span class="button square closer"></span>
-    <div class="info-box-content">
-        <canvas id="chartCanvas"></canvas>
+<!--
+<div style="visibility: hidden">
+    <div class="md-dialog-container" id="chartDialog">
+        <md-dialog aria-label="Chart-Dialog" layout-padding>
+            <div class="text-align-right">
+                <md-button class="md-icon-button" aria-label="Close-Button" data-ng-click="hideChartDialog()">
+                    <md-icon>close</md-icon>
+                </md-button>
+            </div>
+            <canvas id="chartCanvas" width="400" height="400"></canvas>
+        </md-dialog>
     </div>
 </div>
+-->

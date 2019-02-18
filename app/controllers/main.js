@@ -1,9 +1,10 @@
 var app = angular.module('sensorApp');
 
-app.controller('MainController', function ($scope, $location, PAGE_DATA, AUTH_EVENTS, STATUS_CODES, AuthService) {
+app.controller('MainController', function ($scope, $mdToast, $mdDialog, PAGE_DATA, IMAGE_DATA) {
     $scope.pageLoading = false;
 
     $scope.pageData = PAGE_DATA;
+    $scope.imageData = IMAGE_DATA;
 
     $scope.showLoadingOverlay = function () {
         $scope.pageLoading = true;
@@ -13,47 +14,28 @@ app.controller('MainController', function ($scope, $location, PAGE_DATA, AUTH_EV
         $scope.pageLoading = false;
     };
 
-    $scope.signIn = function (credentials) {
-        $scope.showLoadingOverlay();
+    $scope.showMenu = function ($mdMenu, event) {
+        $mdMenu.open(event);
+    };
 
-        AuthService.signIn(credentials, $scope, AUTH_EVENTS.signIn, function (event, data) {
-            $scope.safeApply(function () {
-                $scope.hideLoadingOverlay();
-            });
-
-            switch (data.statusCode) {
-                case STATUS_CODES.signInSuccessful:
-                    Metro.toast.create("Successfully logged in.", null, 5000, "bg-green fg-white");
-                    $scope.safeApply(function () {
-                        $location.url('/');
-                    });
-                    break;
-                case STATUS_CODES.signInFailed:
-                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.</span>', 'alert');
-                    break;
-            }
+    $scope.showToast = function (message) {
+        $mdToast.show({
+            template: '<md-toast aria-label="Alert-Toast"><span class="md-toast-text">' + message + '</span></md-toast>',
+            hideDelay: 5000,
+            position: 'top right'
         });
     };
 
-    $scope.signOut = function () {
-        $scope.showLoadingOverlay();
-
-        AuthService.signOut($scope, AUTH_EVENTS.signOut, function (event, data) {
-            $scope.safeApply(function () {
-                $scope.hideLoadingOverlay();
-            });
-
-            switch (data.statusCode) {
-                case STATUS_CODES.signOutSuccessful:
-                    Metro.toast.create("Successfully logged out.", null, 5000, "bg-green fg-white");
-                    $scope.safeApply(function () {
-                        $location.url('/login');
-                    });
-                    break;
-                case STATUS_CODES.signOutFailed:
-                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.</span>', 'alert');
-                    break;
-            }
+    $scope.showDialog = function (title, message) {
+        $mdDialog.show({
+            template: '<md-dialog aria-label="Alert-Dialog"><md-dialog-content><div class="md-dialog-content"><div layout="row" layout-align="space-between center"><span class="md-title">' + title + '</span><md-button class="md-icon-button" data-ng-click="hideDialog()"><md-icon>close</md-icon></md-button></div><p>' + message + '</p></div></md-dialog-content></md-dialog>',
+            controller: function ($scope, $mdDialog) {
+                $scope.hideDialog = function () {
+                    $mdDialog.hide();
+                };
+            },
+            parent: angular.element(document.body),
+            clickOutsideToClose: true
         });
     };
 

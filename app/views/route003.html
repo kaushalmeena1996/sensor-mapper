@@ -1,0 +1,66 @@
+<md-content class="md-padding md-margin" md-whiteframe="1">
+    <div class="md-margin">
+        <div class="md-display-1">
+            <span>Result</span>
+        </div>
+        <div class="md-title">
+            <span>Route(s) which gives the optimised path starting from centre(s) and traversing all sensors.</span>
+        </div>
+    </div>
+    <md-divider class="margin-top-15"></md-divider>
+    <div class="md-margin" md-whiteframe="1">
+        <md-toolbar class="border-top-left-radius-4 border-top-right-radius-4">
+            <div class="md-toolbar-tools">
+                <span>Optimised Routes</span>
+            </div>
+        </md-toolbar>
+        <div class="padding-top-5 padding-bottom-5">
+            <md-card class="fade-animation" data-ng-repeat="routeItem in customRouteData track by $index">
+                <md-card-content>
+                    <md-card class="fade-animation" data-ng-repeat="item in routeItem.routeArray track by $index">
+                        <md-card-content layout="row" layout-xs="column">
+                            <div class="text-align-center padding-right-15">
+                                <img data-ng-src="{{item.icon}}" alt="Item-Icon">
+                            </div>
+                            <div layout="column">
+                                <span class="md-title" data-ng-bind="item.name"></span>
+                                <span class="md-body-1" data-ng-bind="item.category.name"></span>
+                                <span class="md-caption" data-ng-bind="item.type.name"></span>
+                            </div>
+                        </md-card-content>
+                    </md-card>
+                    <div class="margin-top-15" layout="column" layout-align="center end">
+                        <div flex flex-gt-xs="30">
+                            <div class="text-align-left">
+                                <span>Nodes :</span>
+                                <span data-ng-bind="routeItem.routeInfo.totalNodes"></span>
+                            </div>
+                            <div class="text-align-left">
+                                <span>Distance :</span>
+                                <span data-ng-bind="routeItem.routeInfo.totalDistance"></span>
+                                <span>km</span>
+                            </div>
+                            <div class="text-align-left">
+                                <span>Score :</span>
+                                <span data-ng-bind="routeItem.routeInfo.totalScore"></span>
+                            </div>
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
+            <div class="text-align-center padding-top-5 padding-bottom-5" data-ng-if="!customRouteData.length">
+                <span>No route available.</span>
+            </div>
+        </div>
+    </div>
+    <div class="text-align-right">
+        <md-button class="md-raised md-primary" title="Go to previous step." aria-label="Prev-Button"
+            data-ng-href="{{::pageData.pd005.href}}">
+            <md-icon>arrow_backward</md-icon>
+        </md-button>
+        <md-button class="md-raised md-primary" title="Plot route on map." aria-label="Next-Button"
+            data-ng-click="plotRoute()">
+            <md-icon>map</md-icon>
+        </md-button>
+    </div>
+</md-content>

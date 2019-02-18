@@ -1,79 +1,116 @@
-<div class="container bg-lightGray p-4">
-  <div class="tiles-grid">
-    <div data-size="large" data-role="tile" data-effect="hover-slide-left">
-      <div class="slide-front bg-orange">
-        <span class="mif-user icon"></span>
-      </div>
-      <div class="slide-back bg-lightOrange d-flex flex-justify-center flex-align-center p-4 op-mauve">
-        <p class="text-center h4" data-ng-bind="email"></p>
-      </div>
-      <span class="branding-bar">Welcome</span>
+<md-content class="md-padding md-margin" md-whiteframe="1">
+  <div layout="row" layout-xs="column">
+    <div layout="column" flex flex-gt-xs="25">
+      <md-card>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Welcome</span>
+            <span class="md-body-1">mail@example.com</span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-sm"></div>
+          </md-card-title-media>
+        </md-card-title>
+      </md-card>
+      <md-card>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline" data-ng-bind="::pageData.pd012.title"></span>
+            <span class="md-body-1" data-ng-bind="::pageData.pd012.description"></span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-sm">
+              <img data-ng-src="{{::imageData.id006.path}}" data-ng-attr-alt="{{::imageData.id006.name}}">
+            </div>
+          </md-card-title-media>
+        </md-card-title>
+        <md-card-actions layout="row" layout-align="end center">
+          <md-button class="md-raised md-primary" data-ng-href="{{::pageData.pd012.href}}"
+            data-ng-attr-aria-label="{{::pageData.pd012.title}}">
+            <md-icon>arrow_forward</md-icon>
+          </md-button>
+        </md-card-actions>
+      </md-card>
     </div>
-    <a href="#!/map" class="fg-white" data-size="large" data-role="tile" data-effect="hover-slide-left">
-      <div class="slide-front {{::pageData.pd002.data.bgColor.normal}}">
-        <span class="mif-map icon"></span>
+    <div layout="column" flex flex-gt-xs="75">
+      <md-card>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline" data-ng-bind="::pageData.pd002.title"></span>
+            <span class="md-body-1" data-ng-bind="::pageData.pd002.description"></span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-sm">
+              <img data-ng-src="{{::imageData.id001.path}}" data-ng-attr-alt="{{::imageData.id001.name}}">
+            </div>
+          </md-card-title-media>
+        </md-card-title>
+        <md-card-actions layout="row" layout-align="end center">
+          <md-button class="md-raised md-primary" data-ng-href="{{::pageData.pd002.href}}"
+            data-ng-attr-aria-label="{{::pageData.pd002.title}}">
+            <md-icon>arrow_forward</md-icon>
+          </md-button>
+        </md-card-actions>
+      </md-card>
+      <div layout="row" layout-xs="column" flex>
+        <md-card flex>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline" data-ng-bind="::pageData.pd003.title"></span>
+              <span class="md-body-1" data-ng-bind="::pageData.pd003.description"></span>
+            </md-card-title-text>
+            <md-card-title-media>
+              <div class="md-media-sm">
+                <img data-ng-src="{{::imageData.id002.path}}" data-ng-attr-alt="{{::imageData.id002.name}}">
+              </div>
+            </md-card-title-media>
+          </md-card-title>
+          <md-card-actions layout="row" layout-align="end center">
+            <md-button class="md-raised md-primary" data-ng-href="{{::pageData.pd003.href}}"
+              data-ng-attr-aria-label="{{::pageData.pd003.title}}">
+              <md-icon>arrow_forward</md-icon>
+            </md-button>
+          </md-card-actions>
+        </md-card>
+        <md-card flex>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline" data-ng-bind="::pageData.pd004.title"></span>
+              <span class="md-body-1" data-ng-bind="::pageData.pd004.description"></span>
+            </md-card-title-text>
+            <md-card-title-media>
+              <div class="md-media-sm">
+                <img data-ng-src="{{::imageData.id003.paths.p001}}" data-ng-attr-alt="{{::imageData.id003.name}}">
+              </div>
+            </md-card-title-media>
+          </md-card-title>
+          <md-card-actions layout="row" layout-align="end center">
+            <md-button class="md-raised md-primary" data-ng-href="{{::pageData.pd004.href}}"
+              data-ng-attr-aria-label="{{::pageData.pd004.title}}">
+              <md-icon>arrow_forward</md-icon>
+            </md-button>
+          </md-card-actions>
+        </md-card>
+        <md-card flex>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline" data-ng-bind="::pageData.pd010.title"></span>
+              <span class="md-body-1" data-ng-bind="::pageData.pd010.description"></span>
+            </md-card-title-text>
+            <md-card-title-media>
+              <div class="md-media-sm">
+                <img data-ng-src="{{::imageData.id004.path}}" data-ng-attr-alt="{{::imageData.id004.name}}">
+              </div>
+            </md-card-title-media>
+          </md-card-title>
+          <md-card-actions layout="row" layout-align="end center">
+            <md-button class="md-raised md-primary" data-ng-href="{{::pageData.pd010.href}}"
+              data-ng-attr-aria-label="{{::pageData.pd010.title}}">
+              <md-icon>arrow_forward</md-icon>
+            </md-button>
+          </md-card-actions>
+        </md-card>
       </div>
-      <div class="slide-back {{::pageData.pd002.data.bgColor.light}} d-flex flex-justify-center flex-align-center p-4 op-mauve">
-        <p class="text-center h4">
-          Display centres, locations and sensors on map.
-        </p>
-      </div>
-      <span class="branding-bar">Map</span>
-    </a>
-    <a href="#!/search" class="fg-white" data-size="wide" data-role="tile" data-effect="hover-slide-left">
-      <div class="slide-front {{::pageData.pd003.data.bgColor.normal}}">
-        <span class="mif-search icon"></span>
-      </div>
-      <div class="slide-back {{::pageData.pd003.data.bgColor.light}} d-flex flex-justify-center flex-align-center p-4 op-mauve">
-        <p class="text-center h4">
-          Search centres, location or sensor by text or applying filter.
-        </p>
-      </div>
-      <span class="branding-bar">Search</span>
-    </a>
-    <a href="#!/route/step-1" class="fg-white" data-size="wide" data-role="tile" data-effect="hover-slide-left">
-      <div class="slide-front {{::pageData.pd004.data.bgColor.normal}}">
-        <span class="mif-flow-branch icon"></span>
-      </div>
-      <div class="slide-back {{::pageData.pd004.data.bgColor.light}} d-flex flex-justify-center flex-align-center p-4 op-mauve">
-        <p class="text-center h4">
-          Generate route between selected centres and sensors.
-        </p>
-      </div>
-      <span class="branding-bar">Route</span>
-    </a>
-    <a href="#!/about" class="fg-white" data-size="wide" data-role="tile" data-effect="hover-slide-left">
-      <div class="slide-front {{::pageData.pd006.data.bgColor.normal}}">
-        <span class="mif-info icon"></span>
-      </div>
-      <div class="slide-back {{::pageData.pd006.data.bgColor.light}} d-flex flex-justify-center flex-align-center p-4 op-mauve">
-        <p class="text-center h4">
-          Display information about application.
-        </p>
-      </div>
-      <span class="branding-bar">About</span>
-    </a>
-    <div data-role="tile" data-effect="hover-slide-left" data-ng-click="signOut()">
-      <div class="slide-front bg-crimson">
-        <span class="mif-switch icon"></span>
-      </div>
-      <div class="slide-back bg-lightCrimson d-flex flex-justify-center flex-align-center p-4 op-mauve">
-        <p class="text-center h4">
-          Log-out from application.
-        </p>
-      </div>
-      <span class="branding-bar">Logout</span>
-    </div>
-    <div data-role="tile" data-effect="hover-slide-left">
-      <div class="slide-front bg-indigo">
-        <span class="mif-tools icon"></span>
-      </div>
-      <div class="slide-back bg-lightIndigo d-flex flex-justify-center flex-align-center p-4 op-mauve">
-        <p class="text-center h4">
-          v2.2.1
-        </p>
-      </div>
-      <span class="branding-bar">Version</span>
     </div>
   </div>
-</div>
+</md-content>

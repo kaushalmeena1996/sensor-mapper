@@ -5,7 +5,7 @@
   "description": "A web application that displays sensors, places and locations on maps and calculates optimal route to relief centres in case of emergency.",
   "main": "index.html",
   "scripts": {
-    "start": "http-server -a localhost -p 8000 ./app -o"
+    "start": "live-server --host=localhost --port=8080 app/"
   },
   "keywords": [
     "mapmysensor",
@@ -21,6 +21,6 @@
   "author": "Kaushal Meena",
   "license": "ISC",
   "devDependencies": {
-    "http-server": "^0.11.1"
+    "live-server": "^1.2.1"
   }
 }

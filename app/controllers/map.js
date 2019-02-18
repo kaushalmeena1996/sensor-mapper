@@ -7,7 +7,7 @@ var map,
     },
     chart = null;
 
-app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGORIES, MAP_CENTRES, SENSOR_STATUSES, MAP_ROUTES, STATUS_CODES, CHARMS_BAR_DATA, CHARMS_BAR_MODES, PLOT_CODES, SERVICE_EVENTS, RouteService, DataService) {
+app.controller('MapController', function ($scope, $location, $filter, $mdSidenav, MAP_CATEGORIES, MAP_CENTRES, SENSOR_STATUSES, MAP_ROUTES, STATUS_CODES, SIDEBAR_DATA, SIDEBAR_MODES, PLOT_CODES, SERVICE_EVENTS, RouteService, DataService) {
     $scope.tableData = [];
 
     $scope.emergencyRouteData = [];
@@ -15,10 +15,11 @@ app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGO
 
     $scope.charmBarTitle = '';
     $scope.charmBarMode = 0;
+    $scope.charmBarNodeId = 'l001';
     $scope.charmBarNodeItem = {};
 
-    $scope.moderateSensorCount = 0;
-    $scope.severeSensorCount = 0;
+    $scope.sensorCount1 = 0;
+    $scope.sensorCount2 = 0;
 
     $scope.mapLoaded = false;
 
@@ -27,8 +28,9 @@ app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGO
     $scope.filter1 = '*';
     $scope.filter2 = '*';
 
-    $scope.modes = CHARMS_BAR_MODES;
-    $scope.categories = MAP_CATEGORIES;
+    $scope.mapCategories = MAP_CATEGORIES;
+    $scope.sidebarData = SIDEBAR_DATA;
+    $scope.sidebarModes = SIDEBAR_MODES;
 
     $scope.getNodeData = function () {
         $scope.$parent.showLoadingOverlay();
@@ -50,25 +52,26 @@ app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGO
                     $scope.$parent.safeApply(function () {
                         $scope.$parent.hideLoadingOverlay();
                     });
-                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.<span>', 'alert');
+
+                    $scope.$parent.showDialog('Error', data.message);
                     break;
                 case STATUS_CODES.dataUpdateFailed:
-                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.<span>', 'alert');
+                    $scope.$parent.showDialog('Error', data.message);
                     break;
             }
         });
     };
 
     $scope.updateMap = function (nodeItem, sensorStatusChanged) {
-        if (nodeItem.category == MAP_CATEGORIES.sensor) {
+        if (nodeItem.category.id == MAP_CATEGORIES.c003.id) {
 
-            if ($scope.charmBarMode == CHARMS_BAR_MODES.markerInformation) {
+            if ($scope.charmBarMode == SIDEBAR_MODES.markerInformation) {
                 if ($scope.charmBarNodeItem.id == nodeItem.id) {
                     $scope.$parent.safeApply(function () {
                         $scope.charmBarNodeItem = nodeItem;
                     });
 
-                    if ($('#chartBox').data('infobox').isOpen() && chart) {
+                    if ($mdDialog.isOpen()) {
                         chart.data.datasets[0].data.push({
                             x: new Date(),
                             y: nodeItem.value
@@ -94,8 +97,8 @@ app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGO
 
             if (sensorStatusChanged) {
                 var emergencyRouteData = RouteService.getEmergencyRouteData(),
-                    moderateSensorCount = DataService.getModerateSensorCount(),
-                    severeSensorCount = DataService.getSevereSensorCount(),
+                    sensorCount1 = DataService.getSevereSensorCount(),
+                    sensorCount2 = DataService.getExtremeSensorCount(),
                     i;
 
                 markerData[nodeItem.id].setIcon({
@@ -119,18 +122,18 @@ app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGO
 
                 $scope.$parent.safeApply(function () {
                     $scope.emergencyRouteData = emergencyRouteData;
-                    $scope.moderateSensorCount = moderateSensorCount;
-                    $scope.severeSensorCount = severeSensorCount;
+                    $scope.sensorCount1 = sensorCount1;
+                    $scope.sensorCount2 = sensorCount2;
                 });
 
                 switch (nodeItem.status) {
                     case SENSOR_STATUSES.sst002.name:
-                        Metro.notify.create("Sensor " + nodeItem.name + " failed.", "Alert", {
+                        $scope.$parent.showDialog('Error', data.message).notify.create("Sensor " + nodeItem.name + " failed.", "Alert", {
                             cls: "warning"
                         });
                         break;
                     case SENSOR_STATUSES.sst003.name:
-                        Metro.notify.create("Sensor " + nodeItem.name + " is behaving abnormally.", "Alert", {
+                        $scope.$parent.showDialog('Error', data.message).notify.create("Sensor " + nodeItem.name + " is behaving abnormally.", "Alert", {
                             cls: "alert"
                         });
                         break;
@@ -165,7 +168,8 @@ app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGO
                 google.maps.event.addListener(marker, 'click', (function (marker, scope) {
                     return function () {
                         scope.$parent.safeApply(function () {
-                            scope.openCharmsBar('sd008', marker.id);
+                            scope.charmBarNodeId = marker.id;
+                            scope.openSidebar('sd005');
                         });
                     };
                 })(marker, $scope));
@@ -240,8 +244,8 @@ app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGO
 
                 var markerCluster = new MarkerClusterer(map, markerData, { imagePath: '../assets/img/clusterer/' });
 
-                $scope.moderateSensorCount = DataService.getModerateSensorCount();
-                $scope.severeSensorCount = DataService.getSevereSensorCount();
+                $scope.sensorCount1 = DataService.getSevereSensorCount();
+                $scope.sensorCount2 = DataService.getExtremeSensorCount();
 
                 $scope.mapLoaded = true;
 
@@ -294,7 +298,8 @@ app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGO
                 google.maps.event.addListener(marker, 'click', (function (marker, scope) {
                     return function () {
                         scope.$parent.safeApply(function () {
-                            scope.openCharmsBar('sd008', marker.id);
+                            scope.charmBarNodeId = marker.id;
+                            scope.openSidebar('sd005');
                         });
                     };
                 })(marker, $scope));
@@ -389,36 +394,38 @@ app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGO
         }
     };
 
-    $scope.openCharmsBar = function (charmBarId, nodeId) {
-        $scope.charmBarMode = CHARMS_BAR_DATA[charmBarId].mode;
+    $scope.openSidebar = function (charmBarId) {
+        $scope.charmBarMode = SIDEBAR_DATA[charmBarId].mode;
 
         switch ($scope.charmBarMode) {
-            case CHARMS_BAR_MODES.markerList:
-                if (CHARMS_BAR_DATA[charmBarId].filter1) {
-                    $scope.filter1 = CHARMS_BAR_DATA[charmBarId].filter1;
+            case SIDEBAR_MODES.markerList:
+                if (SIDEBAR_DATA[charmBarId].filter1) {
+                    $scope.filter1 = SIDEBAR_DATA[charmBarId].filter1;
                 }
-                if (CHARMS_BAR_DATA[charmBarId].filter2) {
-                    $scope.filter2 = CHARMS_BAR_DATA[charmBarId].filter2;
+                if (SIDEBAR_DATA[charmBarId].filter2) {
+                    $scope.filter2 = SIDEBAR_DATA[charmBarId].filter2;
                 }
                 $scope.applyFilter();
                 break;
-            case CHARMS_BAR_MODES.markerInformation:
-                $scope.setCharmBarNodeInfo(nodeId);
+            case SIDEBAR_MODES.markerInformation:
+                $scope.setCharmBarNodeInfo();
                 break;
         }
 
-        $scope.charmBarTitle = CHARMS_BAR_DATA[charmBarId].title;
+        $scope.charmBarTitle = SIDEBAR_DATA[charmBarId].title;
 
-        $('#charmsBar').data('charms').open();
+        $mdSidenav("map-sidebar").open();
     };
 
-    $scope.closeCharmsBar = function () {
+    $scope.closeSidebar = function () {
         $scope.charmBarMode = 0;
 
-        $('#charmsBar').data('charms').close();
+        $mdSidenav("map-sidebar").close();
     };
 
-    $scope.setCharmBarNodeInfo = function (nodeId) {
+    $scope.setCharmBarNodeInfo = function () {
+        var nodeId = $scope.charmBarNodeId;
+
         $scope.charmBarNodeItem = DataService.getNodeItem(nodeId);
         $scope.tableData = DataService.getNodeChildren(nodeId);
     };
@@ -440,31 +447,30 @@ app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGO
 
         if ($scope.filter1 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                category: $scope.filter1
+                category: { id: $scope.filter1 }
             }, true);
         }
 
         if ($scope.filter2 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                status: { name: $scope.filter2 }
+                status: { id: $scope.filter2 }
             }, true);
         }
 
         $scope.tableData = nodeData;
     };
 
-    $scope.openSensorChart = function () {
+    $scope.showChartDialog = function (event) {
         $scope.$parent.showLoadingOverlay();
 
-        DataService.subscribeChartData($scope.charmBarNodeItem.id, $scope, SERVICE_EVENTS.chartData, function (event, data) {
+        DataService.subscribeChartData($scope.nodeId, $scope, SERVICE_EVENTS.chartData, function (event, data) {
             switch (data.statusCode) {
                 case STATUS_CODES.dataLoadSuccessful:
-
                     if (chart) {
                         chart.data.datasets[0].data = data.chartData
                         chart.update();
                     } else {
-                        chart = new Chart($("#chartCanvas"), {
+                        chart = new Chart(document.getElementById("chartCanvas").getContext('2d'), {
                             type: 'line',
                             data: {
                                 datasets: [{
@@ -483,7 +489,7 @@ app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGO
                                 tooltips: {
                                     callbacks: {
                                         label: function (tooltipItems, data) {
-                                            return tooltipItems.yLabel + $scope.charmBarNodeItem.reading.unit;
+                                            return tooltipItems.yLabel + ' ' + $scope.nodeItem.reading.unit;
                                         }
                                     }
                                 },
@@ -498,7 +504,7 @@ app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGO
                                     yAxes: [{
                                         scaleLabel: {
                                             display: true,
-                                            labelString: $scope.charmBarNodeItem.reading.unit
+                                            labelString: $scope.nodeItem.reading.unit
                                         }
                                     }]
                                 }
@@ -508,35 +514,60 @@ app.controller('MapController', function ($scope, $location, $filter, MAP_CATEGO
 
                     $scope.$parent.safeApply(function () {
                         $scope.$parent.hideLoadingOverlay();
+
+                        $mdDialog.show({
+                            contentElement: '#chartDialog',
+                            parent: angular.element(document.body),
+                            targetEvent: event,
+                            clickOutsideToClose: true
+                        });
                     });
 
-                    $('#chartBox').data('infobox').open();
                     break;
                 case STATUS_CODES.dataLoadFailed:
                     $scope.$parent.safeApply(function () {
                         $scope.$parent.hideLoadingOverlay();
                     });
-                    Metro.infobox.create('<h5>Error</h5><span>' + data.message + '.<span>', 'alert');
+                    $scope.$parent.showDialog('Error', data.message);
                     break;
             }
         });
     }
 
+    $scope.hideChartDialog = function () {
+        $mdDialog.hide();
+    };
+
     $scope.showNodeItem = function () {
-        var id = $scope.charmBarNodeItem.id,
-            category = $scope.charmBarNodeItem.category,
-            link = '/view';
+        var nodeId = $scope.charmBarNodeItem.id,
+            categoryId = $scope.charmBarNodeItem.category.id,
+            categoryName = '',
+            link = '';
 
-        category = category.toLowerCase();
+        switch (categoryId) {
+            case MAP_CATEGORIES.c001.id:
+                categoryName = MAP_CATEGORIES.c001.name;
+                link = $scope.$parent.pageData.pd007.route;
+                break;
+            case MAP_CATEGORIES.c002.id:
+                categoryName = MAP_CATEGORIES.c002.name;
+                link = $scope.$parent.pageData.pd008.route;
+                break;
+            case MAP_CATEGORIES.c003.id:
+                categoryName = MAP_CATEGORIES.c003.name;
+                link = $scope.$parent.pageData.pd009.route;
+                break;
+        }
 
-        link += '/' + category;
-        link += '?' + category + '_id=' + id;
+        categoryName = categoryName.toLowerCase();
+
+        link += '?' + categoryName + '_id=' + nodeId;
 
         $location.url(link);
     };
 
     $scope.$on('$viewContentLoaded', function () {
-        map = new google.maps.Map(document.getElementById('map1'), {
+        map = new google.maps.Map(document.querySelector(".map-container-1"), {
             center: {
                 lat: 21.170240,
                 lng: 72.831062

@@ -3,7 +3,10 @@
     "c001": {
       "id": "c001",
       "parentId": "l002",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Umra Police Station",
       "address": "Maa Thakur Bhai Desai Marg Near Police Pared Ground, Meghdoot Society, Athwalines, Athwa, Surat, Gujarat 395001",
       "type": {
@@ -22,13 +25,16 @@
         "lng": 72.803662,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c002": {
       "id": "c002",
       "parentId": "l002",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "New City Hospital",
       "address": "Jhanvi Dev Deep Society Lane, City Light Town, Athwa, Surat, Gujarat 395007",
       "type": {
@@ -47,13 +53,16 @@
         "lng": 72.789299,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c003": {
       "id": "c003",
       "parentId": "l006",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Majura Fire Station",
       "address": "NX-1, Ghod Dod Rd, Sanskar Nagar, Athwa, Surat, Gujarat 395017",
       "type": {
@@ -72,13 +81,16 @@
         "lng": 72.818594,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c004": {
       "id": "c004",
       "parentId": "l006",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Pandesara Police Station",
       "address": "GIDC Main Rd, Display Communities, Pandesara GIDC, Udhna, Surat, Gujarat 394221",
       "type": {
@@ -97,13 +109,16 @@
         "lng": 72.840056,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c005": {
       "id": "c005",
       "parentId": "l006",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Sunrise Multispeciality Hospital",
       "address": "B1, Mahadev Complex, Gujrat Housing Board Road, Udhna, Bhedwad, Harinagar, Udhna, Surat, Gujarat 394220",
       "type": {
@@ -122,13 +137,16 @@
         "lng": 72.844742,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c006": {
       "id": "c006",
       "parentId": "l004",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Dumbhal Fire Station",
       "address": "Model Town Rd, Om Nagar, Kailash Banglaw, Parvat Patiya, Surat, Gujarat 395010",
       "type": {
@@ -147,13 +165,16 @@
         "lng": 72.861768,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c007": {
       "id": "c007",
       "parentId": "l004",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Limbayat Police Station",
       "address": "Rustam Bagh Rd, Ambanagar Society, Near, Limbayat, Surat, Gujarat 394210",
       "type": {
@@ -172,15 +193,18 @@
         "lng": 72.857149,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c008": {
       "id": "c008",
       "parentId": "l004",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Max Hospital",
-      "address": "Madhav Shopping Center, Devadh Canal Road, Near Priyanka Metro City, Godadara, Surat, Gujarat 395011",
+      "address": "Madhav Shopping Center, Devadh Canal Road, Near Priyanka $scope.$parent.showDialog('Error',  data.message) City, Godadara, Surat, Gujarat 395011",
       "type": {
         "id": "ct004",
         "name": "Hospital"
@@ -197,13 +221,16 @@
         "lng": 72.877113,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c009": {
       "id": "c009",
       "parentId": "l003",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Navsari Bazar Fire Station",
       "address": "Kotsafil Main Rd, Navsari Bazaar, Surat, Gujarat 395008",
       "type": {
@@ -222,13 +249,16 @@
         "lng": 72.826977,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c010": {
       "id": "c010",
       "parentId": "l003",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Salabatpura Police Station",
       "address": "Salabatpura Main Rd, Opposite Circle, Salabatpura, Surat, Gujarat 395003",
       "type": {
@@ -247,13 +277,16 @@
         "lng": 72.836444,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c011": {
       "id": "c011",
       "parentId": "l003",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Parsi General Hospital",
       "address": "Shahpore Road, Opposite Sir. J. J. School, Sayedpura, Surat, Gujarat 395003",
       "type": {
@@ -272,13 +305,16 @@
         "lng": 72.824131,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c012": {
       "id": "c012",
       "parentId": "l007",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Katargam Fire Station",
       "address": "Katargam Rd, Near Dholakiya Garden, Katargam, Surat, Gujarat 395004",
       "type": {
@@ -297,13 +333,16 @@
         "lng": 72.833381,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c013": {
       "id": "c013",
       "parentId": "l007",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Old Katargam Police Station",
       "address": "Katargam Rd, Opp. Ramji Mandir, Katargam, Surat, Gujarat 395004",
       "type": {
@@ -322,13 +361,16 @@
         "lng": 72.833211,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c014": {
       "id": "c014",
       "parentId": "l007",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Bansari Hospital & ICU",
       "address": "Sayan Rd, Brahmani Nagar Society, Amroli, Surat, Gujarat 394107",
       "type": {
@@ -347,20 +389,23 @@
         "lng": 72.851600,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c015": {
       "id": "c015",
       "parentId": "l008",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Kapodra Fire Station",
       "address": "Kalakunj Society, Kapodra Patiya, Surat, Gujarat 395006",
       "type": {
         "id": "ct002",
         "name": "Fire Station"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "rating": 3.8,
       "leafNode": true,
@@ -372,13 +417,16 @@
         "lng": 72.874999,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c016": {
       "id": "c016",
       "parentId": "l008",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Kapodra Police Station",
       "address": "Nana Varachha Road, Mamata Park Society, Kapodra Patiya, Surat, Gujarat 394010",
       "type": {
@@ -397,13 +445,16 @@
         "lng": 72.875560,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c017": {
       "id": "c017",
       "parentId": "l008",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "SDA Diamond Hospital",
       "address": "Surya Kiran Society, Swati Society, Chikuwadi, Nana Varachha, Surat, Gujarat 395006",
       "type": {
@@ -422,20 +473,23 @@
         "lng": 72.884397,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c018": {
       "id": "c018",
       "parentId": "l005",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Adajan Fire Station",
       "address": "Guru Ram Pavan Bhumi, Adajan Gam, Adajan, Surat, Gujarat 395009",
       "type": {
         "id": "ct002",
         "name": "Fire Station"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "rating": 3.3,
       "leafNode": true,
@@ -447,13 +501,16 @@
         "lng": 72.795080,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c019": {
       "id": "c019",
       "parentId": "l005",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "Adajan Police Station",
       "address": "Behind Gangeshwar Mahadev Temple, Chatrapati Shivaji Marg, Guru Ram Pavan Bhumi, Adajan, Surat, Gujarat 395009",
       "type": {
@@ -472,13 +529,16 @@
         "lng": 72.790208,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "c020": {
       "id": "c020",
       "parentId": "l005",
-      "category": "Centre",
+      "category": {
+        "id": "c001",
+        "name": "Centre"
+      },
       "name": "LifeLine Multispeciality Hospital",
       "address": "Shreenathji Complex, 1st, Rander Rd, Ramnagar, Rander, Surat, Gujarat 395009",
       "type": {
@@ -497,13 +557,16 @@
         "lng": 72.792031,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "l001": {
       "id": "l001",
       "parentId": null,
-      "category": "Location",
+      "category": {
+        "id": "c002",
+        "name": "Location"
+      },
       "name": "Surat",
       "address": "Gujarat, India",
       "type": {
@@ -516,25 +579,33 @@
       "display": true,
       "zoom": 11,
       "boundary": null,
+      "disasterScore": {
+        "lst001": 0,
+        "lst002": 30000,
+        "lst003": 60000
+      },
       "coordinates": {
         "lat": 21.170240,
         "lng": 72.831062,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "l002": {
       "id": "l002",
       "parentId": "l001",
-      "category": "Location",
+      "category": {
+        "id": "c002",
+        "name": "Location"
+      },
       "name": "South West (AthwaZone)",
       "address": "Gujarat, India",
       "type": {
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -1238,25 +1309,33 @@
         ],
         "color": null
       },
+      "disasterScore": {
+        "lst001": 0,
+        "lst002": 30000,
+        "lst003": 60000
+      },
       "coordinates": {
         "lat": 21.125583,
         "lng": 72.775961,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "l003": {
       "id": "l003",
       "parentId": "l001",
-      "category": "Location",
+      "category": {
+        "id": "c002",
+        "name": "Location"
+      },
       "name": "Central Zone",
       "address": "Gujarat, India",
       "type": {
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -1676,25 +1755,33 @@
         ],
         "color": null
       },
+      "disasterScore": {
+        "lst001": 0,
+        "lst002": 30,
+        "lst003": 60
+      },
       "coordinates": {
         "lat": 21.198285,
         "lng": 72.828440,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "l004": {
       "id": "l004",
       "parentId": "l001",
-      "category": "Location",
+      "category": {
+        "id": "c002",
+        "name": "Location"
+      },
       "name": "South East (Limbayat) Zone",
       "address": "Gujarat, India",
       "type": {
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -2330,25 +2417,33 @@
         ],
         "color": null
       },
+      "disasterScore": {
+        "lst001": 0,
+        "lst002": 30,
+        "lst003": 60
+      },
       "coordinates": {
         "lat": 21.166372,
         "lng": 72.869020,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "l005": {
       "id": "l005",
       "parentId": "l001",
-      "category": "Location",
+      "category": {
+        "id": "c002",
+        "name": "Location"
+      },
       "name": "West (Rander) Zone",
       "address": "Gujarat, India",
       "type": {
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -4204,25 +4299,33 @@
         ],
         "color": null
       },
+      "disasterScore": {
+        "lst001": 0,
+        "lst002": 30,
+        "lst003": 60
+      },
       "coordinates": {
         "lat": 21.282444,
         "lng": 72.827271,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "l006": {
       "id": "l006",
       "parentId": "l001",
-      "category": "Location",
+      "category": {
+        "id": "c002",
+        "name": "Location"
+      },
       "name": "South (Udhana) Zone",
       "address": "Gujarat, India",
       "type": {
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -5266,25 +5369,33 @@
         ],
         "color": null
       },
+      "disasterScore": {
+        "lst001": 0,
+        "lst002": 30,
+        "lst003": 60
+      },
       "coordinates": {
         "lat": 21.124940,
         "lng": 72.841992,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "l007": {
       "id": "l007",
       "parentId": "l001",
-      "category": "Location",
+      "category": {
+        "id": "c002",
+        "name": "Location"
+      },
       "name": "North (Katargam) Zone",
       "address": "Gujarat, India",
       "type": {
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -6458,25 +6569,33 @@
         ],
         "color": null
       },
+      "disasterScore": {
+        "lst001": 0,
+        "lst002": 30,
+        "lst003": 60
+      },
       "coordinates": {
         "lat": 21.236782,
         "lng": 72.818846,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "l008": {
       "id": "l008",
       "parentId": "l001",
-      "category": "Location",
+      "category": {
+        "id": "c002",
+        "name": "Location"
+      },
       "name": "East (Varachha) Zone",
       "address": "Gujarat, India",
       "type": {
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -8510,18 +8629,26 @@
         ],
         "color": null
       },
+      "disasterScore": {
+        "lst001": 0,
+        "lst002": 30,
+        "lst003": 60
+      },
       "coordinates": {
         "lat": 21.200903,
         "lng": 72.872780,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "l009": {
       "id": "l009",
       "parentId": "l002",
-      "category": "Location",
+      "category": {
+        "id": "c002",
+        "name": "Location"
+      },
       "name": "SVNIT Campus",
       "address": "Athwa, Surat, Gujarat 395007",
       "type": {
@@ -8610,25 +8737,33 @@
         ],
         "color": "#0000ff"
       },
+      "disasterScore": {
+        "lst001": 0,
+        "lst002": 30,
+        "lst003": 60
+      },
       "coordinates": {
         "lat": 21.166018,
         "lng": 72.785736,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "l010": {
       "id": "l010",
       "parentId": "l009",
-      "category": "Location",
+      "category": {
+        "id": "c002",
+        "name": "Location"
+      },
       "name": "Computer Department Cluster",
       "address": "SVNIT Campus, Athwa, Surat, Gujarat 395007",
       "type": {
         "id": "lt004",
         "name": "Cluster"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -8658,25 +8793,33 @@
         ],
         "color": "#aa00ff"
       },
+      "disasterScore": {
+        "lst001": 0,
+        "lst002": 30,
+        "lst003": 60
+      },
       "coordinates": {
         "lat": 21.164516,
         "lng": 72.782703,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "l011": {
       "id": "l011",
       "parentId": "l009",
-      "category": "Location",
+      "category": {
+        "id": "c002",
+        "name": "Location"
+      },
       "name": "Mother Teresa Bhavan Cluster",
       "address": "SVNIT Campus, Athwa, Surat, Gujarat 395007",
       "type": {
         "id": "lt004",
         "name": "Cluster"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -8706,25 +8849,33 @@
         ],
         "color": "#aa00ff"
       },
+      "disasterScore": {
+        "lst001": 0,
+        "lst002": 30,
+        "lst003": 60
+      },
       "coordinates": {
         "lat": 21.167312,
         "lng": 72.787401,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "l012": {
       "id": "l012",
       "parentId": "l009",
-      "category": "Location",
+      "category": {
+        "id": "c002",
+        "name": "Location"
+      },
       "name": "Swami Vivekanada Bhavan Cluster",
       "address": "SVNIT Campus, Athwa, Surat, Gujarat 395007",
       "type": {
         "id": "lt004",
         "name": "Cluster"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -8766,45 +8917,52 @@
         ],
         "color": "#aa00ff"
       },
+      "disasterScore": {
+        "lst001": 0,
+        "lst002": 30,
+        "lst003": 60
+      },
       "coordinates": {
         "lat": 21.162901,
         "lng": 72.790070,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "s001": {
       "id": "s001",
       "parentId": "l010",
-      "category": "Sensor",
+      "category": {
+        "id": "c003",
+        "name": "Sensor"
+      },
       "name": "Sensor A",
       "address": "Computer Department, SVNIT Campus, Athwa, Surat, Gujarat 395007",
-      "model": "A000",
-      "manufacturer": "XYZ",
       "type": {
         "id": "st002",
         "name": "Thermometer"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "leafNode": true,
       "display": true,
       "zoom": 20,
       "boundary": null,
+      "disasterId": "dt001",
       "disasterScore": {
-        "normal": 0,
-        "moderate": 30,
-        "severe": 60
+        "sst001": 0,
+        "sst002": 30,
+        "sst003": 60
       },
       "reading": {
         "value": 37,
         "unit": "°C",
         "boolean": false,
         "limit": {
-          "normal": 100,
-          "moderate": 200,
-          "severe": 500
+          "sst001": 100,
+          "sst002": 200,
+          "sst003": 500
         }
       },
       "coordinates": {
@@ -8812,40 +8970,42 @@
         "lng": 72.782879,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "s002": {
       "id": "s002",
       "parentId": "l011",
-      "category": "Sensor",
+      "category": {
+        "id": "c003",
+        "name": "Sensor"
+      },
       "name": "SensorB",
       "address": "Mother Teresa Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
-      "model": "A000",
-      "manufacturer": "XYZ",
       "type": {
         "id": "st002",
         "name": "Thermometer"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "leafNode": true,
       "display": true,
       "zoom": 19,
       "boundary": null,
+      "disasterId": "dt001",
       "disasterScore": {
-        "normal": 0,
-        "moderate": 30,
-        "severe": 60
+        "sst001": 0,
+        "sst002": 30,
+        "sst003": 60
       },
       "reading": {
         "value": 37,
         "unit": "°C",
         "boolean": false,
         "limit": {
-          "normal": 100,
-          "moderate": 200,
-          "severe": 500
+          "sst001": 100,
+          "sst002": 200,
+          "sst003": 500
         }
       },
       "coordinates": {
@@ -8853,40 +9013,42 @@
         "lng": 72.787028,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     },
     "s003": {
       "id": "s003",
       "parentId": "l012",
-      "category": "Sensor",
+      "category": {
+        "id": "c003",
+        "name": "Sensor"
+      },
       "name": "SensorC",
       "address": "Swami Vivekanand Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
-      "model": "A000",
-      "manufacturer": "XYZ",
       "type": {
         "id": "st002",
         "name": "Thermometer"
       },
-      "photo": "assets/img/default_image.png",
+      "photo": "assets/img/default-photo.png",
       "description": "",
       "leafNode": true,
       "display": true,
       "zoom": 19,
       "boundary": null,
+      "disasterId": "dt001",
       "disasterScore": {
-        "normal": 0,
-        "moderate": 30,
-        "severe": 60
+        "sst001": 0,
+        "sst002": 30,
+        "sst003": 60
       },
       "reading": {
         "value": 37,
         "unit": "°C",
         "boolean": false,
         "limit": {
-          "normal": 100,
-          "moderate": 200,
-          "severe": 500
+          "sst001": 100,
+          "sst002": 200,
+          "sst003": 500
         }
       },
       "coordinates": {
@@ -8894,7 +9056,7 @@
         "lng": 72.790458,
         "dynamic": false
       },
-      "modified": 1518244200000,
+      "updated": 1518244200000,
       "created": 1518244200000
     }
   },
