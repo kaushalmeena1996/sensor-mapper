@@ -120,7 +120,7 @@ body {
   font-feature-settings: 'liga';
 }
 
-.loader-1 {
+.fixed-background-1 {
   position: fixed;
   left: 0px;
   top: 0px;
@@ -133,7 +133,7 @@ body {
   z-index: 10000;
 }
 
-.loader-2 {
+.fixed-background-2 {
   display: table;
   position: fixed;
   left: 0px;
@@ -194,6 +194,12 @@ body {
   left: 5px;
 }
 
+.chart-container {
+  position: relative;
+  margin: auto;
+  width: 80vw;
+}
+
 .fab-badge {
   top: 12px;
   right: 15px;;
@@ -219,6 +225,18 @@ body {
 
 .fade-animation.ng-leave,
 .fade-animation.ng-move.ng-move-active,
-.fade-animation.ng-enter.ng-enter-active {
+.fade-animation.ng-enter.ng-enter-active
+ {
   opacity: 1;
+}
+
+.fade-toogle {
+  -webkit-transition: all linear 0.2s;
+  -o-transition: all linear 0.2s;
+  transition: all linear 0.2s;  
+  opacity: 1;
+}
+
+.fade-toogle.ng-hide {
+  opacity: 0;
 }

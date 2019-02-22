@@ -331,7 +331,7 @@ app.constant('MAP_CATEGORIES', {
     },
     c003: {
         id: "c003",
-        name: "Location"
+        name: "Sensor"
     }
 });
 

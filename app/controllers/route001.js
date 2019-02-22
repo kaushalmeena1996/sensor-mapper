@@ -21,7 +21,7 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
     $scope.customCentre = {
         id: '',
         parentId: 'l001',
-        category: MAP_CATEGORIES.c001.id,
+        category: MAP_CATEGORIES.c001,
         name: '',
         address: '',
         icon: CUSTOM_CENTRE.icons.cst001,
@@ -55,18 +55,33 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
                     });
                     break;
                 case STATUS_CODES.dataUpdateSuccessful:
-                    if (data.nodeItem.category.id == MAP_CATEGORIES.c001.id) {
-                        var index = $scope.tableData.findIndex(
+                    var tableData = $scope.tableData,
+                        tableDataUpdated = false,
+                        nodeIndex,
+                        nodeItem,
+                        i;
+
+                    for (i = 0; i < data.updateNodeIds.length; i++) {
+                        nodeIndex = tableData.findIndex(
                             function (tableItem) {
-                                return tableItem.id == data.nodeItem.id;
+                                return tableItem.id == data.updateNodeIds[i];
                             }
                         );
 
-                        if (index > -1) {
-                            $scope.$parent.safeApply(function () {
-                                $scope.tableData[index] = data.nodeItem;
-                            });
+                        if (nodeIndex > -1) {
+                            nodeItem = DataService.getNodeItem(data.updateNodeIds[i]);
+
+                            if (tableData[nodeIndex].status.id != nodeItem.status.id) {
+                                $scope.tableData[nodeIndex] = nodeItem;
+                                tableDataUpdated = true;
+                            }
                         }
+                    }
+
+                    if (tableDataUpdated) {
+                        $scope.$parent.safeApply(function () {
+                            $scope.tableData = tableData;
+                        });
                     }
                     break;
                 case STATUS_CODES.dataLoadFailed:
@@ -106,7 +121,7 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
                             $scope.customCentre = {
                                 id: '',
                                 parentId: 'l001',
-                                category: MAP_CATEGORIES.c001.id,
+                                category: 'c001',
                                 name: '',
                                 address: '',
                                 icon: CUSTOM_CENTRE.icons.cst001,

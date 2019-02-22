@@ -38,7 +38,7 @@
             </div>
             <div class="text-align-center margin-top-15">
                 <md-button class="md-fab" title="Show sensor chart." aria-label="Chart-Button"
-                    data-ng-click="showChartDialog($event)">
+                    data-ng-click="showChartDialog()">
                     <md-icon>show_chart</md-icon>
                 </md-button>
             </div>
@@ -62,15 +62,19 @@
         </div>
     </div>
 </md-content>
-<div style="visibility: hidden">
-    <div class="md-dialog-container" id="chartDialog">
-        <md-dialog aria-label="Chart-Dialog" layout-padding>
-            <div class="text-align-right">
-                <md-button class="md-icon-button" aria-label="Close-Button" data-ng-click="hideChartDialog()">
-                    <md-icon>close</md-icon>
-                </md-button>
-            </div>
-            <canvas id="chartCanvas" width="400" height="400"></canvas>
-        </md-dialog>
+<div class="fade-toogle fixed-background-2" ng-show="chartDialogVisible">
+    <div class="position-center">
+        <md-card class="chart-container">
+            <md-card-content>
+                <div class="text-align-right">
+                    <md-button class="md-icon-button" aria-label="Close-Button" data-ng-click="hideChartDialog()">
+                        <md-icon>close</md-icon>
+                    </md-button>
+                </div>
+                <div class="text-align-center">
+                    <canvas class="chart-canvas"></canvas>
+                </div>
+            </md-card-content>
+        </md-card>
     </div>
 </div>

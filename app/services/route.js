@@ -33,7 +33,7 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
 
     routeService.getEmergencyRouteData = function () {
         var centreData = DataService.getCentreData(),
-            abnormalSensorData = DataService.getAbnormalSensorData(),
+            abnormalSensorData = DataService.getFilteredNodeData('c003', 'sst003'),
             selectedCentreData;
 
         if (abnormalSensorData) {

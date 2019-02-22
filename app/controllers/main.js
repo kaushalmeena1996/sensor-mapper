@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 
-app.controller('MainController', function ($scope, $mdToast, $mdDialog, PAGE_DATA, IMAGE_DATA) {
+app.controller('MainController', function ($scope, $mdToast, $mdDialog, PAGE_DATA, IMAGE_DATA, DataService) {
     $scope.pageLoading = false;
 
     $scope.pageData = PAGE_DATA;
@@ -28,7 +28,7 @@ app.controller('MainController', function ($scope, $mdToast, $mdDialog, PAGE_DAT
 
     $scope.showDialog = function (title, message) {
         $mdDialog.show({
-            template: '<md-dialog aria-label="Alert-Dialog"><md-dialog-content><div class="md-dialog-content"><div layout="row" layout-align="space-between center"><span class="md-title">' + title + '</span><md-button class="md-icon-button" data-ng-click="hideDialog()"><md-icon>close</md-icon></md-button></div><p>' + message + '</p></div></md-dialog-content></md-dialog>',
+            template: '<md-dialog aria-label="Alert-Dialog"><md-dialog-content><div class="md-dialog-content"><div layout="row" layout-align="space-between center"><span class="md-title">' + title + '</span><md-button class="md-icon-button" aria-label="Close-Button" data-ng-click="hideDialog()"><md-icon>close</md-icon></md-button></div><p>' + message + '</p></div></md-dialog-content></md-dialog>',
             controller: function ($scope, $mdDialog) {
                 $scope.hideDialog = function () {
                     $mdDialog.hide();
@@ -49,4 +49,10 @@ app.controller('MainController', function ($scope, $mdToast, $mdDialog, PAGE_DAT
             this.$apply(func);
         }
     };
+
+    //Test Function
+
+    $scope.updateLocalNodeData = function () {
+        DataService.updateLocalNodeData();
+    }
 });

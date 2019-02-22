@@ -23,8 +23,8 @@
 </head>
 
 <body md-theme={{theme}} md-theme-watch="true" data-ng-controller="MainController">
-    <div class="loader-1"></div>
-    <div class="loader-2" data-ng-if="pageLoading">
+    <div class="fade-toogle fixed-background-1"></div>
+    <div class="fade-toogle fixed-background-2" data-ng-show="pageLoading">
         <div class="position-center">
             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
         </div>
@@ -67,6 +67,10 @@
                 data-ng-attr-aria-label="{{::pageData.pd012.title}}"
                 data-ng-attr-title="{{::pageData.pd012.description}}">
                 <md-icon data-ng-bind="::pageData.pd012.icon"></md-icon>
+            </md-button>
+            <md-button class="md-fab md-mini md-primary hide-xs" data-ng-click="updateLocalNodeData()"
+                aria-label="Update-Button" title="Updates local node data.">
+                <md-icon>build</md-icon>
             </md-button>
 
             <md-menu class="hide-gt-xs">
@@ -125,8 +129,6 @@
 
     <ng-view></ng-view>
 
-    <!-- jQuery library -->
-    <script src="assets/js/jquery-3.3.1.min.js"></script>
     <!-- Firebase libraries -->
     <script src="assets/js/firebase-app.js"></script>
     <script src="assets/js/firebase-auth.js"></script>
@@ -138,6 +140,7 @@
     <script src="assets/js/angular-route.min.js"></script>
     <script src="assets/js/angular-animate.min.js"></script>
     <script src="assets/js/angular-messages.min.js"></script>
+    <script src="assets/js/angular-sanitize.min.js"></script>
     <script src="assets/js/angular-aria.min.js"></script>
     <!-- Angular Material Library -->
     <script src="assets/js/angular-material.min.js"></script>

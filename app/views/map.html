@@ -1,7 +1,7 @@
 <md-sidenav class="md-sidenav-left" md-component-id="map-sidebar" md-disable-backdrop md-whiteframe="4">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <span data-ng-bind="charmBarTitle"></span>
+            <span data-ng-bind="sidebarActiveData.title"></span>
             <span flex md-truncate></span>
             <md-button data-ng-click="closeSidebar()" aria-label="Close-Button" title="Closes the sidebar.">
                 <md-icon>arrow_backward</md-icon>
@@ -9,7 +9,7 @@
         </div>
     </md-toolbar>
     <md-content>
-        <div data-ng-show="charmBarMode == sidebarModes.markerList">
+        <div data-ng-show="sidebarActiveData.mode == sidebarModes.markerList">
             <div class="padding-left-5 padding-right-15">
                 <md-input-container md-no-float class="md-icon-float md-block">
                     <label>Search</label>
@@ -34,9 +34,9 @@
                 <span>No results to display.</span>
             </div>
         </div>
-        <div data-ng-if="charmBarMode == sidebarModes.customRouteList">
+        <div data-ng-if="sidebarActiveData.mode == sidebarModes.customRouteList">
             <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item.routeArray[0], false)"
-                data-ng-repeat="item in customRouteData track by $index">
+                data-ng-repeat="item in routeData.custom track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="text-align-center padding-right-15">
                         <img class="height-50" data-ng-src="{{item.icon}}" alt="Item-Icon">
@@ -63,13 +63,13 @@
                     </div>
                 </md-card-content>
             </md-card>
-            <div class="text-align-center margin-top-15" data-ng-if="!customRouteData.length">
+            <div class="text-align-center margin-top-15" data-ng-if="!routeData.custom.length">
                 <span>No results to display.</span>
             </div>
         </div>
-        <div data-ng-if="charmBarMode == sidebarModes.emergencyRouteList">
+        <div data-ng-if="sidebarActiveData.mode == sidebarModes.emergencyRouteList">
             <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item.routeArray[0], false)"
-                data-ng-repeat="item in emergencyRouteData track by $index">
+                data-ng-repeat="item in routeData.emergency track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="text-align-center padding-right-15">
                         <img class="height-50" data-ng-src="{{item.icon}}" alt="Item-Icon">
@@ -96,37 +96,37 @@
                     </div>
                 </md-card-content>
             </md-card>
-            <div class="text-align-center margin-top-15" data-ng-if="!emergencyRouteData.length">
+            <div class="text-align-center margin-top-15" data-ng-if="!routeData.emergency.length">
                 <span>No results to display.</span>
             </div>
         </div>
-        <div data-ng-if="charmBarMode == sidebarModes.markerInformation">
+        <div data-ng-if="sidebarActiveData.mode == sidebarModes.markerInformation">
             <div class="text-align-center margin-top-15" layout="column">
-                <span class="md-display-1" data-ng-bind="charmBarNodeItem.name"></span>
-                <span class="md-title" data-ng-bind="charmBarNodeItem.category.name"></span>
-                <span class="md-body-1" data-ng-bind="charmBarNodeItem.type.name"></span>
+                <span class="md-display-1" data-ng-bind="sidebarActiveData.nodeItem.name"></span>
+                <span class="md-title" data-ng-bind="sidebarActiveData.nodeItem.category.name"></span>
+                <span class="md-body-1" data-ng-bind="sidebarActiveData.nodeItem.type.name"></span>
             </div>
             <div class="text-align-center margin-top-15" layout="row" layout-align="center center">
                 <div flex>
-                    <img data-ng-src="{{charmBarNodeItem.icon}}" alt="Item-Icon">
+                    <img data-ng-src="{{sidebarActiveData.nodeItem.icon}}" alt="Item-Icon">
                 </div>
                 <div class="md-display-2">
                     <span>|</span>
                 </div>
                 <div flex>
-                    <img data-ng-src="{{charmBarNodeItem.status.icon}}" alt="Sensor-Status">
+                    <img data-ng-src="{{sidebarActiveData.nodeItem.status.icon}}" alt="Sensor-Status">
                     <div class="md-caption">
-                        <span data-ng-bind="charmBarNodeItem.status.name"></span>
+                        <span data-ng-bind="sidebarActiveData.nodeItem.status.name"></span>
                     </div>
                 </div>
             </div>
             <div class="text-align-center margin-top-15" layout="row" layout-align="center center">
-                <md-button title="Go up one level." aria-label="Parent-Button" data-ng-click="setParentNodeInfo()"
-                    data-ng-if="charmBarNodeItem.parentId">
+                <md-button title="Go up one level." aria-label="Parent-Button" data-ng-click="setParentNodeItem()"
+                    data-ng-if="sidebarActiveData.nodeItem.parentId">
                     <md-icon>arrow_backward</md-icon>
                 </md-button>
                 <md-button title="Show sensor chart." aria-label="Chart-Button" data-ng-click="showChartDialog()"
-                    data-ng-if="charmBarNodeItem.category.id == mapCategories.c003.id">
+                    data-ng-if="sidebarActiveData.nodeItem.category.id == 'c003'">
                     <md-icon>show_chart</md-icon>
                 </md-button>
                 <md-button title="Display more information." aria-label="Info-Button" data-ng-click="showNodeItem()">
@@ -134,15 +134,15 @@
                 </md-button>
             </div>
             <div class="md-display-1 text-align-center margin-top-15"
-                data-ng-if="charmBarNodeItem.category.id == mapCategories.c003.id">
-                <span data-ng-bind="charmBarNodeItem.reading.value"></span>
-                <span data-ng-bind="charmBarNodeItem.reading.unit"></span>
+                data-ng-if="sidebarActiveData.nodeItem.category.id == 'c003'">
+                <span data-ng-bind="sidebarActiveData.nodeItem.reading.value"></span>
+                <span data-ng-bind="sidebarActiveData.nodeItem.reading.unit"></span>
             </div>
-            <div class="text-align-center margin-top-15" data-ng-if="charmBarNodeItem.leafNode">
+            <div class="text-align-center margin-top-15" data-ng-if="sidebarActiveData.nodeItem.leafNode">
                 <md-icon>place</md-icon>
-                <span data-ng-bind="charmBarNodeItem.address"></span>
+                <span data-ng-bind="sidebarActiveData.nodeItem.address"></span>
             </div>
-            <div data-ng-if="!charmBarNodeItem.leafNode">
+            <div data-ng-if="!sidebarActiveData.nodeItem.leafNode">
                 <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item, true)"
                     data-ng-repeat="item in tableData track by $index">
                     <md-card-content layout="row" layout-xs="column">
@@ -194,9 +194,14 @@
                 data-ng-attr-title="{{::pageData.pd010.description}}">
                 <md-icon data-ng-bind="::pageData.pd010.icon"></md-icon>
             </md-button>
-            <md-button class="md-fab md-raised md-mini" data-ng-click="signOut()" aria-label="Logout"
-                title="Logout from application.">
-                <md-icon>power_settings_new</md-icon>
+            <md-button class="md-fab md-raised md-mini" data-ng-href="{{::pageData.pd012.href}}"
+                data-ng-attr-aria-label="{{::pageData.pd012.title}}"
+                data-ng-attr-title="{{::pageData.pd012.description}}">
+                <md-icon data-ng-bind="::pageData.pd012.icon"></md-icon>
+            </md-button>
+            <md-button class="md-fab md-raised md-mini" data-ng-click="updateLocalNodeData()" aria-label="Update-Button"
+                title="Updates local node data.">
+                <md-icon>build</md-icon>
             </md-button>
         </md-fab-actions>
     </md-fab-speed-dial>
@@ -273,17 +278,19 @@
         </md-button>
     </div>
 </div>
-<!--
-<div style="visibility: hidden">
-    <div class="md-dialog-container" id="chartDialog">
-        <md-dialog aria-label="Chart-Dialog" layout-padding>
-            <div class="text-align-right">
-                <md-button class="md-icon-button" aria-label="Close-Button" data-ng-click="hideChartDialog()">
-                    <md-icon>close</md-icon>
-                </md-button>
-            </div>
-            <canvas id="chartCanvas" width="400" height="400"></canvas>
-        </md-dialog>
+<div class="fade-toogle fixed-background-2" ng-show="chartDialogVisible">
+    <div class="position-center">
+        <md-card class="chart-container">
+            <md-card-content>
+                <div class="text-align-right">
+                    <md-button class="md-icon-button" aria-label="Close-Button" data-ng-click="hideChartDialog()">
+                        <md-icon>close</md-icon>
+                    </md-button>
+                </div>
+                <div class="text-align-center">
+                    <canvas class="chart-canvas"></canvas>
+                </div>
+            </md-card-content>
+        </md-card>
     </div>
 </div>
--->

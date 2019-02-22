@@ -19,9 +19,15 @@ app.controller('ViewCentreController', function ($scope, $location, STATUS_CODES
                     });
                     break;
                 case STATUS_CODES.dataUpdateSuccessful:
-                    if ($scope.centreId == data.nodeItem.id) {
+                    var nodeIndex = data.updatedNodeIds.findIndex(
+                        function (nodeId) {
+                            return $scope.centreId == nodeId;
+                        }
+                    );
+
+                    if (nodeIndex > -1) {
                         $scope.$parent.safeApply(function () {
-                            $scope.centreItem = data.nodeItem;
+                            $scope.centreItem = DataService.getNodeItem(data.updatedNodeIds[nodeIndex]);
                         });
                     }
                     break;
@@ -43,8 +49,7 @@ app.controller('ViewCentreController', function ($scope, $location, STATUS_CODES
             $scope.centreId = $location.search().centre_id;
             $scope.getCentreItem();
         } else {
-            $scope.$parent.showDialog('Error', 'centre_id was not found in the query parameters.')
-
+            $scope.$parent.showDialog('Error', 'centre_id was not found in the query parameters.');
             $location.url($scope.pageData.pd001.route);
         }
     });

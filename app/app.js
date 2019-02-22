@@ -1,4 +1,4 @@
-var app = angular.module('sensorApp', ['ngRoute', 'ngAnimate', 'ngMaterial', 'ngMessages', 'ngAria']);
+var app = angular.module('sensorApp', ['ngRoute', 'ngAnimate', 'ngMaterial', 'ngMessages', 'ngSanitize', 'ngAria']);
 
 app.run(function ($rootScope, $mdDialog, $location, PAGE_DATA, AuthService) {
     /*

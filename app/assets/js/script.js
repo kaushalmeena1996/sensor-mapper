@@ -8,6 +8,6 @@ firebase
         messagingSenderId: "833622353265"
     });
 
-$(window).on('load', function () {
-    $(".loader-1").fadeOut("fast");
-});
+window.onload = function () {
+    document.querySelector('.fade-toogle').classList.add('ng-hide');
+};

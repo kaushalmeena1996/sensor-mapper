@@ -31,17 +31,11 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
 
         nodeRef.on("child_changed", function (snapshot) {
             var item = snapshot.val(),
-                sensorStatusChanged = false,
-                index = updateSensorItem(item);
-
-            if (item.status.name != nodeData[index].status.name) {
-                sensorStatusChanged = true;
-            }
+                updatedNodeIds = updateNodeItem(item);
 
             $rootScope.$emit(SERVICE_EVENTS.nodeData, {
                 statusCode: STATUS_CODES.dataUpdateSuccessful,
-                nodeItem: nodeData[index],
-                sensorStatusChanged: sensorStatusChanged
+                updatedNodeIds: updatedNodeIds
             });
         }, function (error) {
             $rootScope.$emit(SERVICE_EVENTS.nodeData, {
@@ -73,77 +67,83 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
     }
 
     function loadNodeData(data) {
-        var index = -1;
+        var nodeIndex = -1;
 
         angular.forEach(data, function (item) {
-            index = nodeData.push(item) - 1;
+            nodeIndex = nodeData.push(item) - 1;
 
             switch (item.category.id) {
-                case MAP_CATEGORIES.c001.id:
-                    nodeData[index].icon = MAP_CENTRES[item.type.id].icons.cst001;
-                    nodeData[index].status = CENTRE_STATUSES.cst001;
+                case 'c001':
+                    nodeData[nodeIndex].icon = MAP_CENTRES[item.type.id].icons.cst001;
+                    nodeData[nodeIndex].status = CENTRE_STATUSES.cst001;
                     break;
-                case MAP_CATEGORIES.c002.id:
-                    nodeData[index].icon = MAP_LOCATIONS[item.type.id].icons.lst001;
-                    nodeData[index].status = LOCATION_STATUSES.lst001;
-                    nodeData[index].status.disasterId = null;
+                case 'c002':
+                    nodeData[nodeIndex].icon = MAP_LOCATIONS[item.type.id].icons.lst001;
+                    nodeData[nodeIndex].status = LOCATION_STATUSES.lst001;
                     break;
-                case MAP_CATEGORIES.c003.id:
-
+                case 'c003':
                     if (item.reading.value > item.reading.limit.moderate) {
-                        nodeData[index].icon = MAP_SENSORS[item.type.id].icons.sst003;
-                        nodeData[index].status = SENSOR_STATUSES.sst003;
+                        nodeData[nodeIndex].icon = MAP_SENSORS[item.type.id].icons.sst003;
+                        nodeData[nodeIndex].status = SENSOR_STATUSES.sst003;
                     } else if (item.reading.value > item.reading.limit.normal) {
-                        nodeData[index].icon = MAP_SENSORS[item.type.id].icons.sst002;
-                        nodeData[index].status = SENSOR_STATUSES.sst002;
+                        nodeData[nodeIndex].icon = MAP_SENSORS[item.type.id].icons.sst002;
+                        nodeData[nodeIndex].status = SENSOR_STATUSES.sst002;
                     } else {
-                        nodeData[index].icon = MAP_SENSORS[item.type.id].icons.sst001;
-                        nodeData[index].status = SENSOR_STATUSES.sst001;
+                        nodeData[nodeIndex].icon = MAP_SENSORS[item.type.id].icons.sst001;
+                        nodeData[nodeIndex].status = SENSOR_STATUSES.sst001;
                     }
-
-                    nodeData[index].status.disasterId = item.disasterId;
                     break;
             }
 
-            nodeIds[item.id] = index;
+            nodeIds[item.id] = nodeIndex;
         });
     }
 
-    function updateSensorItem(item) {
-        var index = nodeIds[item.id];
+    function updateNodeItem(item) {
+        var nodeIndex = nodeIds[item.id],
+            updatedNodeIds = [];
 
-        if (item.category.id == MAP_CATEGORIES.c003.id) {
-            nodeData[index].reading.value = item.reading.value;
+        updatedNodeIds.push(item.id);
 
-            if (item.reading.value > item.reading.limit.moderate) {
-                nodeData[index].icon = MAP_SENSORS[item.type.id].icons.sst003;
-                nodeData[index].status = SENSOR_STATUSES.sst003
-            } else if (item.reading.value > item.reading.limit.normal) {
-                nodeData[index].icon = MAP_SENSORS[item.type.id].icons.sst002;
-                nodeData[index].status = SENSOR_STATUSES.sst002;
-            } else {
-                nodeData[index].icon = MAP_SENSORS[item.type.id].icons.sst001;
-                nodeData[index].status = SENSOR_STATUSES.sst001;
-            }
+        switch (item.category.id) {
+            case 'c001':
+                break;
+            case 'c002':
+                break;
+            case 'c003':
+                nodeData[nodeIndex].reading.value = item.reading.value;
 
-            if (item.coordinates.dynamic) {
-                nodeData[index].coordinates = item.coordinates;
-            }
+                if (item.reading.value > item.reading.limit.moderate) {
+                    nodeData[nodeIndex].icon = MAP_SENSORS[item.type.id].icons.sst003;
+                    nodeData[nodeIndex].status = SENSOR_STATUSES.sst003
+                } else if (item.reading.value > item.reading.limit.normal) {
+                    nodeData[nodeIndex].icon = MAP_SENSORS[item.type.id].icons.sst002;
+                    nodeData[nodeIndex].status = SENSOR_STATUSES.sst002;
+                } else {
+                    nodeData[nodeIndex].icon = MAP_SENSORS[item.type.id].icons.sst001;
+                    nodeData[nodeIndex].status = SENSOR_STATUSES.sst001;
+                }
+
+                if (item.coordinates.dynamic) {
+                    nodeData[nodeIndex].coordinates.lat = item.coordinates.lat;
+                    nodeData[nodeIndex].coordinates.lng = item.coordinates.lng;
+                }
+                break;
         }
 
-        return index;
+        return updatedNodeIds;
     }
 
     function updateNodeStatus(id) {
-        var index = nodeIds[id];
+        var nodeIndex = nodeIds[id];
 
-        if (nodeData[index].category.id == MAP_CATEGORIES.c002.id) {
+        if (nodeData[nodeIndex].category.id == 'c002') {
             var childrenNodes = nodeData.filter(function (nodeItem) { return nodeItem.parentId == id }),
                 disasterScore = 0,
                 maxDisasterId = '',
                 maxDisasterScore = 0,
-                totalDisasterScore = 0;
-            i;
+                totalDisasterScore = 0,
+                i;
 
             for (i = 0; i < childrenNodes.length; i++) {
                 disasterScore = childrenNodes[i].disasterScore[childrenNodes[i].status.id];
@@ -156,16 +156,16 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
                 totalDisasterScore += disasterScore;
             }
 
-            if (disasterScore > nodeData[index].disasterScore.lst002) {
-                nodeData[index].icon = MAP_SENSORS[nodeData[index].type.id].icons.lst003;
-                nodeData[index].status.id = LOCATION_STATUSES.sst003.id;
-                nodeData[index].status.name = LOCATION_STATUSES.lst003.name;
-                nodeData[index].status.disasterId = maxDisasterId;
+            if (totalDisasterScore > nodeData[nodeIndex].disasterScore.lst002) {
+                nodeData[nodeIndex].icon = MAP_SENSORS[nodeData[nodeIndex].type.id].icons.lst003;
+                nodeData[nodeIndex].status.id = LOCATION_STATUSES.sst003.id;
+                nodeData[nodeIndex].status.name = LOCATION_STATUSES.lst003.name;
+                nodeData[nodeIndex].status.disasterId = maxDisasterId;
 
                 if (DISASTER_TYPES[maxDisasterId].hasLevels) {
-                    nodeData[index].status.icon = DISASTER_TYPES[maxDisasterId].icons.lst003;
+                    nodeData[nodeIndex].status.icon = DISASTER_TYPES[maxDisasterId].icons.lst003;
                 } else {
-                    nodeData[index].status.icon = DISASTER_TYPES[maxDisasterId].icon;
+                    nodeData[nodeIndex].status.icon = DISASTER_TYPES[maxDisasterId].icon;
                 }
             }
         }
@@ -184,18 +184,6 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
         scope.$on('$destroy', handler);
     };
 
-    function fetchLocalNodeData() {
-        $.getJSON("mapmysensor.json", function (data) {
-            loadNodeData(data.nodes);
-
-            nodeDataLoaded = true;
-
-            $rootScope.$emit(SERVICE_EVENTS.nodeData, {
-                statusCode: STATUS_CODES.dataLoadSuccessful
-            });
-        });
-    }
-
     dataService.subscribeChartData = function (id, scope, event, callback) {
         var handler = $rootScope.$on(event, callback);
 
@@ -205,26 +193,18 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
         scope.$on('$destroy', handler);
     };
 
-    function fetchLocalValueData() {
-        $.getJSON("mapmysensor.json", function (data) {
-            var chartData = [];
-
-            angular.forEach(data.values.s001, function (item) {
-                chartData.push({
-                    x: new Date(item.timestamp),
-                    y: item.value
-                });
-            });
-
-            $rootScope.$emit(SERVICE_EVENTS.chartData, {
-                statusCode: STATUS_CODES.dataLoadSuccessful,
-                chartData: chartData
-            });
-        });
-    }
-
     dataService.getNodeData = function () {
         return nodeData;
+    };
+
+    dataService.getFilteredNodeData = function (categoryId, statusId) {
+        var item = nodeData.find(
+            function (nodeItem) {
+                return nodeItem.category.id == categoryId && nodeItem.status.id == statusId;
+            }
+        );
+
+        return item;
     };
 
     dataService.getNodeItem = function (id) {
@@ -242,13 +222,13 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
     };
 
     dataService.updateNodeItem = function (item) {
-        var index = nodeData.findIndex(
+        var nodeIndex = nodeData.findIndex(
             function (nodeItem) {
                 return nodeItem.id == item.id
             }
         );
 
-        nodeData[index] = item;
+        nodeData[nodeIndex] = item;
     };
 
     dataService.getNodeChildren = function (id) {
@@ -264,7 +244,7 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
     dataService.getCentreData = function () {
         var data = nodeData.filter(
             function (nodeItem) {
-                return nodeItem.category.id == MAP_CATEGORIES.c001.id;
+                return nodeItem.category.id == 'c001';
             }
         );
 
@@ -274,88 +254,37 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
     dataService.getLocationData = function () {
         var data = nodeData.filter(
             function (nodeItem) {
-                return nodeItem.category.id == MAP_CATEGORIES.c002.id;
+                return nodeItem.category.id == 'c002';
             }
         );
 
         return data;
+    };
+
+    dataService.getAbnormalLocationData = function () {
+        var item = nodeData.find(
+            function (nodeItem) {
+                return nodeItem.category.id == 'c002' && (nodeItem.status.id == 'lst002' || nodeItem.status.id == 'lst003');
+            }
+        );
+
+        return item;
     };
 
     dataService.getSensorData = function () {
         var data = nodeData.filter(
             function (nodeItem) {
-                return nodeItem.category.id == MAP_CATEGORIES.c003.id;
+                return nodeItem.category.id == 'c003';
             }
         );
 
         return data;
-    };
-
-    dataService.getNormalSensorData = function () {
-        var data = nodeData.filter(
-            function (nodeItem) {
-                return nodeItem.category.id == MAP_CATEGORIES.c003.id && nodeItem.status.name == SENSOR_STATUSES.sst001.name;
-            }
-        );
-
-        return data;
-    };
-
-    dataService.getNormalSensorCount = function () {
-        var data = nodeData.filter(
-            function (nodeItem) {
-                return nodeItem.category.id == MAP_CATEGORIES.c003.id && nodeItem.status.name == SENSOR_STATUSES.sst001.name;
-            }
-        );
-
-        return data.length;
-    };
-
-
-    dataService.getFailedSensorData = function () {
-        var data = nodeData.filter(
-            function (nodeItem) {
-                return nodeItem.category.id == MAP_CATEGORIES.c003.id && nodeItem.status.name == SENSOR_STATUSES.sst002.name;
-            }
-        );
-
-        return data;
-    };
-
-    dataService.getSevereSensorCount = function () {
-        var data = nodeData.filter(
-            function (nodeItem) {
-                return nodeItem.category.id == MAP_CATEGORIES.c003.id && nodeItem.status.name == SENSOR_STATUSES.sst002.name;
-            }
-        );
-
-        return data.length;
-    };
-
-    dataService.getAbnormalSensorData = function () {
-        var data = nodeData.filter(
-            function (nodeItem) {
-                return nodeItem.category.id == MAP_CATEGORIES.c003.id && nodeItem.status.name == SENSOR_STATUSES.sst003.name;
-            }
-        );
-
-        return data;
-    };
-
-    dataService.getExtremeSensorCount = function () {
-        var data = nodeData.filter(
-            function (nodeItem) {
-                return nodeItem.category.id == MAP_CATEGORIES.c003.id && nodeItem.status.name == SENSOR_STATUSES.sst003.name;
-            }
-        );
-
-        return data.length;
     };
 
     dataService.deleteCustomCentreData = function () {
         nodeData = nodeData.filter(
             function (nodeItem) {
-                return nodeItem.type.id != 'ct006';
+                return nodeItem.type.id != 'ctxxx';
             }
         );
     };
@@ -363,6 +292,106 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
     $rootScope.$on('$destroy', function () {
         nodeRef.off();
     });
+
+    // Test Functions
+
+    function getJSON(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            var status = xhr.status;
+            if (status === 200) {
+                callback(xhr.response);
+            } else {
+                callback(xhr.response, status);
+            }
+        };
+        xhr.send();
+    };
+
+    function fetchLocalNodeData() {
+        getJSON("mapmysensor.json", function (data) {
+            loadNodeData(data.nodes);
+
+            nodeDataLoaded = true;
+
+            $rootScope.$emit(SERVICE_EVENTS.nodeData, {
+                statusCode: STATUS_CODES.dataLoadSuccessful
+            });
+        });
+    }
+
+    function fetchLocalValueData() {
+        getJSON("mapmysensor.json", function (data) {
+            var chartData = [];
+
+            angular.forEach(data.values.s001, function (item) {
+                chartData.push({
+                    x: new Date(item.timestamp),
+                    y: item.value
+                });
+            });
+
+            $rootScope.$emit(SERVICE_EVENTS.chartData, {
+                statusCode: STATUS_CODES.dataLoadSuccessful,
+                chartData: chartData
+            });
+        });
+    }
+
+    dataService.updateLocalNodeData = function () {
+        var item = {
+            id: "s001",
+            parentId: "l012",
+            category: {
+                id: "c003",
+                name: "Sensor"
+            },
+            name: "SensorC",
+            address: "Swami Vivekanand Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
+            type: {
+                id: "st002",
+                name: "Thermometer"
+            },
+            photo: "assets/img/default-photo.png",
+            description: "",
+            leafNode: true,
+            display: true,
+            zoom: 19,
+            boundary: null,
+            disasterId: "dt001",
+            disasterScore: {
+                sst001: 0,
+                sst002: 30,
+                sst003: 60
+            },
+            reading: {
+                value: 50,
+                unit: "°C",
+                boolean: false,
+                limit: {
+                    sst001: 100,
+                    sst002: 200,
+                    sst003: 500
+                }
+            },
+            coordinates: {
+                lat: 21.162866,
+                lng: 72.790458,
+                dynamic: false
+            },
+            updated: 1518244200000,
+            created: 1518244200000
+        };
+
+        var updatedNodeIds = updateNodeItem(item);
+
+        $rootScope.$emit(SERVICE_EVENTS.nodeData, {
+            statusCode: STATUS_CODES.dataUpdateSuccessful,
+            updatedNodeIds: updatedNodeIds
+        });
+    };
 
     return dataService;
 });

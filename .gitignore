@@ -1,2 +1,5 @@
 node_modules/
-.firebase/
+/.firebase/
+/.vscode/
+/.firebaserc/
+firebase-debug.log

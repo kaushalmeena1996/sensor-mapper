@@ -9,7 +9,6 @@ app.controller('SearchController', function ($scope, $location, $filter, MAP_CAT
     $scope.filter2 = '*';
     $scope.filter3 = '*';
 
-    $scope.mapCategories = MAP_CATEGORIES;
     $scope.categoryTypes = CATEGORY_TYPES;
     $scope.centreTypes = CENTRE_TYPES;
     $scope.locationTypes = LOCATION_TYPES;
@@ -30,15 +29,32 @@ app.controller('SearchController', function ($scope, $location, $filter, MAP_CAT
                     });
                     break;
                 case STATUS_CODES.dataUpdateSuccessful:
-                    var index = $scope.tableData.findIndex(
-                        function (tableItem) {
-                            return tableItem.id == data.nodeItem.id;
-                        }
-                    );
+                    var tableData = $scope.tableData,
+                        tableDataUpdated = false,
+                        nodeIndex,
+                        nodeItem,
+                        i;
 
-                    if (index > -1) {
+                    for (i = 0; i < data.updateNodeIds.length; i++) {
+                        nodeIndex = tableData.findIndex(
+                            function (tableItem) {
+                                return tableItem.id == data.updateNodeIds[i];
+                            }
+                        );
+
+                        if (nodeIndex > -1) {
+                            nodeItem = DataService.getNodeItem(data.updateNodeIds[i]);
+
+                            if (tableData[nodeIndex].status.id != nodeItem.status.id) {
+                                $scope.tableData[nodeIndex] = nodeItem;
+                                tableDataUpdated = true;
+                            }
+                        }
+                    }
+
+                    if (tableDataUpdated) {
                         $scope.$parent.safeApply(function () {
-                            $scope.tableData[index] = data.nodeItem;
+                            $scope.tableData = tableData;
                         });
                     }
                     break;
@@ -86,19 +102,35 @@ app.controller('SearchController', function ($scope, $location, $filter, MAP_CAT
     };
 
     $scope.plotNodeItem = function (id) {
-        var link = $scope.$parent.pageData.p002.route;
+        var link = $scope.$parent.pageData.pd002.route;
 
         link += '?plot_code=' + PLOT_CODES.nodeItem + '&node_id=' + id;
 
         $location.url(link);
     };
 
-    $scope.showNodeItem = function (id, category) {
-        var link = '/view/';
+    $scope.showNodeItem = function (nodeId, categoryId) {
+        var categoryName = '',
+            link = '';
 
-        category = category.toLowerCase();
+        switch (categoryId) {
+            case 'c001':
+                categoryName = MAP_CATEGORIES.c001.name;
+                link = $scope.$parent.pageData.pd007.route;
+                break;
+            case 'c002':
+                categoryName = MAP_CATEGORIES.c002.name;
+                link = $scope.$parent.pageData.pd008.route;
+                break;
+            case 'c003':
+                categoryName = MAP_CATEGORIES.c003.name;
+                link = $scope.$parent.pageData.pd009.route;
+                break;
+        }
 
-        link += category + '?' + category + '_id=' + id;
+        categoryName = categoryName.toLowerCase();
+
+        link += '?' + categoryName + '_id=' + nodeId;
 
         $location.url(link);
     };
