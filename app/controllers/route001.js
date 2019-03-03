@@ -2,7 +2,7 @@ var app = angular.module('sensorApp');
 var map,
     markerObject = null;
 
-app.controller('RouteCentreController', function ($scope, $location, $filter, MAP_CATEGORIES, CUSTOM_CENTRE, CENTRE_TYPES, CENTRE_STATUSES, CENTRE_STATUS_TYPES, STATUS_CODES, SERVICE_EVENTS, DEFAULT_PHOTO_PATH, RouteService, DataService) {
+app.controller('RouteCentreController', function ($scope, $location, $filter, MAP_CATEGORIES, MAP_CENTRES, CENTRE_TYPES, CENTRE_STATUSES, CENTRE_STATUS_TYPES, STATUS_CODES, SERVICE_EVENTS, IMAGE_DATA, RouteService, DataService) {
     $scope.tableData = [];
 
     $scope.selectedCentres = [];
@@ -24,13 +24,13 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
         category: MAP_CATEGORIES.c001,
         name: '',
         address: '',
-        icon: CUSTOM_CENTRE.icons.cst001,
+        icon: MAP_CENTRES.ctxxx.icons.cst001,
         type: {
-            id: CUSTOM_CENTRE.id,
-            name: CUSTOM_CENTRE.name
+            id: MAP_CENTRES.ctxxx.id,
+            name: MAP_CENTRES.ctxxx.name
         },
         status: CENTRE_STATUSES.cst001,
-        photo: DEFAULT_PHOTO_PATH,
+        photo: IMAGE_DATA.id008.path,
         description: '',
         rating: 1.0,
         leafNode: true,
@@ -61,18 +61,18 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
                         nodeItem,
                         i;
 
-                    for (i = 0; i < data.updateNodeIds.length; i++) {
+                    for (i = 0; i < data.updatedNodeIds.length; i++) {
                         nodeIndex = tableData.findIndex(
                             function (tableItem) {
-                                return tableItem.id == data.updateNodeIds[i];
+                                return tableItem.id == data.updatedNodeIds[i];
                             }
                         );
 
                         if (nodeIndex > -1) {
-                            nodeItem = DataService.getNodeItem(data.updateNodeIds[i]);
+                            nodeItem = DataService.getNodeItem(data.updatedNodeIds[i]);
 
                             if (tableData[nodeIndex].status.id != nodeItem.status.id) {
-                                $scope.tableData[nodeIndex] = nodeItem;
+                                tableData[nodeIndex] = nodeItem;
                                 tableDataUpdated = true;
                             }
                         }
@@ -88,6 +88,7 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
                     $scope.$parent.safeApply(function () {
                         $scope.$parent.hideLoadingOverlay();
                     });
+
                     $scope.$parent.showDialog('Error', data.message);
                     break;
                 case STATUS_CODES.dataUpdateFailed:
@@ -124,13 +125,13 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
                                 category: 'c001',
                                 name: '',
                                 address: '',
-                                icon: CUSTOM_CENTRE.icons.cst001,
+                                icon: MAP_CENTRES.ctxxx.icons.cst001,
                                 type: {
-                                    id: CUSTOM_CENTRE.id,
-                                    name: CUSTOM_CENTRE.name
+                                    id: MAP_CENTRES.ctxxx.id,
+                                    name: MAP_CENTRES.ctxxx.name
                                 },
                                 status: CENTRE_STATUSES.cst001,
-                                photo: DEFAULT_PHOTO_PATH,
+                                photo: IMAGE_DATA.id008.path,
                                 description: '',
                                 rating: 1.0,
                                 leafNode: true,

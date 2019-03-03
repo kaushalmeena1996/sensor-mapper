@@ -16,7 +16,7 @@ app.controller('LoginController', function ($scope, $location, AUTH_EVENTS, STAT
 
             switch (data.statusCode) {
                 case STATUS_CODES.signInSuccessful:
-                    $scope.$parent.showDialog('Error', 'Successfully logged in.');
+                    $scope.$parent.showToast(['Successfully logged in.'], 3000);
                     $scope.safeApply(function () {
                         $location.url($scope.$parent.pageData.pd001.route);
                     });

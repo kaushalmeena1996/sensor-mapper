@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 
-app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES, MAP_ROUTES, DataService) {
+app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_ROUTES, DataService) {
     var routeService = {};
 
     var customCentreData = [],
@@ -33,19 +33,42 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
 
     routeService.getEmergencyRouteData = function () {
         var centreData = DataService.getCentreData(),
-            abnormalSensorData = DataService.getFilteredNodeData('c003', 'sst003'),
+            disasterAffectedClusterData = DataService.getDisasterAffectedClusterData(),
             selectedCentreData;
 
-        if (abnormalSensorData) {
-            selectedCentreData = centreSelectionAlgorithm1(
+        if (disasterAffectedClusterData.length > 0) {
+            selectedCentreData = sourceSelectionAlgorithm1(
                 centreData,
-                abnormalSensorData
+                disasterAffectedClusterData
             );
 
             return routeGenerationAlgorithm1(
                 selectedCentreData,
-                abnormalSensorData,
-                MAP_ROUTES.emergency
+                disasterAffectedClusterData,
+                LOCATION_STATUSES,
+                MAP_ROUTES.r001
+            );
+        } else {
+            return [];
+        }
+    };
+
+    routeService.getHospitalRouteData = function () {
+        var hospitalData = DataService.getHospitalData(),
+            disasterAffectedClusterData = DataService.getDisasterAffectedClusterData(),
+            selectedHospitalData;
+
+        if (disasterAffectedClusterData.length > 0) {
+            selectedHospitalData = sourceSelectionAlgorithm1(
+                hospitalData,
+                disasterAffectedClusterData
+            );
+
+            return routeGenerationAlgorithm1(
+                selectedHospitalData,
+                disasterAffectedClusterData,
+                LOCATION_STATUSES,
+                MAP_ROUTES.r002
             );
         } else {
             return [];
@@ -56,180 +79,169 @@ app.factory('RouteService', function (MAP_CENTRES, MAP_SENSORS, SENSOR_STATUSES,
         return routeGenerationAlgorithm1(
             customCentreData,
             customSensorData,
-            MAP_ROUTES.custom
+            SENSOR_STATUSES,
+            MAP_ROUTES.rxxx
         );
     };
 
-    function centreSelectionAlgorithm1(centreData, sensorData) {
-        var selectedCentreData = [],
-            selectedCentreIds = [],
+    function sourceSelectionAlgorithm1(sourceData, waypointData) {
+        var selectedSourceData = [],
+            selectedSourceLimit = waypointData.length,
+            visitedIndexes = [],
             distance,
             rating,
-            score,
-            maxCentreIndex,
-            maxScore,
+            routeScore,
+            selectedSourceIndex,
+            maxRouteScore,
             i,
             j;
 
         while (1) {
-            maxCentreIndex = -1;
-            maxScore = 0;
+            maxRouteScore = 0;
+            selectedSourceIndex = -1;
 
-            for (i = 0; i < sensorData.length; i++) {
-                for (j = 0; j < centreData.length; j++) {
-                    if (selectedCentreIds.includes(centreData[j].id) == false) {
+            for (i = 0; i < waypointData.length; i++) {
+                for (j = 0; j < sourceData.length; j++) {
+                    if (visitedIndexes.includes(j) == false) {
+                        if (sourceData[j].type.id != waypointData[i].disaster.centreTypeId) {
+                            continue;
+                        }
+
                         distance = computeDistance(
-                            sensorData[i].coordinates.lat,
-                            sensorData[i].coordinates.lng,
-                            centreData[j].coordinates.lat,
-                            centreData[j].coordinates.lng,
+                            waypointData[i].coordinates.lat,
+                            waypointData[i].coordinates.lng,
+                            sourceData[j].coordinates.lat,
+                            sourceData[j].coordinates.lng,
                         );
 
-                        rating = centreData[j].rating;
+                        rating = sourceData[j].rating;
 
-                        score = (rating) / (distance);
+                        routeScore = (rating) / (distance);
 
-                        if (maxScore < score) {
-                            maxCentreIndex = j;
-                            maxScore = score;
+                        if (maxRouteScore < routeScore) {
+                            maxRouteScore = routeScore;
+                            selectedSourceIndex = j;
                         }
                     }
                 }
             }
 
-            if (maxScore > 0) {
-                selectedCentreData.push(
-                    centreData[maxCentreIndex]
-                );
-
-                selectedCentreIds.push(
-                    centreData[maxCentreIndex].id
-                );
-            } else {
+            if (maxRouteScore == 0 || selectedSourceData.length == selectedSourceLimit) {
                 break;
             }
+
+            selectedSourceData.push(sourceData[selectedSourceIndex]);
+
+            visitedIndexes.push(selectedSourceIndex);
         }
 
-        return selectedCentreData;
+        return selectedSourceData;
     }
 
-    function routeGenerationAlgorithm1(centreData, sensorData, routeType) {
-        var visitedSensors = [],
+    function routeGenerationAlgorithm1(sourceData, waypointData, statusData, routeType) {
+        var visitedIndexes = [],
+            previousIndexes = [],
             routeData = [],
             distance,
             priority,
             rating,
-            score,
-            totalScore,
-            maxCentreIndex,
-            maxSensorIndex,
+            routeScore,
+            totalRouteScore,
+            selectedSourceIndex,
+            selectedWaypointIndex,
+            maxRouteScore,
             minDistance,
-            maxScore,
             i,
             j;
 
-        for (i = 0; i < centreData.length; i++) {
+        for (i = 0; i < sourceData.length; i++) {
             routeData.push({
-                routeInfo: {
-                    routeType: routeType,
-                    previousSensorIndex: -1,
-                    origin: centreData[i].name,
+                information: {
+                    type: routeType,
+                    origin: sourceData[i].name,
                     destination: null,
                     totalNodes: 1,
                     totalDistance: 0,
-                    totalScore: 0
+                    totalRouteScore: 0
                 },
-                routeArray: [
-                    centreData[i]
+                path: [
+                    sourceData[i]
                 ]
             });
+
+            previousIndexes.push(-1);
         }
 
         while (1) {
-            maxCentreIndex = -1;
-            maxSensorIndex = -1;
+            maxRouteScore = 0;
+            selectedSourceIndex = -1;
+            selectedWaypointIndex = -1;
             minDistance = 0;
-            maxScore = 0;
 
-            for (i = 0; i < centreData.length; i++) {
-                for (j = 0; j < sensorData.length; j++) {
-                    if (visitedSensors.includes(sensorData[j].id) == false) {
-                        if (centreData[i].type.name == MAP_CENTRES.ct004.name && sensorData[j].type.name != MAP_SENSORS.st002.name) {
+            for (i = 0; i < sourceData.length; i++) {
+                for (j = 0; j < waypointData.length; j++) {
+                    if (visitedIndexes.includes(j) == false) {
+                        if (routeType.id != 'rxxx' && sourceData[i].type.id != waypointData[j].disaster.centreTypeId) {
                             continue;
                         }
 
-                        if (routeData[i].routeInfo.previousSensorIndex == -1) {
+                        if (previousIndexes[i] == -1) {
                             distance = computeDistance(
-                                centreData[i].coordinates.lat,
-                                centreData[i].coordinates.lng,
-                                sensorData[j].coordinates.lat,
-                                sensorData[j].coordinates.lng
+                                sourceData[i].coordinates.lat,
+                                sourceData[i].coordinates.lng,
+                                waypointData[j].coordinates.lat,
+                                waypointData[j].coordinates.lng
                             );
                         } else {
                             distance = computeDistance(
-                                sensorData[routeData[i].routeInfo.previousSensorIndex].coordinates.lat,
-                                sensorData[routeData[i].routeInfo.previousSensorIndex].coordinates.lng,
-                                sensorData[j].coordinates.lat,
-                                sensorData[j].coordinates.lng,
+                                waypointData[previousIndexes[i]].coordinates.lat,
+                                waypointData[previousIndexes[i]].coordinates.lng,
+                                waypointData[j].coordinates.lat,
+                                waypointData[j].coordinates.lng,
                             );
                         }
 
-                        switch (sensorData[j].status) {
-                            case SENSOR_STATUSES.sst001.name:
-                                priority = 1;
-                                break;
-                            case SENSOR_STATUSES.sst002.name:
-                                priority = 5;
-                                break;
-                            case SENSOR_STATUSES.sst003.name:
-                                priority = 10;
-                                break;
-                            default:
-                                priority = 1;
-                        }
+                        priority = statusData[waypointData[j].status.id].priority;
 
-                        rating = centreData[i].rating;
+                        rating = sourceData[i].rating;
 
-                        score = (rating * priority) / (distance);
+                        routeScore = (rating * priority) / (distance);
 
-                        totalScore = routeData[i].routeInfo.totalScore;
+                        totalRouteScore = routeData[i].information.totalRouteScore;
 
-                        if (maxScore + totalScore < score + totalScore) {
-                            maxCentreIndex = i;
-                            maxSensorIndex = j;
+                        if (maxRouteScore + totalRouteScore < routeScore + totalRouteScore) {
+                            maxRouteScore = routeScore;
                             minDistance = distance;
-                            maxScore = score;
+                            selectedSourceIndex = i;
+                            selectedWaypointIndex = j;
                         }
                     }
                 }
             }
 
-            if (maxScore > 0) {
-                routeData[maxCentreIndex].routeInfo.previousSensorIndex = maxSensorIndex;
-                routeData[maxCentreIndex].routeInfo.destination = sensorData[maxSensorIndex].name;
-                routeData[maxCentreIndex].routeInfo.totalDistance += minDistance;
-                routeData[maxCentreIndex].routeInfo.totalScore += maxScore;
-                routeData[maxCentreIndex].routeInfo.totalNodes += 1;
-
-                routeData[maxCentreIndex].routeArray.push(
-                    sensorData[maxSensorIndex]
-                );
-
-                visitedSensors.push(
-                    sensorData[maxSensorIndex].id
-                );
-            } else {
+            if (maxRouteScore == 0) {
                 break;
             }
+
+            routeData[selectedSourceIndex].information.destination = waypointData[selectedWaypointIndex].name;
+            routeData[selectedSourceIndex].information.totalDistance += minDistance;
+            routeData[selectedSourceIndex].information.totalRouteScore += maxRouteScore;
+            routeData[selectedSourceIndex].information.totalNodes += 1;
+
+            routeData[selectedSourceIndex].path.push(waypointData[selectedWaypointIndex]);
+
+            previousIndexes[selectedSourceIndex] = selectedWaypointIndex;
+
+            visitedIndexes.push(selectedWaypointIndex);
         }
 
-        routeData = routeData.filter(function (e) {
-            return e.routeInfo.totalNodes > 1;
+        routeData = routeData.filter(function (routeItem) {
+            return routeItem.information.totalNodes > 1;
         });
 
         for (i = 0; i < routeData.length; i++) {
-            routeData[i].routeInfo.totalDistance = (Math.round(routeData[i].routeInfo.totalDistance * 1000) / 1000);
-            routeData[i].routeInfo.totalScore = (Math.round(routeData[i].routeInfo.totalScore * 1000) / 1000);
+            routeData[i].information.totalDistance = (Math.round(routeData[i].information.totalDistance * 1000) / 1000);
+            routeData[i].information.totalRouteScore = (Math.round(routeData[i].information.totalRouteScore * 1000) / 1000);
         }
 
         return routeData;

@@ -154,15 +154,32 @@ body {
   transform: translateX(-50%) translateY(-50%);
 }
 
-.img-thumbnail {
-  border: 1px solid #dddddd; 
-  padding: 5px; 
-  
+.position-relative {
+  position: relative;
 }
 
-.img-responsive {
+.image-thumbnail {
+  border: 1px solid #dddddd; 
+  padding: 5px; 
+}
+
+.image-responsive {
   width: calc(100% - 10px);
   height: auto;
+}
+
+.map-badge {
+    position: absolute;
+    top: 6px;
+    left: 34px;
+    height: 15px;
+    width: 25px;
+    text-align: center;
+    font-size: 13px;
+    color: white;
+    background-color: blue;
+    border-radius: 10px;
+    z-index: 20;
 }
 
 .map-container-1 {
@@ -190,7 +207,7 @@ body {
 
 .map-action-menu-3 {
   position: absolute;
-  bottom: 5px;
+  bottom: 20px;
   left: 5px;
 }
 
@@ -198,15 +215,6 @@ body {
   position: relative;
   margin: auto;
   width: 80vw;
-}
-
-.fab-badge {
-  top: 12px;
-  right: 15px;;
-  position: absolute;
-  color: white;
-  background-color: blue;
-  border-radius: 2px; 
 }
 
 .fade-animation.ng-move,

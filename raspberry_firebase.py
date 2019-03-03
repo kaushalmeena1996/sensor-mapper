@@ -28,6 +28,14 @@ credentials = firebase_admin.credentials.cert({
 # Sensor id for which data to be stored
 sensor_id = "s001"
 
+# Sensor abnormal limit
+# Reading above which sensor status is changed to abnormal
+abnormal_limit = 100
+
+# Sensor failure limit
+# Reading below which sensor status is changed to failure
+failure_limit = 0
+
 # Sensor should be set to Adafruit_DHT.DHT11,
 # Adafruit_DHT.DHT22, or Adafruit_DHT.AM2302.
 sensor = Adafruit_DHT.DHT11
@@ -48,9 +56,6 @@ firebase_admin.initialize_app(credentials, {
 # Get a reference to the database service
 db = firebase_admin.db.reference()
 
-# Get starting time
-time1 = time.time()
-
 while True:
     humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
 
@@ -64,17 +69,12 @@ while True:
         time.sleep(10)
 
     # Write data to database
-    db.child('nodes').child(sensor_id).update(
+    db.child('nodes').child(sensor_id).child('reading').update(
         {'value': temperature})
     db.child('values').child(sensor_id).push(
         {'value': temperature, 'timestamp': {'.sv': 'timestamp'}})
 
-    # Stop loop if abnormal temperature detected
-    if temperature > 99 or temperature < 1:
+    # Stop loop if abnormal or failure reading detected
+    if temperature > abnormal_limit or temperature < failure_limit:
+        print('Status changed, exiting the loop...')
         break
-
-    # Get ending time
-    time2 = time.time()
-
-    # Calculate time difference in seconds
-    seconds = time2 - time1

@@ -11,7 +11,7 @@ app.controller('LogoutController', function ($scope, $location, AUTH_EVENTS, STA
 
             switch (data.statusCode) {
                 case STATUS_CODES.signOutSuccessful:
-                    $scope.$parent.showDialog('Error', 'Successfully logged out.');
+                    $scope.$parent.showToast(['Successfully logged out.'], 3000);
                     $scope.safeApply(function () {
                         $location.url($scope.$parent.pageData.pd011.route);
                     });

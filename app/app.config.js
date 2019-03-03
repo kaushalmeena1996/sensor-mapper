@@ -190,6 +190,7 @@ app.constant('SIDEBAR_DATA', {
         description: "Display list of relief centres.",
         icon: "notifications",
         mode: 0,
+        color: "#000000",
         filter1: "c001"
     },
     sd002: {
@@ -198,14 +199,16 @@ app.constant('SIDEBAR_DATA', {
         description: "Display list of locations.",
         icon: "place",
         mode: 0,
+        color: "#000000",
         filter1: "c002"
     },
     sd003: {
         id: "sd003",
         title: "Normal Sensors",
-        description: "Display list of sensors behaving normally.",
+        description: "Display list of sensors which have normal readings.",
         icon: "wifi",
         mode: 0,
+        color: "#000000",
         filter1: "c003",
         filter2: "sst001"
     },
@@ -214,14 +217,16 @@ app.constant('SIDEBAR_DATA', {
         title: "Custom Routes",
         description: "Display list of user defined generated routes.",
         icon: "timeline",
-        mode: 3
+        mode: 4,
+        color: "#000000",
     },
     sd005: {
         id: "sd005",
         title: "Information",
         description: "Display node information.",
         icon: "info",
-        mode: 1
+        mode: 1,
+        color: "#000000",
     },
     sd006: {
         id: "sd006",
@@ -229,6 +234,7 @@ app.constant('SIDEBAR_DATA', {
         description: "Display list of busy centres.",
         icon: "notifications",
         mode: 0,
+        color: "#fa6800",
         filter1: "c001",
         filter2: "cst002"
     },
@@ -238,15 +244,17 @@ app.constant('SIDEBAR_DATA', {
         description: "Display list of closed centres.",
         icon: "notifications",
         mode: 0,
+        color: "#ce352c",
         filter1: "c001",
         filter2: "cst003"
     },
     sd008: {
         id: "sd008",
-        title: "Severe Locations",
-        description: "Display list of severe locations.",
+        title: "Serious Locations",
+        description: "Display list of serious locations.",
         icon: "place",
         mode: 0,
+        color: "#fa6800",
         filter1: "c002",
         filter2: "lst002"
     },
@@ -256,33 +264,45 @@ app.constant('SIDEBAR_DATA', {
         description: "Display list of extreme locations.",
         icon: "place",
         mode: 0,
+        color: "#ce352c",
         filter1: "c002",
         filter2: "lst003"
     },
     sd010: {
         id: "sd010",
-        title: "Severe Sensors",
-        description: "Display list sensors have severe readings.",
+        title: "Failed Sensors",
+        description: "Display list sensors which have failed.",
         icon: "wifi",
         mode: 0,
+        color: "#fa6800",
         filter1: "c003",
         filter2: "sst002"
     },
     sd011: {
         id: "sd011",
-        title: "Extreme Sensors",
-        description: "Display list sensors have extreme readings.",
+        title: "Abnormal Sensors",
+        description: "Display list sensors which have abnormal readings.",
         icon: "wifi",
         mode: 0,
+        color: "#ce352c",
         filter1: "c003",
         filter2: "sst003"
     },
     sd012: {
         id: "sd012",
-        title: "Emergency Routes",
-        description: "Display list of routes from relief centres to abnormal sensors.",
+        title: "Hospital Routes",
+        description: "Display list of routes from hospital to disaster affected locations.",
         icon: "timeline",
-        mode: 2
+        mode: 2,
+        color: "#fa6800",
+    },
+    sd013: {
+        id: "sd013",
+        title: "Emergency Routes",
+        description: "Display list of routes from relief centres to disaster affected locations.",
+        icon: "timeline",
+        mode: 3,
+        color: "#ce352c",
     }
 });
 
@@ -300,8 +320,9 @@ app.constant('AUTH_EVENTS', {
 app.constant('SIDEBAR_MODES', {
     markerList: 0,
     markerInformation: 1,
-    emergencyRouteList: 2,
-    customRouteList: 3
+    hospitalRouteList: 2,
+    emergencyRouteList: 3,
+    customRouteList: 4
 });
 
 app.constant('STATUS_CODES', {
@@ -359,47 +380,46 @@ app.constant('MAP_CENTRES', {
         id: "ct001",
         name: "Centre",
         icons: {
-            cst001: "assets/img/map/centres/open-centre.png",
-            cst002: "assets/img/map/centres/busy-centre.png",
-            cst003: "assets/img/map/centres/closed-centre.png",
+            cst001: "assets/img/marker/centre/centre-001.png",
+            cst002: "assets/img/marker/centre/centre-002.png",
+            cst003: "assets/img/marker/centre/centre-003.png",
         }
     },
     ct002: {
         id: "ct002",
         name: "Fire Station",
         icons: {
-            cst001: "assets/img/map/centres/open-fire-station.png",
-            cst002: "assets/img/map/centres/busy-fire-station.png",
-            cst003: "assets/img/map/centres/closed-fire-station.png",
+            cst001: "assets/img/marker/centre/fire-station-001.png",
+            cst002: "assets/img/marker/centre/fire-station-002.png",
+            cst003: "assets/img/marker/centre/fire-station-003.png",
         }
     },
     ct003: {
         id: "ct003",
         name: "Police Station",
         icons: {
-            cst001: "assets/img/map/centres/open-police-station.png",
-            cst002: "assets/img/map/centres/busy-police-station.png",
-            cst003: "assets/img/map/centres/closed-police-station.png",
+            cst001: "assets/img/marker/centre/police-station-001.png",
+            cst002: "assets/img/marker/centre/police-station-002.png",
+            cst003: "assets/img/marker/centre/police-station-003.png",
         }
     },
     ct004: {
         id: "ct004",
         name: "Hospital",
         icons: {
-            cst001: "assets/img/map/centres/open-hospital.png",
-            cst002: "assets/img/map/centres/busy-hospital.png",
-            cst003: "assets/img/map/centres/closed-hospital.png",
+            cst001: "assets/img/marker/centre/hospital-001.png",
+            cst002: "assets/img/marker/centre/hospital-002.png",
+            cst003: "assets/img/marker/centre/hospital-003.png",
         }
-    }
-});
-
-app.constant('CUSTOM_CENTRE', {
-    id: "ctxxx",
-    name: "Custom Centre",
-    icons: {
-        cst001: "assets/img/map/centres/open-custom-centre.png",
-        cst002: "assets/img/map/centres/busy-custom-centre.png",
-        cst003: "assets/img/map/centres/closed-custom-centre.png",
+    },
+    ctxxx: {
+        id: "ctxxx",
+        name: "Custom Centre",
+        icons: {
+            cst001: "assets/img/marker/centre/custom-centre-001.png",
+            cst002: "assets/img/marker/centre/custom-centre-002.png",
+            cst003: "assets/img/marker/centre/custom-centre-003.png",
+        }
     }
 });
 
@@ -426,17 +446,17 @@ app.constant('CENTRE_STATUSES', {
     cst001: {
         id: "cst001",
         name: "Open",
-        icon: "assets/img/map/centre-statuses/open.png"
+        icon: "assets/img/status/centre/open.png"
     },
     cst002: {
         id: "cst002",
         name: "Busy",
-        icon: "assets/img/map/centre-statuses/busy.png"
+        icon: "assets/img/status/centre/busy.png"
     },
     cst003: {
         id: "cst003",
         name: "Closed",
-        icon: "assets/img/map/centre-statuses/closed.png"
+        icon: "assets/img/status/centre/closed.png"
     }
 });
 
@@ -464,90 +484,90 @@ app.constant('MAP_LOCATIONS', {
         id: "lt001",
         name: "Location",
         icons: {
-            lst001: "assets/img/map/locations/normal-location.png",
-            lst002: "assets/img/map/locations/severe-location.png",
-            lst003: "assets/img/map/locations/extreme-location.png"
+            lst001: "assets/img/marker/location/location-001.png",
+            lst002: "assets/img/marker/location/location-002.png",
+            lst003: "assets/img/marker/location/location-002.png"
         }
     },
     lt002: {
         id: "lt002",
         name: "City",
         icons: {
-            lst001: "assets/img/map/locations/normal-city.png",
-            lst002: "assets/img/map/locations/severe-city.png",
-            lst003: "assets/img/map/locations/extreme-city.png"
+            lst001: "assets/img/marker/location/city-001.png",
+            lst002: "assets/img/marker/location/city-002.png",
+            lst003: "assets/img/marker/location/city-003.png"
         }
     },
     lt003: {
         id: "lt003",
         name: "Zone",
         icons: {
-            lst001: "assets/img/map/locations/normal-zone.png",
-            lst002: "assets/img/map/locations/severe-zone.png",
-            lst003: "assets/img/map/locations/extreme-zone.png"
+            lst001: "assets/img/marker/location/zone-001.png",
+            lst002: "assets/img/marker/location/zone-002.png",
+            lst003: "assets/img/marker/location/zone-003.png"
         }
     },
     lt004: {
         id: "lt004",
         name: "Cluster",
         icons: {
-            lst001: "assets/img/map/locations/normal-cluster.png",
-            lst002: "assets/img/map/locations/severe-cluster.png",
-            lst003: "assets/img/map/locations/extreme-cluster.png"
+            lst001: "assets/img/marker/location/cluster-001.png",
+            lst002: "assets/img/marker/location/cluster-002.png",
+            lst003: "assets/img/marker/location/cluster-003.png"
         }
     },
     lt005: {
         id: "lt005",
         name: "College",
         icons: {
-            lst001: "assets/img/map/locations/normal-college.png",
-            lst002: "assets/img/map/locations/severe-college.png",
-            lst003: "assets/img/map/locations/extreme-college.png"
+            lst001: "assets/img/marker/location/college-001.png",
+            lst002: "assets/img/marker/location/college-002.png",
+            lst003: "assets/img/marker/location/college-003.png"
         }
     },
     lt006: {
         id: "lt006",
         name: "Factory",
         icons: {
-            lst001: "assets/img/map/locations/normal-factory.png",
-            lst002: "assets/img/map/locations/severe-factory.png",
-            lst003: "assets/img/map/locations/extreme-factory.png"
+            lst001: "assets/img/marker/location/factory-001.png",
+            lst002: "assets/img/marker/location/factory-002.png",
+            lst003: "assets/img/marker/location/factory-003.png"
         }
     },
     lt007: {
         id: "lt007",
         name: "Bank",
         icons: {
-            lst001: "assets/img/map/locations/normal-bank.png",
-            lst002: "assets/img/map/locations/severe-bank.png",
-            lst003: "assets/img/map/locations/extreme-bank.png"
+            lst001: "assets/img/marker/location/bank-001.png",
+            lst002: "assets/img/marker/location/bank-002.png",
+            lst003: "assets/img/marker/location/bank-003.png"
         }
     },
     lt008: {
         id: "lt008",
         name: "Hotel",
         icons: {
-            lst001: "assets/img/map/locations/normal-hotel.png",
-            lst002: "assets/img/map/locations/severe-hotel.png",
-            lst003: "assets/img/map/locations/extreme-hotel.png"
+            lst001: "assets/img/marker/location/hotel-001.png",
+            lst002: "assets/img/marker/location/hotel-002.png",
+            lst003: "assets/img/marker/location/hotel-003.png"
         }
     },
     lt009: {
         id: "lt009",
         name: "Restaurant",
         icons: {
-            lst001: "assets/img/map/locations/normal-restaurant.png",
-            lst002: "assets/img/map/locations/severe-restaurant.png",
-            lst003: "assets/img/map/locations/extreme-restaurant.png"
+            lst001: "assets/img/marker/location/restaurant-001.png",
+            lst002: "assets/img/marker/location/restaurant-002.png",
+            lst003: "assets/img/marker/location/restaurant-003.png"
         }
     },
     lt010: {
         id: "lt010",
         name: "Store",
         icons: {
-            lst001: "assets/img/map/locations/normal-store.png",
-            lst002: "assets/img/map/locations/severe-store.png",
-            lst003: "assets/img/map/locations/extreme-store.png"
+            lst001: "assets/img/marker/location/store-001.png",
+            lst002: "assets/img/marker/location/store-002.png",
+            lst003: "assets/img/marker/location/store-003.png"
         }
     }
 });
@@ -599,56 +619,62 @@ app.constant('DISASTER_TYPES', {
     dt001: {
         id: "dt001",
         name: "Fire",
-        requiredCentres: ["ct002", "ct004"],
-        haveLevels: true,
+        centreTypeId: "ct002",
+        hospitalRequired: true,
         icons: {
-            lst002: "assets/img/map/location-statuses/severe-fire.png",
-            lst003: "assets/img/map/location-statuses/extreme-fire.png",
+            lst002: "assets/img/status/location/fire-001.png",
+            lst003: "assets/img/status/location/fire-002.png",
         }
     },
     dt002: {
         id: "dt002",
         name: "Flood",
-        requiredCentres: ["ct001", "ct004"],
-        haveLevels: true,
+        centreTypeId: "ct001",
+        hospitalRequired: true,
         icons: {
-            lst002: "assets/img/map/location-statuses/severe-flood.png",
-            lst003: "assets/img/map/location-statuses/extreme-flood.png",
+            lst002: "assets/img/status/location/flood-001.png",
+            lst003: "assets/img/status/location/flood-002.png",
         }
     },
     dt003: {
         id: "dt003",
         name: "Cyclone",
-        requiredCentres: ["ct001", "ct004"],
-        haveLevels: true,
+        centreTypeId: "ct001",
+        hospitalRequired: true,
         icons: {
-            lst002: "assets/img/map/location-statuses/severe-cyclone.png",
-            lst003: "assets/img/map/location-statuses/extreme-cyclone.png",
+            lst002: "assets/img/status/location/cyclone-001.png",
+            lst003: "assets/img/status/location/cyclone-002.png",
         }
     },
     dt004: {
         id: "dt004",
         name: "Earthquake",
-        requiredCentres: ["ct001", "ct004"],
-        haveLevels: true,
+        centreTypeId: "ct001",
+        hospitalRequired: true,
         icons: {
-            lst002: "assets/img/map/location-statuses/severe-earthquake.png",
-            lst003: "assets/img/map/location-statuses/extreme-earthquake.png",
+            lst002: "assets/img/status/location/earthquake-001.png",
+            lst003: "assets/img/status/location/earthquake-002.png",
         }
     },
     dt005: {
         id: "dt005",
         name: "Burglary",
-        requiredCentres: ["ct003"],
-        haveLevels: false,
-        icon: "assets/img/map/location-statuses/burglary.png"
+        centreTypeId: "ct003",
+        hospitalRequired: false,
+        icons: {
+            lst002: "assets/img/status/location/burglary-001.png",
+            lst003: "assets/img/status/location/burglary-002.png",
+        }
     },
     dt006: {
         id: "dt006",
         name: "Robbery",
-        requiredCentres: ["ct003"],
-        haveLevels: false,
-        icon: "assets/img/map/location-statuses/robbery.png"
+        centreTypeId: "ct003",
+        hospitalRequired: true,
+        icons: {
+            lst002: "assets/img/status/location/robbery-001.png",
+            lst003: "assets/img/status/location/robbery-002.png",
+        }
     }
 });
 
@@ -656,15 +682,18 @@ app.constant('LOCATION_STATUSES', {
     lst001: {
         id: "lst001",
         name: "Normal",
-        icon: "assets/img/map/location-statuses/normal.png"
+        priority: 1,
+        icon: "assets/img/status/location/normal.png"
     },
     lst002: {
         id: "lst002",
-        name: "Extreme"
+        name: "Serious",
+        priority: 5
     },
     lst003: {
         id: "lst003",
-        name: "Extreme"
+        name: "Extreme",
+        priority: 10
     }
 });
 
@@ -674,7 +703,7 @@ app.constant('LOCATION_STATUS_TYPES', [
         value: "lst001"
     },
     {
-        name: "Extreme",
+        name: "Serious",
         value: "lst002"
     },
     {
@@ -692,70 +721,72 @@ app.constant('MAP_SENSORS', {
         id: "st001",
         name: "Sensor",
         icons: {
-            sst001: "assets/img/map/sensors/normal-sensor.png",
-            sst002: "assets/img/map/sensors/severe-sensor.png",
-            sst003: "assets/img/map/sensors/extreme-sensor.png"
+            sst001: "assets/img/marker/sensor/sensor-001.png",
+            sst002: "assets/img/marker/sensor/sensor-002.png",
+            sst003: "assets/img/marker/sensor/sensor-003.png"
         }
     },
     st002: {
         id: "st002",
         name: "Thermometer",
         icons: {
-            sst001: "assets/img/map/sensors/normal-thermometer.png",
-            sst002: "assets/img/map/sensors/severe-thermometer.png",
-            sst003: "assets/img/map/sensors/extreme-thermometer.png"
+            sst001: "assets/img/marker/sensor/thermometer-001.png",
+            sst002: "assets/img/marker/sensor/thermometer-002.png",
+            sst003: "assets/img/marker/sensor/thermometer-003.png"
         }
     },
     st003: {
         id: "st003",
         name: "Hygrometer",
         icons: {
-            sst001: "assets/img/map/sensors/normal-hygrometer.png",
-            sst002: "assets/img/map/sensors/severe-hygrometer.png",
-            sst003: "assets/img/map/sensors/extreme-hygrometer.png"
+            sst001: "assets/img/marker/sensor/hygrometer-001.png",
+            sst002: "assets/img/marker/sensor/hygrometer-002.png",
+            sst003: "assets/img/marker/sensor/hygrometer-003.png"
         }
     },
     st004: {
         id: "st004",
         name: "Udometer",
         icons: {
-            sst001: "assets/img/map/sensors/normal-udometer.png",
-            sst002: "assets/img/map/sensors/severe-udometer.png",
-            sst003: "assets/img/map/sensors/extreme-udometer.png"
+            sst001: "assets/img/marker/sensor/udometer-001.png",
+            sst002: "assets/img/marker/sensor/udometer-002.png",
+            sst003: "assets/img/marker/sensor/udometer-003.png"
         }
     },
     st005: {
         id: "st005",
         name: "Anemometer",
         icons: {
-            sst001: "assets/img/map/sensors/normal-anemometer.png",
-            sst002: "assets/img/map/sensors/severe-anemometer.png",
-            sst003: "assets/img/map/sensors/extreme-anemometer.png"
+            sst001: "assets/img/marker/sensor/anemometer-001.png",
+            sst002: "assets/img/marker/sensor/anemometer-002.png",
+            sst003: "assets/img/marker/sensor/anemometer-003.png"
         }
     },
     st006: {
         id: "st006",
-        name: "Gas-Meter",
+        name: "Gas-Sensor",
         icons: {
-            sst001: "assets/img/map/sensors/normal-gas-meter.png",
-            sst002: "assets/img/map/sensors/severe-gas-meter.png",
-            sst003: "assets/img/map/sensors/extreme-gas-meter.png"
+            sst001: "assets/img/marker/sensor/gas-sensor-001.png",
+            sst002: "assets/img/marker/sensor/gas-sensor-002.png",
+            sst003: "assets/img/marker/sensor/gas-sensor-003.png"
         }
     },
     st007: {
         id: "st007",
-        name: "Motion-Detector",
+        name: "Motion-Sensor",
         icons: {
-            sst001: "assets/img/map/sensors/normal-motion-detector.png",
-            sst004: "assets/img/map/sensors/triggered-motion-detector.png"
+            sst001: "assets/img/marker/sensor/motion-sensor-001.png",
+            sst002: "assets/img/marker/sensor/motion-sensor-002.png",
+            sst003: "assets/img/marker/sensor/motion-sensor-003.png"
         }
     },
     st008: {
         id: "st008",
         name: "Alarm",
         icons: {
-            sst001: "assets/img/map/sensors/normal-alarm.png",
-            sst004: "assets/img/map/sensors/triggered-alarm.png"
+            sst001: "assets/img/marker/sensor/alarm-001.png",
+            sst002: "assets/img/marker/sensor/alarm-002.png",
+            sst003: "assets/img/marker/sensor/alarm-003.png"
         }
     }
 });
@@ -782,7 +813,7 @@ app.constant('SENSOR_TYPES', [
         value: "st006"
     },
     {
-        name: "Motion-Detector",
+        name: "Motion-Sensor",
         value: "st007"
     },
     {
@@ -799,22 +830,20 @@ app.constant('SENSOR_STATUSES', {
     sst001: {
         id: "sst001",
         name: "Normal",
-        icon: "assets/img/map/sensor-statuses/normal.png"
+        priority: 1,
+        icon: "assets/img/status/sensor/normal.png"
     },
     sst002: {
         id: "sst002",
-        name: "Severe",
-        icon: "assets/img/map/sensor-statuses/severe.png"
+        name: "Failure",
+        priority: 5,
+        icon: "assets/img/status/sensor/failure.png"
     },
     sst003: {
         id: "sst003",
-        name: "Extreme",
-        icon: "assets/img/map/sensor-statuses/extreme.png"
-    },
-    sst004: {
-        id: "sst004",
-        name: "Triggered",
-        icon: "assets/img/map/sensor-statuses/triggered.png"
+        name: "Abnormal",
+        priority: 10,
+        icon: "assets/img/status/sensor/abnormal.png"
     }
 });
 
@@ -824,16 +853,12 @@ app.constant('SENSOR_STATUS_TYPES', [
         value: "sst001"
     },
     {
-        name: "Severe",
+        name: "Failure",
         value: "sst002"
     },
     {
-        name: "Extreme",
+        name: "Abnormal",
         value: "sst003"
-    },
-    {
-        name: "Triggered",
-        value: "sst004"
     },
     {
         name: "All",
@@ -844,15 +869,21 @@ app.constant('SENSOR_STATUS_TYPES', [
 app.constant('MAP_ROUTES', {
     r001: {
         id: "r001",
-        name: "Emergency Route"
+        name: "Emergency Route",
+        color: "#ce352c",
+        icon: "assets/img/other/route-003.png"
     },
     r002: {
         id: "r002",
-        name: "Hospital Route"
+        name: "Hospital Route",
+        color: "#fa6800",
+        icon: "assets/img/other/route-002.png"
     },
-    r003: {
-        id: "r003",
-        name: "Emergency Route"
+    rxxx: {
+        id: "rxxx",
+        name: "Custom Route",
+        color: "#000000",
+        icon: "assets/img/other/route-001.png"
     }
 });
 
@@ -860,42 +891,41 @@ app.constant('IMAGE_DATA', {
     id001: {
         id: "id001",
         name: "Map-Image",
-        multiple: false,
-        path: "assets/img/map/others/map.png",
+        path: "assets/img/other/map.png",
     },
     id002: {
         id: "id002",
         name: "Search-Image",
-        multiple: false,
-        path: "assets/img/map/others/search.png",
+        path: "assets/img/other/search.png",
     },
     id003: {
         id: "id003",
-        name: "Route-Image",
-        multiple: true,
-        paths: {
-            p001: "assets/img/map/others/route-normal.png",
-            p002: "assets/img/map/others/route-emergency.png"
-        }
+        name: "Route-Image-001",
+        path: "assets/img/other/route-001.png"
     },
     id004: {
         id: "id004",
-        name: "Info-Image",
-        multiple: false,
-        path: "assets/img/map/others/info.png",
+        name: "Route-Image-002",
+        path: "assets/img/other/route-002.png"
     },
     id005: {
         id: "id005",
-        name: "Login-Image",
-        multiple: false,
-        path: "assets/img/map/others/login.png",
+        name: "Info-Image",
+        path: "assets/img/other/info.png",
     },
     id006: {
         id: "id006",
+        name: "Login-Image",
+        path: "assets/img/other/login.png",
+    },
+    id007: {
+        id: "id007",
         name: "Logout-Image",
-        multiple: false,
-        path: "assets/img/map/others/logout.png",
+        path: "assets/img/other/logout.png",
+    },
+    id008: {
+        id: "id008",
+        name: "Default-Image",
+        path: "assets/img/other/default-photo.png",
     }
 });
-
-app.constant('DEFAULT_PHOTO_PATH', "assets/img/default-photo.png");

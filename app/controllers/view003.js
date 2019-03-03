@@ -29,14 +29,16 @@ app.controller('ViewSensorController', function ($scope, $location, STATUS_CODES
                     );
 
                     if (nodeIndex > -1) {
+                        var nodeItem = DataService.getNodeItem(data.updatedNodeIds[nodeIndex]);
+
                         $scope.$parent.safeApply(function () {
-                            $scope.sensorItem = DataService.getNodeItem(data.updatedNodeIds[nodeIndex]);
+                            $scope.sensorItem = nodeItem;
                         });
 
                         if ($scope.chartDialogVisible) {
                             $scope.chartData.data.datasets[0].data.push({
                                 x: new Date(),
-                                y: data.nodeItem.value
+                                y: nodeItem.reading.value
                             });
 
                             $scope.chartData.update();
@@ -47,6 +49,7 @@ app.controller('ViewSensorController', function ($scope, $location, STATUS_CODES
                     $scope.$parent.safeApply(function () {
                         $scope.$parent.hideLoadingOverlay();
                     });
+
                     $scope.$parent.showDialog('Error', data.message);
                     break;
                 case STATUS_CODES.dataUpdateFailed:

@@ -405,7 +405,7 @@
         "id": "ct002",
         "name": "Fire Station"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "rating": 3.8,
       "leafNode": true,
@@ -489,7 +489,7 @@
         "id": "ct002",
         "name": "Fire Station"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "rating": 3.3,
       "leafNode": true,
@@ -605,7 +605,7 @@
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -1310,9 +1310,9 @@
         "color": null
       },
       "disasterScore": {
-        "lst001": 0,
-        "lst002": 30000,
-        "lst003": 60000
+        "lst001": 1000,
+        "lst002": 1500,
+        "lst003": 2000
       },
       "coordinates": {
         "lat": 21.125583,
@@ -1335,7 +1335,7 @@
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -1781,7 +1781,7 @@
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -2443,7 +2443,7 @@
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -4325,7 +4325,7 @@
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -5395,7 +5395,7 @@
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -6595,7 +6595,7 @@
         "id": "lt003",
         "name": "Zone"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -8738,7 +8738,7 @@
         "color": "#0000ff"
       },
       "disasterScore": {
-        "lst001": 0,
+        "lst001": 15,
         "lst002": 30,
         "lst003": 60
       },
@@ -8763,7 +8763,7 @@
         "id": "lt004",
         "name": "Cluster"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -8795,8 +8795,8 @@
       },
       "disasterScore": {
         "lst001": 0,
-        "lst002": 30,
-        "lst003": 60
+        "lst002": 20,
+        "lst003": 40
       },
       "coordinates": {
         "lat": 21.164516,
@@ -8819,7 +8819,7 @@
         "id": "lt004",
         "name": "Cluster"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -8851,8 +8851,8 @@
       },
       "disasterScore": {
         "lst001": 0,
-        "lst002": 30,
-        "lst003": 60
+        "lst002": 20,
+        "lst003": 40
       },
       "coordinates": {
         "lat": 21.167312,
@@ -8875,7 +8875,7 @@
         "id": "lt004",
         "name": "Cluster"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": false,
       "display": true,
@@ -8943,7 +8943,7 @@
         "id": "st002",
         "name": "Thermometer"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": true,
       "display": true,
@@ -8952,17 +8952,17 @@
       "disasterId": "dt001",
       "disasterScore": {
         "sst001": 0,
-        "sst002": 30,
-        "sst003": 60
+        "sst002": 0,
+        "sst003": 20
       },
+      "displayReading": true,
       "reading": {
         "value": 37,
         "unit": "°C",
-        "boolean": false,
         "limit": {
           "sst001": 100,
-          "sst002": 200,
-          "sst003": 500
+          "sst002": 0,
+          "sst003": 200
         }
       },
       "coordinates": {
@@ -8980,13 +8980,13 @@
         "id": "c003",
         "name": "Sensor"
       },
-      "name": "SensorB",
+      "name": "Sensor B",
       "address": "Mother Teresa Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
       "type": {
         "id": "st002",
         "name": "Thermometer"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": true,
       "display": true,
@@ -8995,17 +8995,18 @@
       "disasterId": "dt001",
       "disasterScore": {
         "sst001": 0,
-        "sst002": 30,
-        "sst003": 60
+        "sst002": 0,
+        "sst003": 20
       },
+      "displayReading": true,
       "reading": {
         "value": 37,
         "unit": "°C",
         "boolean": false,
         "limit": {
           "sst001": 100,
-          "sst002": 200,
-          "sst003": 500
+          "sst002": 0,
+          "sst003": 200
         }
       },
       "coordinates": {
@@ -9023,13 +9024,13 @@
         "id": "c003",
         "name": "Sensor"
       },
-      "name": "SensorC",
+      "name": "Sensor C",
       "address": "Swami Vivekanand Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
       "type": {
         "id": "st002",
         "name": "Thermometer"
       },
-      "photo": "assets/img/default-photo.png",
+      "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": true,
       "display": true,
@@ -9038,17 +9039,18 @@
       "disasterId": "dt001",
       "disasterScore": {
         "sst001": 0,
-        "sst002": 30,
-        "sst003": 60
+        "sst002": 0,
+        "sst003": 20
       },
+      "displayReading": true,
       "reading": {
         "value": 37,
         "unit": "°C",
         "boolean": false,
         "limit": {
           "sst001": 100,
-          "sst002": 200,
-          "sst003": 500
+          "sst002": 0,
+          "sst003": 200
         }
       },
       "coordinates": {

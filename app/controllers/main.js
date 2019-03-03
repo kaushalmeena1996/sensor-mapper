@@ -18,10 +18,21 @@ app.controller('MainController', function ($scope, $mdToast, $mdDialog, PAGE_DAT
         $mdMenu.open(event);
     };
 
-    $scope.showToast = function (message) {
+    $scope.showToast = function (messages, delay) {
+        var html = '',
+            i;
+
+        html += '<ul>';
+
+        for (i = 0; i < messages.length; i++) {
+            html += '<li>' + messages[i] + '</li>';
+        }
+
+        html += '</ul>';
+
         $mdToast.show({
-            template: '<md-toast aria-label="Alert-Toast"><span class="md-toast-text">' + message + '</span></md-toast>',
-            hideDelay: 5000,
+            template: '<md-toast aria-label="Alert-Toast"><div class="md-toast-text">' + html + '</div></md-toast>',
+            hideDelay: delay,
             position: 'top right'
         });
     };
@@ -49,10 +60,4 @@ app.controller('MainController', function ($scope, $mdToast, $mdDialog, PAGE_DAT
             this.$apply(func);
         }
     };
-
-    //Test Function
-
-    $scope.updateLocalNodeData = function () {
-        DataService.updateLocalNodeData();
-    }
 });

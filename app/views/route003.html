@@ -17,9 +17,9 @@
         <div class="padding-top-5 padding-bottom-5">
             <md-card class="fade-animation" data-ng-repeat="routeItem in customRouteData track by $index">
                 <md-card-content>
-                    <md-card class="fade-animation" data-ng-repeat="item in routeItem.routeArray track by $index">
+                    <md-card class="fade-animation" data-ng-repeat="item in routeItem.path track by $index">
                         <md-card-content layout="row" layout-xs="column">
-                            <div class="text-align-center padding-right-15">
+                            <div class="padding-right-15" layout="row" layout-align="center center">
                                 <img data-ng-src="{{item.icon}}" alt="Item-Icon">
                             </div>
                             <div layout="column">
@@ -33,16 +33,16 @@
                         <div flex flex-gt-xs="30">
                             <div class="text-align-left">
                                 <span>Nodes :</span>
-                                <span data-ng-bind="routeItem.routeInfo.totalNodes"></span>
+                                <span data-ng-bind="routeItem.information.totalNodes"></span>
                             </div>
                             <div class="text-align-left">
                                 <span>Distance :</span>
-                                <span data-ng-bind="routeItem.routeInfo.totalDistance"></span>
+                                <span data-ng-bind="routeItem.information.totalDistance"></span>
                                 <span>km</span>
                             </div>
                             <div class="text-align-left">
                                 <span>Score :</span>
-                                <span data-ng-bind="routeItem.routeInfo.totalScore"></span>
+                                <span data-ng-bind="routeItem.information.totalRouteScore"></span>
                             </div>
                         </div>
                     </div>

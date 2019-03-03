@@ -1,6 +1,6 @@
 var app = angular.module('sensorApp');
 
-app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CENTRE_STATUSES, MAP_LOCATIONS, LOCATION_STATUSES, DISASTER_TYPES, MAP_SENSORS, SENSOR_STATUSES, STATUS_CODES, SERVICE_EVENTS) {
+app.factory('DataService', function ($rootScope, MAP_CENTRES, CENTRE_STATUSES, MAP_LOCATIONS, LOCATION_STATUSES, DISASTER_TYPES, MAP_SENSORS, SENSOR_STATUSES, STATUS_CODES, SERVICE_EVENTS) {
     var dataService = {};
 
     var nodeData = [],
@@ -75,23 +75,19 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
             switch (item.category.id) {
                 case 'c001':
                     nodeData[nodeIndex].icon = MAP_CENTRES[item.type.id].icons.cst001;
-                    nodeData[nodeIndex].status = CENTRE_STATUSES.cst001;
+                    nodeData[nodeIndex].status = angular.copy(CENTRE_STATUSES.cst001);
                     break;
                 case 'c002':
                     nodeData[nodeIndex].icon = MAP_LOCATIONS[item.type.id].icons.lst001;
-                    nodeData[nodeIndex].status = LOCATION_STATUSES.lst001;
+                    nodeData[nodeIndex].status = angular.copy(LOCATION_STATUSES.lst001);
+                    nodeData[nodeIndex].disaster = {};
                     break;
                 case 'c003':
-                    if (item.reading.value > item.reading.limit.moderate) {
-                        nodeData[nodeIndex].icon = MAP_SENSORS[item.type.id].icons.sst003;
-                        nodeData[nodeIndex].status = SENSOR_STATUSES.sst003;
-                    } else if (item.reading.value > item.reading.limit.normal) {
-                        nodeData[nodeIndex].icon = MAP_SENSORS[item.type.id].icons.sst002;
-                        nodeData[nodeIndex].status = SENSOR_STATUSES.sst002;
-                    } else {
-                        nodeData[nodeIndex].icon = MAP_SENSORS[item.type.id].icons.sst001;
-                        nodeData[nodeIndex].status = SENSOR_STATUSES.sst001;
-                    }
+                    nodeData[nodeIndex].icon = MAP_SENSORS[nodeData[nodeIndex].type.id].icons.sst001;
+                    nodeData[nodeIndex].status = angular.copy(SENSOR_STATUSES.sst001);
+                    nodeData[nodeIndex].disaster = angular.copy(DISASTER_TYPES[nodeData[nodeIndex].disasterId]);
+
+                    updateNodeStatus(nodeIndex);
                     break;
             }
 
@@ -103,8 +99,6 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
         var nodeIndex = nodeIds[item.id],
             updatedNodeIds = [];
 
-        updatedNodeIds.push(item.id);
-
         switch (item.category.id) {
             case 'c001':
                 break;
@@ -113,62 +107,105 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
             case 'c003':
                 nodeData[nodeIndex].reading.value = item.reading.value;
 
-                if (item.reading.value > item.reading.limit.moderate) {
-                    nodeData[nodeIndex].icon = MAP_SENSORS[item.type.id].icons.sst003;
-                    nodeData[nodeIndex].status = SENSOR_STATUSES.sst003
-                } else if (item.reading.value > item.reading.limit.normal) {
-                    nodeData[nodeIndex].icon = MAP_SENSORS[item.type.id].icons.sst002;
-                    nodeData[nodeIndex].status = SENSOR_STATUSES.sst002;
-                } else {
-                    nodeData[nodeIndex].icon = MAP_SENSORS[item.type.id].icons.sst001;
-                    nodeData[nodeIndex].status = SENSOR_STATUSES.sst001;
-                }
-
-                if (item.coordinates.dynamic) {
+                if (nodeData[nodeIndex].coordinates.dynamic) {
                     nodeData[nodeIndex].coordinates.lat = item.coordinates.lat;
                     nodeData[nodeIndex].coordinates.lng = item.coordinates.lng;
                 }
+
+                updatedNodeIds = updateNodeStatus(nodeIndex);
                 break;
         }
 
         return updatedNodeIds;
     }
 
-    function updateNodeStatus(id) {
-        var nodeIndex = nodeIds[id];
+    function updateNodeStatus(nodeIndex) {
+        var currentNodeIndex = nodeIndex,
+            updatedNodeIds = [],
+            childrenNodes = [],
+            disasterScore = 0,
+            selectedDisasterId = '',
+            maxDisasterScore = 0,
+            totalDisasterScore = 0,
+            oldStatusId = '',
+            newStatusId = '',
+            i;
 
-        if (nodeData[nodeIndex].category.id == 'c002') {
-            var childrenNodes = nodeData.filter(function (nodeItem) { return nodeItem.parentId == id }),
-                disasterScore = 0,
-                maxDisasterId = '',
-                maxDisasterScore = 0,
-                totalDisasterScore = 0,
-                i;
+        while (1) {
+            oldStatusId = nodeData[currentNodeIndex].status.id;
 
-            for (i = 0; i < childrenNodes.length; i++) {
-                disasterScore = childrenNodes[i].disasterScore[childrenNodes[i].status.id];
+            switch (nodeData[currentNodeIndex].category.id) {
+                case 'c002':
+                    disasterScore = 0;
+                    maxDisasterScore = 0;
+                    totalDisasterScore = 0;
 
-                if (maxDisasterScore < disasterScore) {
-                    maxDisasterScore = disasterScore;
-                    maxDisasterId = childrenNodes[i].status.disasterId;
-                }
+                    childrenNodes = nodeData.filter(
+                        function (item) {
+                            return item.parentId == nodeData[currentNodeIndex].id && (item.category.id == 'c002' || item.category.id == 'c003');
+                        }
+                    );
 
-                totalDisasterScore += disasterScore;
+                    for (i = 0; i < childrenNodes.length; i++) {
+                        disasterScore = childrenNodes[i].disasterScore[childrenNodes[i].status.id];
+
+                        if (maxDisasterScore < disasterScore) {
+                            maxDisasterScore = disasterScore;
+                            selectedDisasterId = childrenNodes[i].disaster.id;
+                        }
+
+                        totalDisasterScore += disasterScore;
+                    }
+
+                    if (totalDisasterScore > nodeData[currentNodeIndex].disasterScore.lst002) {
+                        nodeData[currentNodeIndex].icon = MAP_LOCATIONS[nodeData[currentNodeIndex].type.id].icons.lst003;
+                        nodeData[currentNodeIndex].status = angular.copy(LOCATION_STATUSES.lst003);
+
+                        nodeData[currentNodeIndex].status.icon = DISASTER_TYPES[selectedDisasterId].icons.lst003;
+                        nodeData[currentNodeIndex].status.name = LOCATION_STATUSES.lst003.name + ' ' + DISASTER_TYPES[selectedDisasterId].name;
+
+                        nodeData[currentNodeIndex].disaster = angular.copy(DISASTER_TYPES[selectedDisasterId]);
+                    } else if (totalDisasterScore > nodeData[currentNodeIndex].disasterScore.lst001) {
+                        nodeData[currentNodeIndex].icon = MAP_LOCATIONS[nodeData[currentNodeIndex].type.id].icons.lst002;
+                        nodeData[currentNodeIndex].status = angular.copy(LOCATION_STATUSES.lst002);
+
+                        nodeData[currentNodeIndex].status.icon = DISASTER_TYPES[selectedDisasterId].icons.lst002;
+                        nodeData[currentNodeIndex].status.name = LOCATION_STATUSES.lst002.name + ' ' + DISASTER_TYPES[selectedDisasterId].name;
+
+                        nodeData[currentNodeIndex].disaster = angular.copy(DISASTER_TYPES[selectedDisasterId]);
+                    } else {
+                        nodeData[currentNodeIndex].icon = MAP_LOCATIONS[nodeData[currentNodeIndex].type.id].icons.lst001;
+                        nodeData[currentNodeIndex].status = angular.copy(LOCATION_STATUSES.lst001);
+
+                        nodeData[currentNodeIndex].disaster = {};
+                    }
+                    break;
+                case 'c003':
+                    if (nodeData[currentNodeIndex].reading.value > nodeData[currentNodeIndex].reading.limit.sst001) {
+                        nodeData[currentNodeIndex].icon = MAP_SENSORS[nodeData[currentNodeIndex].type.id].icons.sst003;
+                        nodeData[currentNodeIndex].status = angular.copy(SENSOR_STATUSES.sst003)
+                    } else if (nodeData[currentNodeIndex].reading.value > nodeData[currentNodeIndex].reading.limit.sst002) {
+                        nodeData[currentNodeIndex].icon = MAP_SENSORS[nodeData[currentNodeIndex].type.id].icons.sst001;
+                        nodeData[currentNodeIndex].status = angular.copy(SENSOR_STATUSES.sst001);
+                    } else {
+                        nodeData[currentNodeIndex].icon = MAP_SENSORS[nodeData[currentNodeIndex].type.id].icons.sst002;
+                        nodeData[currentNodeIndex].status = angular.copy(SENSOR_STATUSES.sst002);
+                    }
+                    break;
             }
 
-            if (totalDisasterScore > nodeData[nodeIndex].disasterScore.lst002) {
-                nodeData[nodeIndex].icon = MAP_SENSORS[nodeData[nodeIndex].type.id].icons.lst003;
-                nodeData[nodeIndex].status.id = LOCATION_STATUSES.sst003.id;
-                nodeData[nodeIndex].status.name = LOCATION_STATUSES.lst003.name;
-                nodeData[nodeIndex].status.disasterId = maxDisasterId;
+            updatedNodeIds.push(nodeData[currentNodeIndex].id);
 
-                if (DISASTER_TYPES[maxDisasterId].hasLevels) {
-                    nodeData[nodeIndex].status.icon = DISASTER_TYPES[maxDisasterId].icons.lst003;
-                } else {
-                    nodeData[nodeIndex].status.icon = DISASTER_TYPES[maxDisasterId].icon;
-                }
+            newStatusId = nodeData[currentNodeIndex].status.id;
+
+            if (oldStatusId == newStatusId || nodeData[currentNodeIndex].parentId == null) {
+                break;
             }
+
+            currentNodeIndex = nodeIds[nodeData[currentNodeIndex].parentId];
         }
+
+        return updatedNodeIds;
     }
 
     dataService.subscribeNodeData = function (scope, event, callback) {
@@ -177,8 +214,7 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
         if (nodeDataLoaded) {
             $rootScope.$emit(SERVICE_EVENTS.nodeData, { statusCode: STATUS_CODES.dataLoadSuccessful });
         } else {
-            //fetchNodeData();
-            fetchLocalNodeData();
+            fetchNodeData();
         }
 
         scope.$on('$destroy', handler);
@@ -187,8 +223,7 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
     dataService.subscribeChartData = function (id, scope, event, callback) {
         var handler = $rootScope.$on(event, callback);
 
-        //fetchValueItem(id);
-        fetchLocalValueData()
+        fetchValueItem(id);
 
         scope.$on('$destroy', handler);
     };
@@ -197,24 +232,8 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
         return nodeData;
     };
 
-    dataService.getFilteredNodeData = function (categoryId, statusId) {
-        var item = nodeData.find(
-            function (nodeItem) {
-                return nodeItem.category.id == categoryId && nodeItem.status.id == statusId;
-            }
-        );
-
-        return item;
-    };
-
     dataService.getNodeItem = function (id) {
-        var item = nodeData.find(
-            function (nodeItem) {
-                return nodeItem.id == id
-            }
-        );
-
-        return item;
+        return nodeData[nodeIds[id]];
     };
 
     dataService.appendNodeItem = function (item) {
@@ -222,13 +241,7 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
     };
 
     dataService.updateNodeItem = function (item) {
-        var nodeIndex = nodeData.findIndex(
-            function (nodeItem) {
-                return nodeItem.id == item.id
-            }
-        );
-
-        nodeData[nodeIndex] = item;
+        nodeData[nodeIds[item.id]] = item;
     };
 
     dataService.getNodeChildren = function (id) {
@@ -251,6 +264,16 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
         return data;
     };
 
+    dataService.getHospitalData = function () {
+        var data = nodeData.filter(
+            function (nodeItem) {
+                return nodeItem.category.id == 'c001' && nodeItem.type.id == 'ct004';
+            }
+        );
+
+        return data;
+    };
+
     dataService.getLocationData = function () {
         var data = nodeData.filter(
             function (nodeItem) {
@@ -261,14 +284,14 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
         return data;
     };
 
-    dataService.getAbnormalLocationData = function () {
-        var item = nodeData.find(
+    dataService.getDisasterAffectedClusterData = function () {
+        var data = nodeData.filter(
             function (nodeItem) {
-                return nodeItem.category.id == 'c002' && (nodeItem.status.id == 'lst002' || nodeItem.status.id == 'lst003');
+                return nodeItem.category.id == 'c002' && nodeItem.type.id == 'lt004' && (nodeItem.status.id == 'lst002' || nodeItem.status.id == 'lst003');
             }
         );
 
-        return item;
+        return data;
     };
 
     dataService.getSensorData = function () {
@@ -281,117 +304,9 @@ app.factory('DataService', function ($rootScope, MAP_CATEGORIES, MAP_CENTRES, CE
         return data;
     };
 
-    dataService.deleteCustomCentreData = function () {
-        nodeData = nodeData.filter(
-            function (nodeItem) {
-                return nodeItem.type.id != 'ctxxx';
-            }
-        );
-    };
-
     $rootScope.$on('$destroy', function () {
         nodeRef.off();
     });
-
-    // Test Functions
-
-    function getJSON(url, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.responseType = 'json';
-        xhr.onload = function () {
-            var status = xhr.status;
-            if (status === 200) {
-                callback(xhr.response);
-            } else {
-                callback(xhr.response, status);
-            }
-        };
-        xhr.send();
-    };
-
-    function fetchLocalNodeData() {
-        getJSON("mapmysensor.json", function (data) {
-            loadNodeData(data.nodes);
-
-            nodeDataLoaded = true;
-
-            $rootScope.$emit(SERVICE_EVENTS.nodeData, {
-                statusCode: STATUS_CODES.dataLoadSuccessful
-            });
-        });
-    }
-
-    function fetchLocalValueData() {
-        getJSON("mapmysensor.json", function (data) {
-            var chartData = [];
-
-            angular.forEach(data.values.s001, function (item) {
-                chartData.push({
-                    x: new Date(item.timestamp),
-                    y: item.value
-                });
-            });
-
-            $rootScope.$emit(SERVICE_EVENTS.chartData, {
-                statusCode: STATUS_CODES.dataLoadSuccessful,
-                chartData: chartData
-            });
-        });
-    }
-
-    dataService.updateLocalNodeData = function () {
-        var item = {
-            id: "s001",
-            parentId: "l012",
-            category: {
-                id: "c003",
-                name: "Sensor"
-            },
-            name: "SensorC",
-            address: "Swami Vivekanand Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
-            type: {
-                id: "st002",
-                name: "Thermometer"
-            },
-            photo: "assets/img/default-photo.png",
-            description: "",
-            leafNode: true,
-            display: true,
-            zoom: 19,
-            boundary: null,
-            disasterId: "dt001",
-            disasterScore: {
-                sst001: 0,
-                sst002: 30,
-                sst003: 60
-            },
-            reading: {
-                value: 50,
-                unit: "°C",
-                boolean: false,
-                limit: {
-                    sst001: 100,
-                    sst002: 200,
-                    sst003: 500
-                }
-            },
-            coordinates: {
-                lat: 21.162866,
-                lng: 72.790458,
-                dynamic: false
-            },
-            updated: 1518244200000,
-            created: 1518244200000
-        };
-
-        var updatedNodeIds = updateNodeItem(item);
-
-        $rootScope.$emit(SERVICE_EVENTS.nodeData, {
-            statusCode: STATUS_CODES.dataUpdateSuccessful,
-            updatedNodeIds: updatedNodeIds
-        });
-    };
 
     return dataService;
 });

@@ -35,6 +35,7 @@ app.controller('ViewLocationController', function ($scope, $location, STATUS_COD
                     $scope.$parent.safeApply(function () {
                         $scope.$parent.hideLoadingOverlay();
                     });
+
                     $scope.$parent.showDialog('Error', data.message);
                     break;
                 case STATUS_CODES.dataUpdateFailed:

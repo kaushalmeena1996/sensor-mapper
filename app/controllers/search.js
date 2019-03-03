@@ -35,18 +35,18 @@ app.controller('SearchController', function ($scope, $location, $filter, MAP_CAT
                         nodeItem,
                         i;
 
-                    for (i = 0; i < data.updateNodeIds.length; i++) {
+                    for (i = 0; i < data.updatedNodeIds.length; i++) {
                         nodeIndex = tableData.findIndex(
                             function (tableItem) {
-                                return tableItem.id == data.updateNodeIds[i];
+                                return tableItem.id == data.updatedNodeIds[i];
                             }
                         );
 
                         if (nodeIndex > -1) {
-                            nodeItem = DataService.getNodeItem(data.updateNodeIds[i]);
+                            nodeItem = DataService.getNodeItem(data.updatedNodeIds[i]);
 
                             if (tableData[nodeIndex].status.id != nodeItem.status.id) {
-                                $scope.tableData[nodeIndex] = nodeItem;
+                                tableData[nodeIndex] = nodeItem;
                                 tableDataUpdated = true;
                             }
                         }
@@ -62,6 +62,7 @@ app.controller('SearchController', function ($scope, $location, $filter, MAP_CAT
                     $scope.$parent.safeApply(function () {
                         $scope.$parent.hideLoadingOverlay();
                     });
+
                     $scope.$parent.showDialog('Error', data.message);
                     break;
                 case STATUS_CODES.dataUpdateFailed:

@@ -67,7 +67,7 @@ app.factory('AuthService', function ($rootScope, AUTH_EVENTS, STATUS_CODES) {
         scope.$on('$destroy', handler);
     };
 
-    authService.isSignedIn = function () {
+    authService.signedIn = function () {
         return userSignedIn;
     };
 
