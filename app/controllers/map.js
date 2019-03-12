@@ -147,6 +147,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
         if (routeGenerationRequired) {
             var emergencyRouteData = RouteService.getEmergencyRouteData(),
+                hospitalRouteData = RouteService.getHospitalRouteData(),
                 routeData = $scope.routeData,
                 j;
 
@@ -154,11 +155,20 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                 routeData.r001[j].renderer.setMap(null);
             }
 
+            for (j = 0; j < routeData.r002.length; j++) {
+                routeData.r002[j].renderer.setMap(null);
+            }
+
             routeData.r001 = [];
+            routeData.r002 = [];
 
             if (emergencyRouteData.length > 0) {
                 $scope.generateRouteRequests(emergencyRouteData);
                 $scope.moveMapTo(emergencyRouteData[0].path[emergencyRouteData[0].path.length - 1], false);
+            }
+
+            if (hospitalRouteData.length > 0) {
+                $scope.generateRouteRequests(hospitalRouteData);
             }
         }
 
@@ -174,6 +184,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
     $scope.createMap = function () {
         var nodeData = DataService.getNodeData(),
             statusCountData = $scope.statusCountData,
+            routeGenerationRequired = false,
             counter = 0;
 
         function plotMarkers() {
@@ -224,6 +235,10 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                 }
             }
 
+            if (nodeData[counter].category.id == 'c003') {
+                routeGenerationRequired = true;
+            }
+
             statusCountData[nodeData[counter].status.id] = (statusCountData[nodeData[counter].status.id]) ? statusCountData[nodeData[counter].status.id] + 1 : 1;
 
             nextPlot();
@@ -233,11 +248,17 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
             counter++;
 
             if (counter >= nodeData.length) {
-                var emergencyRouteData = RouteService.getEmergencyRouteData();
+                if (routeGenerationRequired) {
+                    var emergencyRouteData = RouteService.getEmergencyRouteData(),
+                        hospitalRouteData = RouteService.getHospitalRouteData();
 
-                if (emergencyRouteData.length > 0) {
-                    $scope.generateRouteRequests(emergencyRouteData);
-                    $scope.routeData.r001 = emergencyRouteData;
+                    if (emergencyRouteData.length > 0) {
+                        $scope.generateRouteRequests(emergencyRouteData);
+                    }
+
+                    if (hospitalRouteData.length > 0) {
+                        $scope.generateRouteRequests(hospitalRouteData);
+                    }
                 }
 
                 if ('plot_code' in $location.search()) {
@@ -265,13 +286,11 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                             }
                             break;
                     }
-                } else {
-                    if (emergencyRouteData.length > 0) {
-                        $scope.moveMapTo(emergencyRouteData[0].path[emergencyRouteData[0].path - 1], false);
-                    }
                 }
 
-                var markerCluster = new MarkerClusterer($scope.mapData, $scope.markerData, { imagePath: '../assets/img/clusterer/' });
+                var markerCluster = new MarkerClusterer($scope.mapData, $scope.markerData, {
+                    imagePath: '../assets/img/clusterer/'
+                });
 
                 $scope.statusCountData = statusCountData;
                 $scope.mapLoaded = true;
@@ -356,6 +375,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
     $scope.processRouteRequests = function (requests, routes) {
         var directionsService = new google.maps.DirectionsService(),
+            routeData = $scope.routeData,
             counter = 0;
 
         function submitRequest() {
@@ -382,7 +402,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
                 routes[counter].renderer = renderer;
 
-                $scope.routeData[routes[counter].information.type.id].push(routes[counter]);
+                routeData[routes[counter].information.type.id].push(routes[counter]);
 
                 nextRequest();
             }
@@ -392,6 +412,10 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
             counter++;
 
             if (counter >= requests.length) {
+                $scope.$parent.safeApply(function () {
+                    $scope.routeData = routeData;
+                });
+
                 return;
             }
 
@@ -464,7 +488,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
     $scope.showChartDialog = function () {
         $scope.$parent.showLoadingOverlay();
 
-        DataService.subscribeChartData($scope.sensorId, $scope, SERVICE_EVENTS.chartData, function (event, data) {
+        DataService.subscribeChartData($scope.sidebarActiveData.nodeItem.id, $scope, SERVICE_EVENTS.chartData, function (event, data) {
             switch (data.statusCode) {
                 case STATUS_CODES.dataLoadSuccessful:
                     $scope.chartData.data.datasets[0].data = data.chartData
@@ -502,13 +526,17 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
         if ($scope.filter1 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                category: { id: $scope.filter1 }
+                category: {
+                    id: $scope.filter1
+                }
             }, true);
         }
 
         if ($scope.filter2 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                status: { id: $scope.filter2 }
+                status: {
+                    id: $scope.filter2
+                }
             }, true);
         }
 
@@ -575,7 +603,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                 tooltips: {
                     callbacks: {
                         label: function (tooltipItems, data) {
-                            return tooltipItems.yLabel + ' ' + $scope.sensorItem.reading.unit;
+                            return tooltipItems.yLabel + ' ' + $scope.sidebarActiveData.nodeItem.reading.unit;
                         }
                     }
                 },

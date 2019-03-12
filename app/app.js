@@ -1,6 +1,7 @@
 var app = angular.module('sensorApp', ['ngRoute', 'ngAnimate', 'ngMaterial', 'ngMessages', 'ngSanitize', 'ngAria']);
 
 app.run(function ($rootScope, $mdDialog, $location, PAGE_DATA, AuthService) {
+    /*
     $rootScope.$on('$routeChangeStart', function (event, next, current) {
         if (AuthService.signedIn()) {
             if (next.title == PAGE_DATA.pd007.title) {
@@ -34,6 +35,7 @@ app.run(function ($rootScope, $mdDialog, $location, PAGE_DATA, AuthService) {
             }
         }
     });
+    */
 
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
         if (current.$$route) {

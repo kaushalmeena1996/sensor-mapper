@@ -188,10 +188,11 @@ app.constant('SIDEBAR_DATA', {
         id: "sd001",
         title: "Normal Centres",
         description: "Display list of relief centres.",
-        icon: "notifications",
+        icon: "location_city",
         mode: 0,
         color: "#000000",
-        filter1: "c001"
+        filter1: "c001",
+        filter2: "cst001"
     },
     sd002: {
         id: "sd002",
@@ -200,13 +201,14 @@ app.constant('SIDEBAR_DATA', {
         icon: "place",
         mode: 0,
         color: "#000000",
-        filter1: "c002"
+        filter1: "c002",
+        filter2: "lst001"
     },
     sd003: {
         id: "sd003",
         title: "Normal Sensors",
         description: "Display list of sensors which have normal readings.",
-        icon: "wifi",
+        icon: "settings_remote",
         mode: 0,
         color: "#000000",
         filter1: "c003",
@@ -232,7 +234,7 @@ app.constant('SIDEBAR_DATA', {
         id: "sd006",
         title: "Busy Centres",
         description: "Display list of busy centres.",
-        icon: "notifications",
+        icon: "location_city",
         mode: 0,
         color: "#fa6800",
         filter1: "c001",
@@ -242,7 +244,7 @@ app.constant('SIDEBAR_DATA', {
         id: "sd007",
         title: "Closed Centres",
         description: "Display list of closed centres.",
-        icon: "notifications",
+        icon: "location_city",
         mode: 0,
         color: "#ce352c",
         filter1: "c001",
@@ -272,7 +274,7 @@ app.constant('SIDEBAR_DATA', {
         id: "sd010",
         title: "Failed Sensors",
         description: "Display list sensors which have failed.",
-        icon: "wifi",
+        icon: "settings_remote",
         mode: 0,
         color: "#fa6800",
         filter1: "c003",
@@ -282,7 +284,7 @@ app.constant('SIDEBAR_DATA', {
         id: "sd011",
         title: "Abnormal Sensors",
         description: "Display list sensors which have abnormal readings.",
-        icon: "wifi",
+        icon: "settings_remote",
         mode: 0,
         color: "#ce352c",
         filter1: "c003",
@@ -356,8 +358,7 @@ app.constant('MAP_CATEGORIES', {
     }
 });
 
-app.constant('CATEGORY_TYPES', [
-    {
+app.constant('CATEGORY_TYPES', [{
         name: "Centre",
         value: "c001"
     },
@@ -423,8 +424,7 @@ app.constant('MAP_CENTRES', {
     }
 });
 
-app.constant('CENTRE_TYPES', [
-    {
+app.constant('CENTRE_TYPES', [{
         name: "Fire Station",
         value: "ct002"
     },
@@ -460,8 +460,7 @@ app.constant('CENTRE_STATUSES', {
     }
 });
 
-app.constant('CENTRE_STATUS_TYPES', [
-    {
+app.constant('CENTRE_STATUS_TYPES', [{
         name: "Open",
         value: "cst001"
     },
@@ -572,8 +571,7 @@ app.constant('MAP_LOCATIONS', {
     }
 });
 
-app.constant('LOCATION_TYPES', [
-    {
+app.constant('LOCATION_TYPES', [{
         name: "City",
         value: "lt002"
     },
@@ -697,8 +695,7 @@ app.constant('LOCATION_STATUSES', {
     }
 });
 
-app.constant('LOCATION_STATUS_TYPES', [
-    {
+app.constant('LOCATION_STATUS_TYPES', [{
         name: "Normal",
         value: "lst001"
     },
@@ -791,8 +788,7 @@ app.constant('MAP_SENSORS', {
     }
 });
 
-app.constant('SENSOR_TYPES', [
-    {
+app.constant('SENSOR_TYPES', [{
         name: "Thermometer",
         value: "st002"
     },
@@ -847,8 +843,7 @@ app.constant('SENSOR_STATUSES', {
     }
 });
 
-app.constant('SENSOR_STATUS_TYPES', [
-    {
+app.constant('SENSOR_STATUS_TYPES', [{
         name: "Normal",
         value: "sst001"
     },

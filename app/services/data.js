@@ -58,10 +58,16 @@ app.factory('DataService', function ($rootScope, MAP_CENTRES, CENTRE_STATUSES, M
                 });
             });
 
-            $rootScope.$emit(SERVICE_EVENTS.chartData, { statusCode: STATUS_CODES.dataLoadSuccessful, chartData: data });
+            $rootScope.$emit(SERVICE_EVENTS.chartData, {
+                statusCode: STATUS_CODES.dataLoadSuccessful,
+                chartData: data
+            });
             valueRef.off();
         }, function (error) {
-            $rootScope.$emit(SERVICE_EVENTS.chartData, { statusCode: STATUS_CODES.dataLoadFailed, message: error });
+            $rootScope.$emit(SERVICE_EVENTS.chartData, {
+                statusCode: STATUS_CODES.dataLoadFailed,
+                message: error
+            });
             valueRef.off();
         });
     }
@@ -80,6 +86,8 @@ app.factory('DataService', function ($rootScope, MAP_CENTRES, CENTRE_STATUSES, M
                 case 'c002':
                     nodeData[nodeIndex].icon = MAP_LOCATIONS[item.type.id].icons.lst001;
                     nodeData[nodeIndex].status = angular.copy(LOCATION_STATUSES.lst001);
+                    nodeData[nodeIndex].disaster = {};
+
                     nodeData[nodeIndex].disaster = {};
                     break;
                 case 'c003':
@@ -147,7 +155,7 @@ app.factory('DataService', function ($rootScope, MAP_CENTRES, CENTRE_STATUSES, M
                     );
 
                     for (i = 0; i < childrenNodes.length; i++) {
-                        disasterScore = childrenNodes[i].disasterScore[childrenNodes[i].status.id];
+                        disasterScore = angular.copy(childrenNodes[i].disaster.score);
 
                         if (maxDisasterScore < disasterScore) {
                             maxDisasterScore = disasterScore;
@@ -179,17 +187,22 @@ app.factory('DataService', function ($rootScope, MAP_CENTRES, CENTRE_STATUSES, M
 
                         nodeData[currentNodeIndex].disaster = {};
                     }
+
+                    nodeData[currentNodeIndex].disaster.score = totalDisasterScore;
                     break;
                 case 'c003':
                     if (nodeData[currentNodeIndex].reading.value > nodeData[currentNodeIndex].reading.limit.sst001) {
                         nodeData[currentNodeIndex].icon = MAP_SENSORS[nodeData[currentNodeIndex].type.id].icons.sst003;
                         nodeData[currentNodeIndex].status = angular.copy(SENSOR_STATUSES.sst003)
+                        nodeData[currentNodeIndex].disaster.score = nodeData[currentNodeIndex].disasterScore.sst003;
                     } else if (nodeData[currentNodeIndex].reading.value > nodeData[currentNodeIndex].reading.limit.sst002) {
                         nodeData[currentNodeIndex].icon = MAP_SENSORS[nodeData[currentNodeIndex].type.id].icons.sst001;
                         nodeData[currentNodeIndex].status = angular.copy(SENSOR_STATUSES.sst001);
+                        nodeData[currentNodeIndex].disaster.score = nodeData[currentNodeIndex].disasterScore.sst001;
                     } else {
                         nodeData[currentNodeIndex].icon = MAP_SENSORS[nodeData[currentNodeIndex].type.id].icons.sst002;
                         nodeData[currentNodeIndex].status = angular.copy(SENSOR_STATUSES.sst002);
+                        nodeData[currentNodeIndex].disaster.score = nodeData[currentNodeIndex].disasterScore.sst002;
                     }
                     break;
             }
@@ -212,7 +225,9 @@ app.factory('DataService', function ($rootScope, MAP_CENTRES, CENTRE_STATUSES, M
         var handler = $rootScope.$on(event, callback);
 
         if (nodeDataLoaded) {
-            $rootScope.$emit(SERVICE_EVENTS.nodeData, { statusCode: STATUS_CODES.dataLoadSuccessful });
+            $rootScope.$emit(SERVICE_EVENTS.nodeData, {
+                statusCode: STATUS_CODES.dataLoadSuccessful
+            });
         } else {
             fetchNodeData();
         }

@@ -37,12 +37,13 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
             selectedCentreData;
 
         if (disasterAffectedClusterData.length > 0) {
-            selectedCentreData = sourceSelectionAlgorithm1(
+            selectedCentreData = sourceSelectionAlgorithm(
                 centreData,
-                disasterAffectedClusterData
+                disasterAffectedClusterData,
+                MAP_ROUTES.r001
             );
 
-            return routeGenerationAlgorithm1(
+            return routeGenerationAlgorithm(
                 selectedCentreData,
                 disasterAffectedClusterData,
                 LOCATION_STATUSES,
@@ -59,12 +60,13 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
             selectedHospitalData;
 
         if (disasterAffectedClusterData.length > 0) {
-            selectedHospitalData = sourceSelectionAlgorithm1(
+            selectedHospitalData = sourceSelectionAlgorithm(
                 hospitalData,
-                disasterAffectedClusterData
+                disasterAffectedClusterData,
+                MAP_ROUTES.r002
             );
 
-            return routeGenerationAlgorithm1(
+            return routeGenerationAlgorithm(
                 selectedHospitalData,
                 disasterAffectedClusterData,
                 LOCATION_STATUSES,
@@ -76,7 +78,7 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
     };
 
     routeService.getCustomRouteData = function () {
-        return routeGenerationAlgorithm1(
+        return routeGenerationAlgorithm(
             customCentreData,
             customSensorData,
             SENSOR_STATUSES,
@@ -84,7 +86,7 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
         );
     };
 
-    function sourceSelectionAlgorithm1(sourceData, waypointData) {
+    function sourceSelectionAlgorithm(sourceData, waypointData, routeType) {
         var selectedSourceData = [],
             selectedSourceLimit = waypointData.length,
             visitedIndexes = [],
@@ -103,7 +105,7 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
             for (i = 0; i < waypointData.length; i++) {
                 for (j = 0; j < sourceData.length; j++) {
                     if (visitedIndexes.includes(j) == false) {
-                        if (sourceData[j].type.id != waypointData[i].disaster.centreTypeId) {
+                        if ((routeType.id == 'r001' && sourceData[j].type.id != waypointData[i].disaster.centreTypeId) || (routeType.id == 'r002' && waypointData[i].disaster.hospitalRequired == false)) {
                             continue;
                         }
 
@@ -138,7 +140,7 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
         return selectedSourceData;
     }
 
-    function routeGenerationAlgorithm1(sourceData, waypointData, statusData, routeType) {
+    function routeGenerationAlgorithm(sourceData, waypointData, statusData, routeType) {
         var visitedIndexes = [],
             previousIndexes = [],
             routeData = [],
@@ -181,7 +183,7 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
             for (i = 0; i < sourceData.length; i++) {
                 for (j = 0; j < waypointData.length; j++) {
                     if (visitedIndexes.includes(j) == false) {
-                        if (routeType.id != 'rxxx' && sourceData[i].type.id != waypointData[j].disaster.centreTypeId) {
+                        if ((routeType.id == 'r001' && sourceData[i].type.id != waypointData[j].disaster.centreTypeId) || (routeType.id == 'r002' && waypointData[j].disaster.hospitalRequired == false)) {
                             continue;
                         }
 
