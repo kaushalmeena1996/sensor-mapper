@@ -164,7 +164,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
             if (emergencyRouteData.length > 0) {
                 $scope.generateRouteRequests(emergencyRouteData);
-                $scope.moveMapTo(emergencyRouteData[0].path[emergencyRouteData[0].path.length - 1], false);
+                $scope.fitMapBoundsTo(emergencyRouteData[0]);
             }
 
             if (hospitalRouteData.length > 0) {
@@ -254,6 +254,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
                     if (emergencyRouteData.length > 0) {
                         $scope.generateRouteRequests(emergencyRouteData);
+                        $scope.fitMapBoundsTo(emergencyRouteData[0]);
                     }
 
                     if (hospitalRouteData.length > 0) {
@@ -278,7 +279,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
                                 $scope.generateRouteRequests(customRouteData);
 
-                                $scope.moveMapTo(customRouteData[0].path[0], false);
+                                $scope.fitMapBoundsTo(customRouteData[0]);
 
                                 RouteService.setCustomCentreData([]);
                                 RouteService.setCustomSensorData([]);
@@ -376,7 +377,8 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
     $scope.processRouteRequests = function (requests, routes) {
         var directionsService = new google.maps.DirectionsService(),
             routeData = $scope.routeData,
-            counter = 0;
+            counter = 0,
+            i;
 
         function submitRequest() {
             directionsService.route(requests[counter], directionCallback);
@@ -397,8 +399,11 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                     }
                 });
 
-                renderer.setMap($scope.mapData);
                 renderer.setDirections(result);
+
+                if (routes[counter].information.type.id == 'r001' || routes[counter].information.type.id == 'r003') {
+                    renderer.setMap($scope.mapData);
+                }
 
                 routes[counter].renderer = renderer;
 
@@ -425,6 +430,20 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
         submitRequest();
     };
 
+    $scope.fitMapBoundsTo = function (route) {
+        var mapData = $scope.mapData,
+            markerData = $scope.markerData,
+            bounds = new google.maps.LatLngBounds(),
+            i;
+
+        for (i = 0; i < route.path.length; i++) {
+            bounds.extend(markerData[route.path[i].id].getPosition());
+        }
+
+        mapData.setCenter(bounds.getCenter());
+        mapData.fitBounds(bounds);
+    }
+
     $scope.moveMapTo = function (nodeItem, trigger) {
         if (nodeItem) {
             $scope.mapData.setZoom(nodeItem.zoom);
@@ -441,9 +460,14 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
     };
 
     $scope.openSidebar = function (charmBarId) {
+        var mapData = $scope.mapData,
+            routeData = $scope.routeData,
+            i;
+
         $scope.$parent.safeApply(function () {
             $scope.sidebarActiveData.mode = SIDEBAR_DATA[charmBarId].mode;
         });
+
         switch ($scope.sidebarActiveData.mode) {
             case SIDEBAR_MODES.markerList:
                 if (SIDEBAR_DATA[charmBarId].filter1) {
@@ -458,6 +482,24 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                 break;
             case SIDEBAR_MODES.markerInformation:
                 $scope.setNodeItem();
+                break;
+            case SIDEBAR_MODES.hospitalRouteList:
+                for (i = 0; i < routeData.r001.length; i++) {
+                    routeData.r001[i].renderer.setMap(null);
+                }
+
+                for (i = 0; i < routeData.r002.length; i++) {
+                    routeData.r002[i].renderer.setMap(mapData);
+                }
+                break;
+            case SIDEBAR_MODES.emergencyRouteList:
+                for (i = 0; i < routeData.r001.length; i++) {
+                    routeData.r001[i].renderer.setMap(mapData);
+                }
+
+                for (i = 0; i < routeData.r002.length; i++) {
+                    routeData.r002[i].renderer.setMap(null);
+                }
                 break;
         }
 

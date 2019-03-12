@@ -34,8 +34,7 @@
             </div>
         </div>
         <div data-ng-show="sidebarActiveData.mode == sidebarModes.customRouteList">
-            <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item.path[item.path - 1], false)"
-                data-ng-repeat="item in routeData.rxxx track by $index">
+            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(item)" data-ng-repeat="item in routeData.rxxx track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
                         <img class="height-50" data-ng-src="{{item.information.type.icon}}" alt="Item-Icon">
@@ -67,8 +66,7 @@
             </div>
         </div>
         <div data-ng-show="sidebarActiveData.mode == sidebarModes.hospitalRouteList">
-            <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item.path[item.path.length - 1], false)"
-                data-ng-repeat="item in routeData.r002 track by $index">
+            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(item)" data-ng-repeat="item in routeData.r002 track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
                         <img class="height-50" data-ng-src="{{item.information.type.icon}}" alt="Item-Icon">
@@ -100,8 +98,7 @@
             </div>
         </div>
         <div data-ng-show="sidebarActiveData.mode == sidebarModes.emergencyRouteList">
-            <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item.path[item.path.length - 1], false)"
-                data-ng-repeat="item in routeData.r001 track by $index">
+            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(item)" data-ng-repeat="item in routeData.r001 track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
                         <img class="height-50" data-ng-src="{{item.information.type.icon}}" alt="Item-Icon">
