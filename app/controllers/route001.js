@@ -1,4 +1,4 @@
-var app = angular.module('sensorApp');
+var app = angular.module('app');
 var map,
     markerObject = null;
 

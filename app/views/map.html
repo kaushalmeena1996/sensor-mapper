@@ -1,3 +1,4 @@
+<!-- MAP-SIDEBAR -->
 <md-sidenav class="md-sidenav-left" md-component-id="map-sidebar" md-disable-backdrop md-whiteframe="4">
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -9,6 +10,8 @@
         </div>
     </md-toolbar>
     <md-content>
+
+        <!-- MARKER-LIST-DIVISION -->
         <div data-ng-show="sidebarActiveData.mode == sidebarModes.markerList">
             <div class="padding-left-5 padding-right-15">
                 <md-input-container md-no-float class="md-icon-float md-block">
@@ -17,7 +20,8 @@
                     <input type="search" data-ng-model="query" data-ng-change="applyFilter()">
                 </md-input-container>
             </div>
-            <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item, false)" data-ng-repeat="item in tableData track by $index">
+            <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item, false)"
+                data-ng-repeat="item in tableData track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
                         <img class="height-50" data-ng-src="{{item.icon}}" alt="Item-Icon">
@@ -33,8 +37,35 @@
                 <span>No results to display.</span>
             </div>
         </div>
+
+        <!-- TRACKED-SENSOR-LIST-DIVISION -->
+        <div data-ng-show="sidebarActiveData.mode == sidebarModes.trackedSensorList">
+            <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item, false)"
+                data-ng-repeat="item in tableData track by $index">
+                <md-card-content layout="row" layout-xs="column">
+                    <div class="padding-right-15" layout="row" layout-align="center center">
+                        <img class="height-50" data-ng-src="{{item.icon}}" alt="Item-Icon">
+                    </div>
+                    <div layout="column">
+                        <strong data-ng-bind="item.name"></strong>
+                        <span class="md-body-1" data-ng-bind="item.category.name"></span>
+                        <span class="md-caption" data-ng-bind="item.type.name"></span>
+                    </div>
+                    <div layout="row" layout-align="center center" flex>
+                        <strong data-ng-bind="item.reading.value"></strong>
+                        <strong data-ng-bind="item.reading.unit"></strong>
+                    </div>
+                </md-card-content>
+            </md-card>
+            <div class="text-align-center margin-top-15" data-ng-if="!tableData.length">
+                <span>No results to display.</span>
+            </div>
+        </div>
+
+        <!-- CUSTOM-ROUTE-LIST-DIVISION -->
         <div data-ng-show="sidebarActiveData.mode == sidebarModes.customRouteList">
-            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(item)" data-ng-repeat="item in routeData.rxxx track by $index">
+            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(item)"
+                data-ng-repeat="item in routeData.rxxx track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
                         <img class="height-50" data-ng-src="{{item.information.type.icon}}" alt="Item-Icon">
@@ -65,8 +96,11 @@
                 <span>No results to display.</span>
             </div>
         </div>
+
+        <!-- HOSPITAL-ROUTE-LIST-DIVISION -->
         <div data-ng-show="sidebarActiveData.mode == sidebarModes.hospitalRouteList">
-            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(item)" data-ng-repeat="item in routeData.r002 track by $index">
+            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(item)"
+                data-ng-repeat="item in routeData.r002 track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
                         <img class="height-50" data-ng-src="{{item.information.type.icon}}" alt="Item-Icon">
@@ -97,8 +131,11 @@
                 <span>No results to display.</span>
             </div>
         </div>
+
+        <!-- EMERGENCY-ROUTE-LIST-DIVISION -->
         <div data-ng-show="sidebarActiveData.mode == sidebarModes.emergencyRouteList">
-            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(item)" data-ng-repeat="item in routeData.r001 track by $index">
+            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(item)"
+                data-ng-repeat="item in routeData.r001 track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
                         <img class="height-50" data-ng-src="{{item.information.type.icon}}" alt="Item-Icon">
@@ -129,6 +166,8 @@
                 <span>No results to display.</span>
             </div>
         </div>
+
+        <!-- MARKER-INFORMATION-DIVSION -->
         <div data-ng-show="sidebarActiveData.mode == sidebarModes.markerInformation">
             <div class="text-align-center margin-top-15" layout="column">
                 <span class="md-display-1" data-ng-bind="sidebarActiveData.nodeItem.name"></span>
@@ -162,7 +201,8 @@
                     <md-icon>folder</md-icon>
                 </md-button>
             </div>
-            <div class="md-display-1 text-align-center margin-top-15" data-ng-if="sidebarActiveData.nodeItem.category.id == 'c003' && sidebarActiveData.nodeItem.displayReading == true">
+            <div class="md-display-1 text-align-center margin-top-15"
+                data-ng-if="sidebarActiveData.nodeItem.category.id == 'c003' && sidebarActiveData.nodeItem.displayReading == true">
                 <span data-ng-bind="sidebarActiveData.nodeItem.reading.value"></span>
                 <span data-ng-bind="sidebarActiveData.nodeItem.reading.unit"></span>
             </div>
@@ -171,7 +211,8 @@
                 <span data-ng-bind="sidebarActiveData.nodeItem.address"></span>
             </div>
             <div data-ng-if="!sidebarActiveData.nodeItem.leafNode">
-                <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item, true)" data-ng-repeat="item in tableData track by $index">
+                <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item, true)"
+                    data-ng-repeat="item in tableData track by $index">
                     <md-card-content layout="row" layout-xs="column">
                         <div class="padding-right-15" layout="row" layout-align="center center">
                             <img class="height-50" data-ng-src="{{item.icon}}" alt="Item-Icon">
@@ -184,10 +225,24 @@
                     </md-card-content>
                 </md-card>
             </div>
+            <div class="text-align-center margin-top-15" data-ng-if="sidebarActiveData.nodeItem.category.id == 'c003'">
+                <md-button title="Track sensor reading." aria-label="Chart-Button"
+                    data-ng-click="appendTrackedSensorId()" data-ng-if="isSensorTracked() == false">
+                    <span>Track</span>
+                </md-button>
+                <md-button title="Untrack sensor reading." aria-label="Chart-Button"
+                    data-ng-click="removeTrackedSensorId()" data-ng-if="isSensorTracked() == true">
+                    <span>Untrack</span>
+                </md-button>
+            </div>
         </div>
     </md-content>
 </md-sidenav>
+
+<!-- MAP-CONTAINER-DIVISON -->
 <div class="map-container-1"></div>
+
+<!-- MAIN-ACTION-MENU-DIVISION -->
 <div class="map-action-menu-1">
     <md-fab-speed-dial md-direction="down" class="md-scale">
         <md-fab-trigger>
@@ -197,147 +252,216 @@
         </md-fab-trigger>
         <md-fab-actions>
             <md-button class="md-fab md-raised md-mini" data-ng-href="{{::pageData.pd001.href}}"
-                data-ng-attr-aria-label="{{::pageData.pd001.title}}" data-ng-attr-title="{{::pageData.pd001.description}}">
+                data-ng-attr-aria-label="{{::pageData.pd001.title}}"
+                data-ng-attr-title="{{::pageData.pd001.description}}">
                 <md-icon data-ng-bind="::pageData.pd001.icon"></md-icon>
             </md-button>
             <md-button class="md-fab md-raised md-mini" data-ng-href="{{::pageData.pd002.href}}"
-                data-ng-attr-aria-label="{{::pageData.pd002.title}}" data-ng-attr-title="{{::pageData.pd002.description}}">
+                data-ng-attr-aria-label="{{::pageData.pd002.title}}"
+                data-ng-attr-title="{{::pageData.pd002.description}}">
                 <md-icon data-ng-bind="::pageData.pd002.icon"></md-icon>
             </md-button>
             <md-button class="md-fab md-raised md-mini" data-ng-href="{{::pageData.pd003.href}}"
-                data-ng-attr-aria-label="{{::pageData.pd003.title}}" data-ng-attr-title="{{::pageData.pd003.description}}">
+                data-ng-attr-aria-label="{{::pageData.pd003.title}}"
+                data-ng-attr-title="{{::pageData.pd003.description}}">
                 <md-icon data-ng-bind="::pageData.pd003.icon"></md-icon>
             </md-button>
             <md-button class="md-fab md-raised md-mini" data-ng-href="{{::pageData.pd004.href}}"
-                data-ng-attr-aria-label="{{::pageData.pd004.title}}" data-ng-attr-title="{{::pageData.pd004.description}}">
+                data-ng-attr-aria-label="{{::pageData.pd004.title}}"
+                data-ng-attr-title="{{::pageData.pd004.description}}">
                 <md-icon data-ng-bind="::pageData.pd004.icon"></md-icon>
             </md-button>
             <md-button class="md-fab md-raised md-mini" data-ng-href="{{::pageData.pd010.href}}"
-                data-ng-attr-aria-label="{{::pageData.pd010.title}}" data-ng-attr-title="{{::pageData.pd010.description}}">
+                data-ng-attr-aria-label="{{::pageData.pd010.title}}"
+                data-ng-attr-title="{{::pageData.pd010.description}}">
                 <md-icon data-ng-bind="::pageData.pd010.icon"></md-icon>
             </md-button>
             <md-button class="md-fab md-raised md-mini" data-ng-href="{{::pageData.pd012.href}}"
-                data-ng-attr-aria-label="{{::pageData.pd012.title}}" data-ng-attr-title="{{::pageData.pd012.description}}">
+                data-ng-attr-aria-label="{{::pageData.pd012.title}}"
+                data-ng-attr-title="{{::pageData.pd012.description}}">
                 <md-icon data-ng-bind="::pageData.pd012.icon"></md-icon>
             </md-button>
+            <div class="position-relative">
+                <md-button class="md-fab md-raised md-mini" data-ng-click="updateLocalNodeItem()"
+                    data-ng-attr-aria-label="Button-Update" data-ng-attr-title="Updates local node item.">
+                    <md-icon>build</md-icon>
+                </md-button>
+            </div>
         </md-fab-actions>
     </md-fab-speed-dial>
 </div>
+
+<!-- SIDEBAR-ACTION-MENU-DIVISION -->
 <div class="map-action-menu-2" layout="column">
     <div class="position-relative">
-        <md-button class="md-fab md-raised md-mini" data-ng-click="openSidebar('sd001')" data-ng-attr-aria-label="{{::sidebarData.sd001.title}}"
+        <md-button class="md-fab md-raised md-mini" data-ng-click="openSidebar('sd001')"
+            data-ng-attr-aria-label="{{::sidebarData.sd001.title}}"
             data-ng-attr-title="{{::sidebarData.sd001.description}}">
             <md-icon data-ng-style="::{'color': sidebarData.sd001.color}" data-ng-bind="::sidebarData.sd001.icon">
             </md-icon>
         </md-button>
-        <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd001.color}" data-ng-bind="statusCountData.cst001"></div>
+        <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd001.color}"
+            data-ng-bind="statusCountData.cst001"></div>
     </div>
     <div class="position-relative">
-        <md-button class="md-fab md-raised md-mini" data-ng-click="openSidebar('sd002')" data-ng-attr-aria-label="{{::sidebarData.sd002.title}}"
+        <md-button class="md-fab md-raised md-mini" data-ng-click="openSidebar('sd002')"
+            data-ng-attr-aria-label="{{::sidebarData.sd002.title}}"
             data-ng-attr-title="{{::sidebarData.sd002.description}}">
             <md-icon data-ng-style="::{'color': sidebarData.sd002.color}" data-ng-bind="::sidebarData.sd002.icon">
             </md-icon>
         </md-button>
-        <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd002.color}" data-ng-bind="statusCountData.lst001"></div>
+        <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd002.color}"
+            data-ng-bind="statusCountData.lst001"></div>
     </div>
     <div class="position-relative">
-        <md-button class="md-fab md-raised md-mini" data-ng-click="openSidebar('sd003')" data-ng-attr-aria-label="{{::sidebarData.sd003.title}}"
+        <md-button class="md-fab md-raised md-mini" data-ng-click="openSidebar('sd003')"
+            data-ng-attr-aria-label="{{::sidebarData.sd003.title}}"
             data-ng-attr-title="{{::sidebarData.sd003.description}}">
             <md-icon data-ng-style="::{'color': sidebarData.sd003.color}" data-ng-bind="::sidebarData.sd003.icon">
             </md-icon>
         </md-button>
-        <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd003.color}" data-ng-bind="statusCountData.sst001"></div>
+        <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd003.color}"
+            data-ng-bind="statusCountData.sst001"></div>
     </div>
     <div class="position-relative" data-ng-if="routeData.rxxx.length">
-        <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd004')" data-ng-attr-aria-label="{{::sidebarData.sd004.title}}"
+        <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd004')"
+            data-ng-attr-aria-label="{{::sidebarData.sd004.title}}"
             data-ng-attr-title="{{::sidebarData.sd004.description}}">
             <md-icon data-ng-style="::{'color': sidebarData.sd004.color}" data-ng-bind="::sidebarData.sd004.icon">
             </md-icon>
         </md-button>
-        <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd004.color}" data-ng-bind="routeData.rxxx.length"></div>
+        <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd004.color}"
+            data-ng-bind="routeData.rxxx.length"></div>
     </div>
-    <div class="position-relative">
-        <md-button class="md-fab md-raised md-mini" data-ng-click="openSidebar('sd005')" data-ng-attr-aria-label="{{::sidebarData.sd005.title}}"
+    <div class="position-relative" data-ng-if="trackedSensorIds.length">
+        <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd005')"
+            data-ng-attr-aria-label="{{::sidebarData.sd005.title}}"
             data-ng-attr-title="{{::sidebarData.sd005.description}}">
             <md-icon data-ng-style="::{'color': sidebarData.sd005.color}" data-ng-bind="::sidebarData.sd005.icon">
             </md-icon>
         </md-button>
+        <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd005.color}"
+            data-ng-bind="trackedSensorIds.length"></div>
+    </div>
+    <div class="position-relative">
+        <md-button class="md-fab md-raised md-mini" data-ng-click="openSidebar('sd006')"
+            data-ng-attr-aria-label="{{::sidebarData.sd006.title}}"
+            data-ng-attr-title="{{::sidebarData.sd006.description}}">
+            <md-icon data-ng-style="::{'color': sidebarData.sd006.color}" data-ng-bind="::sidebarData.sd006.icon">
+            </md-icon>
+        </md-button>
     </div>
 </div>
+
+<!-- EMERGENCY-ACTION-MENU-DIVISION -->
 <div class="map-action-menu-3" layout="row" layout-align="end end">
     <div layout="column">
         <div class="position-relative" ng-if="statusCountData.cst003">
-            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd007')" data-ng-attr-aria-label="{{::sidebarData.sd007.title}}"
-                data-ng-attr-title="{{::sidebarData.sd007.description}}">
-                <md-icon data-ng-style="::{'color': sidebarData.sd007.color}" data-ng-bind="::sidebarData.sd007.icon">
-                </md-icon>
-            </md-button>
-            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd007.color}" data-ng-bind="statusCountData.cst003"></div>
-        </div>
-        <div class="position-relative" ng-if="statusCountData.cst002">
-            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd006')" data-ng-attr-aria-label="{{::sidebarData.sd006.title}}"
-                data-ng-attr-title="{{::sidebarData.sd006.description}}">
-                <md-icon data-ng-style="::{'color': sidebarData.sd006.color}" data-ng-bind="::sidebarData.sd006.icon">
-                </md-icon>
-            </md-button>
-            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd006.color}" data-ng-bind="statusCountData.cst002"></div>
-        </div>
-    </div>
-    <div layout="column">
-        <div class="position-relative" ng-if="statusCountData.lst003">
-            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd009')" data-ng-attr-aria-label="{{::sidebarData.sd009.title}}"
-                data-ng-attr-title="{{::sidebarData.sd009.description}}">
-                <md-icon data-ng-style="::{'color': sidebarData.sd009.color}" data-ng-bind="::sidebarData.sd009.icon">
-                </md-icon>
-            </md-button>
-            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd009.color}" data-ng-bind="statusCountData.lst003"></div>
-        </div>
-        <div class="position-relative" ng-if="statusCountData.lst002">
-            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd008')" data-ng-attr-aria-label="{{::sidebarData.sd008.title}}"
+            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd008')"
+                data-ng-attr-aria-label="{{::sidebarData.sd008.title}}"
                 data-ng-attr-title="{{::sidebarData.sd008.description}}">
                 <md-icon data-ng-style="::{'color': sidebarData.sd008.color}" data-ng-bind="::sidebarData.sd008.icon">
                 </md-icon>
             </md-button>
-            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd008.color}" data-ng-bind="statusCountData.lst002"></div>
+            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd008.color}"
+                data-ng-bind="statusCountData.cst003"></div>
+        </div>
+        <div class="position-relative" ng-if="statusCountData.cst002">
+            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd007')"
+                data-ng-attr-aria-label="{{::sidebarData.sd007.title}}"
+                data-ng-attr-title="{{::sidebarData.sd007.description}}">
+                <md-icon data-ng-style="::{'color': sidebarData.sd007.color}" data-ng-bind="::sidebarData.sd007.icon">
+                </md-icon>
+            </md-button>
+            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd007.color}"
+                data-ng-bind="statusCountData.cst002"></div>
         </div>
     </div>
     <div layout="column">
-        <div class="position-relative" ng-if="statusCountData.sst003">
-            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd011')" data-ng-attr-aria-label="{{::sidebarData.sd011.title}}"
-                data-ng-attr-title="{{::sidebarData.sd011.description}}">
-                <md-icon data-ng-style="::{'color': sidebarData.sd011.color}" data-ng-bind="::sidebarData.sd011.icon">
-                </md-icon>
-            </md-button>
-            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd011.color}" data-ng-bind="statusCountData.sst003"></div>
-        </div>
-        <div class="position-relative" ng-if="statusCountData.sst002">
-            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd010')" data-ng-attr-aria-label="{{::sidebarData.sd010.title}}"
+        <div class="position-relative" ng-if="statusCountData.lst003">
+            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd010')"
+                data-ng-attr-aria-label="{{::sidebarData.sd010.title}}"
                 data-ng-attr-title="{{::sidebarData.sd010.description}}">
                 <md-icon data-ng-style="::{'color': sidebarData.sd010.color}" data-ng-bind="::sidebarData.sd010.icon">
                 </md-icon>
             </md-button>
-            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd010.color}" data-ng-bind="statusCountData.sst002"></div>
+            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd010.color}"
+                data-ng-bind="statusCountData.lst003"></div>
+        </div>
+        <div class="position-relative" ng-if="statusCountData.lst002">
+            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd009')"
+                data-ng-attr-aria-label="{{::sidebarData.sd009.title}}"
+                data-ng-attr-title="{{::sidebarData.sd009.description}}">
+                <md-icon data-ng-style="::{'color': sidebarData.sd009.color}" data-ng-bind="::sidebarData.sd009.icon">
+                </md-icon>
+            </md-button>
+            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd009.color}"
+                data-ng-bind="statusCountData.lst002"></div>
         </div>
     </div>
     <div layout="column">
-        <div class="position-relative" data-ng-if="routeData.r001.length">
-            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd013')" data-ng-attr-aria-label="{{::sidebarData.sd013.title}}"
-                data-ng-attr-title="{{::sidebarData.sd013.description}}">
-                <md-icon data-ng-style="::{'color': sidebarData.sd013.color}" data-ng-bind="::sidebarData.sd013.icon">
-                </md-icon>
-            </md-button>
-            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd013.color}" data-ng-bind="routeData.r001.length"></div>
-        </div>
-        <div class="position-relative" data-ng-if="routeData.r002.length">
-            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd012')" data-ng-attr-aria-label="{{::sidebarData.sd012.title}}"
+        <div class="position-relative" ng-if="statusCountData.sst003">
+            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd012')"
+                data-ng-attr-aria-label="{{::sidebarData.sd012.title}}"
                 data-ng-attr-title="{{::sidebarData.sd012.description}}">
                 <md-icon data-ng-style="::{'color': sidebarData.sd012.color}" data-ng-bind="::sidebarData.sd012.icon">
                 </md-icon>
             </md-button>
-            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd012.color}" data-ng-bind="routeData.r002.length"></div>
+            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd012.color}"
+                data-ng-bind="statusCountData.sst003"></div>
+        </div>
+        <div class="position-relative" ng-if="statusCountData.sst002">
+            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd011')"
+                data-ng-attr-aria-label="{{::sidebarData.sd011.title}}"
+                data-ng-attr-title="{{::sidebarData.sd011.description}}">
+                <md-icon data-ng-style="::{'color': sidebarData.sd011.color}" data-ng-bind="::sidebarData.sd011.icon">
+                </md-icon>
+            </md-button>
+            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd011.color}"
+                data-ng-bind="statusCountData.sst002"></div>
+        </div>
+    </div>
+    <div layout="column">
+        <div class="position-relative" data-ng-if="routeData.r001.length">
+            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd014')"
+                data-ng-attr-aria-label="{{::sidebarData.sd014.title}}"
+                data-ng-attr-title="{{::sidebarData.sd014.description}}">
+                <md-icon data-ng-style="::{'color': sidebarData.sd014.color}" data-ng-bind="::sidebarData.sd014.icon">
+                </md-icon>
+            </md-button>
+            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd014.color}"
+                data-ng-bind="routeData.r001.length"></div>
+        </div>
+        <div class="position-relative" data-ng-if="routeData.r002.length">
+            <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd013')"
+                data-ng-attr-aria-label="{{::sidebarData.sd013.title}}"
+                data-ng-attr-title="{{::sidebarData.sd013.description}}">
+                <md-icon data-ng-style="::{'color': sidebarData.sd013.color}" data-ng-bind="::sidebarData.sd013.icon">
+                </md-icon>
+            </md-button>
+            <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd013.color}"
+                data-ng-bind="routeData.r002.length"></div>
         </div>
     </div>
 </div>
+
+<!-- EMERGENCY-ACTION-MENU-DIVISION -->
+<div class="map-action-menu-4 text-align-center">
+    <md-menu>
+        <md-button class="md-raised" aria-label="Open demo menu" ng-click="$mdMenu.open($event)">
+            <md-icon>timeline</md-icon>
+            Simple route
+        </md-button>
+        <md-menu-content width="6">
+            <md-menu-item ng-repeat="item in [1, 2, 3]">
+                <md-button ng-click="ctrl.announceClick($index)"> <span md-menu-align-target>Option</span> {{item}}
+                </md-button>
+            </md-menu-item>
+        </md-menu-content>
+    </md-menu>
+</div>
+
+<!-- CHAR-DIALOG-DIVISION -->
 <div class="fade-toogle fixed-background-2" ng-show="chartDialogVisible">
     <div class="position-center">
         <md-card class="chart-container">

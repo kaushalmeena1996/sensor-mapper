@@ -1,4 +1,4 @@
-var app = angular.module('sensorApp');
+var app = angular.module('app');
 
 app.controller('MainController', function ($scope, $mdToast, $mdDialog, PAGE_DATA, IMAGE_DATA, DataService) {
     $scope.pageLoading = false;
@@ -59,5 +59,11 @@ app.controller('MainController', function ($scope, $mdToast, $mdDialog, PAGE_DAT
         } else {
             this.$apply(func);
         }
+    };
+
+    // ****************** TESTING-METHOD ****************** //
+
+    $scope.updateLocalNodeItem = function () {
+        DataService.updateLocalNodeItem();
     };
 });

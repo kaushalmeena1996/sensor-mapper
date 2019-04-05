@@ -1,4 +1,4 @@
-var app = angular.module('sensorApp');
+var app = angular.module('app');
 
 app.controller('RouteResultController', function ($scope, $location, PLOT_CODES, RouteService) {
     $scope.customRouteData = [];

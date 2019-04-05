@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-ng-app="sensorApp">
+<html lang="en" data-ng-app="app">
 
 <head>
     <!-- Meta Data -->
     <meta charset="utf-8">
-    <meta name="description" content="A web application that displays sensors, places and locations on maps and calculates optimal route to relief centres in case of emergency.">
+    <meta name="description"
+        content="A web application that displays sensors, places and locations on maps and calculates optimal route to relief centres in case of emergency.">
     <meta name="keywords" content="mapmysensor,angularjs,firebase,jquery,metro4,googlemaps,html,css,js">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Title -->
@@ -38,68 +39,81 @@
             <span flex md-truncate></span>
 
             <md-button class="md-fab md-mini md-primary hide-xs" data-ng-href="{{::pageData.pd001.href}}"
-                data-ng-attr-aria-label="{{::pageData.pd001.title}}" data-ng-attr-title="{{::pageData.pd001.description}}">
+                data-ng-attr-aria-label="{{::pageData.pd001.title}}"
+                data-ng-attr-title="{{::pageData.pd001.description}}">
                 <md-icon data-ng-bind="::pageData.pd001.icon"></md-icon>
             </md-button>
             <md-button class="md-fab md-mini md-primary hide-xs" data-ng-href="{{::pageData.pd002.href}}"
-                data-ng-attr-aria-label="{{::pageData.pd002.title}}" data-ng-attr-title="{{::pageData.pd002.description}}">
+                data-ng-attr-aria-label="{{::pageData.pd002.title}}"
+                data-ng-attr-title="{{::pageData.pd002.description}}">
                 <md-icon data-ng-bind="::pageData.pd002.icon"></md-icon>
             </md-button>
             <md-button class="md-fab md-mini md-primary hide-xs" data-ng-href="{{::pageData.pd003.href}}"
-                data-ng-attr-aria-label="{{::pageData.pd003.title}}" data-ng-attr-title="{{::pageData.pd003.description}}">
+                data-ng-attr-aria-label="{{::pageData.pd003.title}}"
+                data-ng-attr-title="{{::pageData.pd003.description}}">
                 <md-icon data-ng-bind="::pageData.pd003.icon"></md-icon>
             </md-button>
             <md-button class="md-fab md-mini md-primary hide-xs" data-ng-href="{{::pageData.pd004.href}}"
-                data-ng-attr-aria-label="{{::pageData.pd004.title}}" data-ng-attr-title="{{::pageData.pd004.description}}">
+                data-ng-attr-aria-label="{{::pageData.pd004.title}}"
+                data-ng-attr-title="{{::pageData.pd004.description}}">
                 <md-icon data-ng-bind="::pageData.pd004.icon"></md-icon>
             </md-button>
             <md-button class="md-fab md-mini md-primary hide-xs" data-ng-href="{{::pageData.pd010.href}}"
-                data-ng-attr-aria-label="{{::pageData.pd010.title}}" data-ng-attr-title="{{::pageData.pd010.description}}">
+                data-ng-attr-aria-label="{{::pageData.pd010.title}}"
+                data-ng-attr-title="{{::pageData.pd010.description}}">
                 <md-icon data-ng-bind="::pageData.pd010.icon"></md-icon>
             </md-button>
             <md-button class="md-fab md-mini md-primary hide-xs" data-ng-href="{{::pageData.pd012.href}}"
-                data-ng-attr-aria-label="{{::pageData.pd012.title}}" data-ng-attr-title="{{::pageData.pd012.description}}">
+                data-ng-attr-aria-label="{{::pageData.pd012.title}}"
+                data-ng-attr-title="{{::pageData.pd012.description}}">
                 <md-icon data-ng-bind="::pageData.pd012.icon"></md-icon>
             </md-button>
 
             <md-menu class="hide-gt-xs">
-                <md-button class="md-fab md-mini md-primary" aria-label="Menu" data-ng-click="showMenu($mdMenu, $event)">
+                <md-button class="md-fab md-mini md-primary" aria-label="Menu"
+                    data-ng-click="showMenu($mdMenu, $event)">
                     <md-icon>more_vert</md-icon>
                 </md-button>
                 <md-menu-content width="3">
                     <md-menu-item>
-                        <md-button data-ng-href="{{::pageData.pd001.href}}" data-ng-attr-aria-label="{{::pageData.pd001.title}}">
+                        <md-button data-ng-href="{{::pageData.pd001.href}}"
+                            data-ng-attr-aria-label="{{::pageData.pd001.title}}">
                             <md-icon data-ng-bind="::pageData.pd001.icon" md-menu-align-target></md-icon>
                             <span data-ng-bind="::pageData.pd001.title"></span>
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button data-ng-href="{{::pageData.pd002.href}}" data-ng-attr-aria-label="{{::pageData.pd002.title}}">
+                        <md-button data-ng-href="{{::pageData.pd002.href}}"
+                            data-ng-attr-aria-label="{{::pageData.pd002.title}}">
                             <md-icon data-ng-bind="::pageData.pd002.icon" md-menu-align-target></md-icon>
                             <span data-ng-bind="::pageData.pd002.title"></span>
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button data-ng-href="{{::pageData.pd003.href}}" data-ng-attr-aria-label="{{::pageData.pd003.title}}">
+                        <md-button data-ng-href="{{::pageData.pd003.href}}"
+                            data-ng-attr-aria-label="{{::pageData.pd003.title}}">
                             <md-icon data-ng-bind="::pageData.pd003.icon" md-menu-align-target></md-icon>
                             <span data-ng-bind="::pageData.pd003.title"></span>
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button data-ng-href="{{::pageData.pd004.href}}" data-ng-attr-aria-label="{{::pageData.pd004.title}}">
+                        <md-button data-ng-href="{{::pageData.pd004.href}}"
+                            data-ng-attr-aria-label="{{::pageData.pd004.title}}">
                             <md-icon data-ng-bind="::pageData.pd004.icon" md-menu-align-target></md-icon>
                             <span data-ng-bind="::pageData.pd004.title"></span>
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button data-ng-href="{{::pageData.pd010.href}}" data-ng-attr-aria-label="{{::pageData.pd010.title}}">
+                        <md-button data-ng-href="{{::pageData.pd010.href}}"
+                            data-ng-attr-aria-label="{{::pageData.pd010.title}}">
                             <md-icon data-ng-bind="::pageData.pd010.icon" md-menu-align-target></md-icon>
                             <span data-ng-bind="::pageData.pd010.title"></span>
                         </md-button>
                     </md-menu-item>
                     <md-menu-divider></md-menu-divider>
                     <md-menu-item>
-                        <md-button data-ng-href="{{::pageData.pd012.href}}" data-ng-attr-aria-label="{{::pageData.pd012.title}}">
+                        <md-button data-ng-href="{{::pageData.pd012.href}}"
+                            data-ng-attr-aria-label="{{::pageData.pd012.title}}">
                             <md-icon data-ng-bind="::pageData.pd012.icon" md-menu-align-target></md-icon>
                             <span data-ng-bind="::pageData.pd012.title"></span>
                         </md-button>
@@ -130,7 +144,7 @@
     <!-- MODULES -->
     <script src="app.js"></script>
     <script src="app.config.js"></script>
-    <script src="app.routes.js"></script>
+    <script src="app.constant.js"></script>
     <!-- CONTROLLERS -->
     <script src="controllers/main.js"></script>
     <script src="controllers/map.js"></script>

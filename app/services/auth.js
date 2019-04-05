@@ -1,4 +1,14 @@
-var app = angular.module('sensorApp');
+/**
+ * @ngdoc service
+ * @name app.AuthService
+ * 
+ * @description
+ * Handle the authentication of application to the firbase
+ * server
+ *
+ **/
+
+var app = angular.module('app');
 
 app.factory('AuthService', function ($rootScope, AUTH_EVENTS, STATUS_CODES) {
     var authService = {};
@@ -47,7 +57,10 @@ app.factory('AuthService', function ($rootScope, AUTH_EVENTS, STATUS_CODES) {
         var handler = $rootScope.$on(event, callback);
 
         if (userSignedIn == true) {
-            $rootScope.$emit(AUTH_EVENTS.signIn, { statusCode: STATUS_CODES.signInSuccessful, userData: userData });
+            $rootScope.$emit(AUTH_EVENTS.signIn, {
+                statusCode: STATUS_CODES.signInSuccessful,
+                userData: userData
+            });
         } else {
             login(credentials);
         }
@@ -59,7 +72,9 @@ app.factory('AuthService', function ($rootScope, AUTH_EVENTS, STATUS_CODES) {
         var handler = $rootScope.$on(event, callback);
 
         if (userSignedIn == false) {
-            $rootScope.$emit(AUTH_EVENTS.signOut, { statusCode: STATUS_CODES.signOutSuccessful });
+            $rootScope.$emit(AUTH_EVENTS.signOut, {
+                statusCode: STATUS_CODES.signOutSuccessful
+            });
         } else {
             logout();
         }

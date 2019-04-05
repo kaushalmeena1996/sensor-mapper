@@ -1,4 +1,4 @@
-var app = angular.module('sensorApp');
+var app = angular.module('app');
 
 app.factory('DataService', function ($rootScope, MAP_CENTRES, CENTRE_STATUSES, MAP_LOCATIONS, LOCATION_STATUSES, DISASTER_TYPES, MAP_SENSORS, SENSOR_STATUSES, STATUS_CODES, SERVICE_EVENTS) {
     var dataService = {};
@@ -229,7 +229,8 @@ app.factory('DataService', function ($rootScope, MAP_CENTRES, CENTRE_STATUSES, M
                 statusCode: STATUS_CODES.dataLoadSuccessful
             });
         } else {
-            fetchNodeData();
+            //fetchNodeData();
+            fetchLocalNodeData();
         }
 
         scope.$on('$destroy', handler);
@@ -238,7 +239,8 @@ app.factory('DataService', function ($rootScope, MAP_CENTRES, CENTRE_STATUSES, M
     dataService.subscribeChartData = function (id, scope, event, callback) {
         var handler = $rootScope.$on(event, callback);
 
-        fetchValueItem(id);
+        //fetchValueItem(id);
+        fetchLocalValueItem(id);
 
         scope.$on('$destroy', handler);
     };
@@ -322,6 +324,106 @@ app.factory('DataService', function ($rootScope, MAP_CENTRES, CENTRE_STATUSES, M
     $rootScope.$on('$destroy', function () {
         nodeRef.off();
     });
+
+    // ****************** TESTING-METHODS ****************** //
+
+    function getJSON(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            var status = xhr.status;
+            if (status === 200) {
+                callback(null, xhr.response);
+            } else {
+                callback(status, xhr.response);
+            }
+        };
+        xhr.send();
+    };
+
+    function fetchLocalNodeData() {
+        getJSON("mapmysensor.json", function (error, data) {
+            loadNodeData(data.nodes);
+
+            nodeDataLoaded = true;
+
+            $rootScope.$emit(SERVICE_EVENTS.nodeData, {
+                statusCode: STATUS_CODES.dataLoadSuccessful
+            });
+        });
+    }
+
+    function fetchLocalValueItem(id) {
+        getJSON("mapmysensor.json", function (error, data) {
+            var chartData = [];
+
+            angular.forEach(data.values[id], function (item) {
+                chartData.push({
+                    x: new Date(item.timestamp),
+                    y: item.value
+                });
+            });
+
+            $rootScope.$emit(SERVICE_EVENTS.chartData, {
+                statusCode: STATUS_CODES.dataLoadSuccessful,
+                chartData: chartData
+            });
+        });
+    }
+
+    dataService.updateLocalNodeItem = function () {
+        var item = {
+            "id": "s004",
+            "parentId": "l010",
+            "category": {
+                "id": "c003",
+                "name": "Sensor"
+            },
+            "name": "MQ-135 Sensor",
+            "address": "Computer Department, SVNIT Campus, Athwa, Surat, Gujarat 395007",
+            "type": {
+                "id": "st006",
+                "name": "Gas-Sensor"
+            },
+            "photo": "assets/img/other/default-photo.png",
+            "description": "",
+            "leafNode": true,
+            "display": true,
+            "zoom": 21,
+            "boundary": null,
+            "disasterId": "dt001",
+            "disasterScore": {
+                "sst001": 0,
+                "sst002": 0,
+                "sst003": 20
+            },
+            "displayReading": true,
+            "reading": {
+                "value": 512,
+                "unit": "V",
+                "limit": {
+                    "sst001": 500,
+                    "sst002": 0,
+                    "sst003": 1000
+                }
+            },
+            "coordinates": {
+                "lat": 21.164595,
+                "lng": 72.782869,
+                "dynamic": false
+            },
+            "updated": 1518244200000,
+            "created": 1518244200000
+        };
+
+        var updatedNodeIds = updateNodeItem(item);
+
+        $rootScope.$emit(SERVICE_EVENTS.nodeData, {
+            statusCode: STATUS_CODES.dataUpdateSuccessful,
+            updatedNodeIds: updatedNodeIds
+        });
+    }
 
     return dataService;
 });

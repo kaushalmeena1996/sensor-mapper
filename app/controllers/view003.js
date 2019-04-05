@@ -1,4 +1,4 @@
-var app = angular.module('sensorApp');
+var app = angular.module('app');
 
 app.controller('ViewSensorController', function ($scope, $location, STATUS_CODES, SERVICE_EVENTS, DataService) {
     $scope.sensorItem = {};

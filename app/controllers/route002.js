@@ -1,4 +1,4 @@
-var app = angular.module('sensorApp');
+var app = angular.module('app');
 
 app.controller('RouteSensorController', function ($scope, $location, $filter, MAP_CATEGORIES, SENSOR_TYPES, SENSOR_STATUS_TYPES, STATUS_CODES, SERVICE_EVENTS, RouteService, DataService) {
     $scope.tableData = [];

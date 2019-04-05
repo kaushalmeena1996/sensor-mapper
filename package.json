@@ -5,7 +5,8 @@
   "description": "A web application that displays sensors, places and locations on maps and calculates optimal route to relief centres in case of emergency.",
   "main": "index.html",
   "scripts": {
-    "start": "live-server --host=localhost --port=8080 app/"
+    "start": "live-server --host=localhost --port=8080 app/",
+    "generate-docs": "jsdoc app -d docs -t node_modules/docdash -R README.md"
   },
   "keywords": [
     "mapmysensor",
@@ -19,6 +20,8 @@
   "author": "Kaushal Meena",
   "license": "ISC",
   "devDependencies": {
+    "docdash": "^1.0.3",
+    "jsdoc": "^3.5.5",
     "live-server": "^1.2.1"
   }
 }

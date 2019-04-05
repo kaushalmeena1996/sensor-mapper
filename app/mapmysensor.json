@@ -612,8 +612,7 @@
       "zoom": 12,
       "boundary": {
         "bounds": [
-          [
-            {
+          [{
               "lat": 21.08884066515246,
               "lng": 72.68689153860191
             },
@@ -1342,8 +1341,7 @@
       "zoom": 15,
       "boundary": {
         "bounds": [
-          [
-            {
+          [{
               "lat": 21.18786301090666,
               "lng": 72.8081844294635
             },
@@ -1788,8 +1786,7 @@
       "zoom": 14,
       "boundary": {
         "bounds": [
-          [
-            {
+          [{
               "lat": 21.18394247789287,
               "lng": 72.83436987009401
             },
@@ -2450,8 +2447,7 @@
       "zoom": 12,
       "boundary": {
         "bounds": [
-          [
-            {
+          [{
               "lat": 21.19550295304182,
               "lng": 72.7462849123247
             },
@@ -4332,8 +4328,7 @@
       "zoom": 13,
       "boundary": {
         "bounds": [
-          [
-            {
+          [{
               "lat": 21.11444672582524,
               "lng": 72.80311098567799
             },
@@ -5403,8 +5398,7 @@
       "boundary": {
         "bounds": [
           [
-            [
-              {
+            [{
                 "lat": 21.23267296696855,
                 "lng": 72.80128040017212
               },
@@ -5955,8 +5949,7 @@
             ]
           ],
           [
-            [
-              {
+            [{
                 "lat": 21.24457637581303,
                 "lng": 72.84160268283318
               },
@@ -6603,8 +6596,7 @@
       "boundary": {
         "bounds": [
           [
-            [
-              {
+            [{
                 "lat": 21.2096909367202,
                 "lng": 72.84019281115495
               },
@@ -7931,8 +7923,7 @@
             ]
           ],
           [
-            [
-              {
+            [{
                 "lat": 21.23162921600504,
                 "lng": 72.8674516818647
               },
@@ -8663,8 +8654,7 @@
       "boundary": {
         "bounds": [
           [
-            [
-              {
+            [{
                 "lat": 21.165702,
                 "lng": 72.781551
               },
@@ -8771,8 +8761,7 @@
       "boundary": {
         "bounds": [
           [
-            [
-              {
+            [{
                 "lat": 21.164533,
                 "lng": 72.782432
               },
@@ -8827,8 +8816,7 @@
       "boundary": {
         "bounds": [
           [
-            [
-              {
+            [{
                 "lat": 21.167626,
                 "lng": 72.786834
               },
@@ -8883,8 +8871,7 @@
       "boundary": {
         "bounds": [
           [
-            [
-              {
+            [{
                 "lat": 21.163201,
                 "lng": 72.789279
               },
@@ -8937,7 +8924,7 @@
         "id": "c003",
         "name": "Sensor"
       },
-      "name": "Sensor A",
+      "name": "DHT11 Sensor",
       "address": "Computer Department, SVNIT Campus, Athwa, Surat, Gujarat 395007",
       "type": {
         "id": "st002",
@@ -8947,7 +8934,7 @@
       "description": "",
       "leafNode": true,
       "display": true,
-      "zoom": 20,
+      "zoom": 21,
       "boundary": null,
       "disasterId": "dt001",
       "disasterScore": {
@@ -8975,12 +8962,141 @@
     },
     "s002": {
       "id": "s002",
+      "parentId": "l010",
+      "category": {
+        "id": "c003",
+        "name": "Sensor"
+      },
+      "name": "MQ-5 Sensor",
+      "address": "Computer Department, SVNIT Campus, Athwa, Surat, Gujarat 395007",
+      "type": {
+        "id": "st006",
+        "name": "Gas-Sensor"
+      },
+      "photo": "assets/img/other/default-photo.png",
+      "description": "",
+      "leafNode": true,
+      "display": true,
+      "zoom": 21,
+      "boundary": null,
+      "disasterId": "dt001",
+      "disasterScore": {
+        "sst001": 0,
+        "sst002": 0,
+        "sst003": 20
+      },
+      "displayReading": true,
+      "reading": {
+        "value": 1.2,
+        "unit": "V",
+        "limit": {
+          "sst001": 500,
+          "sst002": 0,
+          "sst003": 1000
+        }
+      },
+      "coordinates": {
+        "lat": 21.164614,
+        "lng": 72.782795,
+        "dynamic": false
+      },
+      "updated": 1518244200000,
+      "created": 1518244200000
+    },
+    "s003": {
+      "id": "s003",
+      "parentId": "l010",
+      "category": {
+        "id": "c003",
+        "name": "Sensor"
+      },
+      "name": "MQ-9 Sensor",
+      "address": "Computer Department, SVNIT Campus, Athwa, Surat, Gujarat 395007",
+      "type": {
+        "id": "st006",
+        "name": "Gas-Sensor"
+      },
+      "photo": "assets/img/other/default-photo.png",
+      "description": "",
+      "leafNode": true,
+      "display": true,
+      "zoom": 21,
+      "boundary": null,
+      "disasterId": "dt001",
+      "disasterScore": {
+        "sst001": 0,
+        "sst002": 0,
+        "sst003": 20
+      },
+      "displayReading": true,
+      "reading": {
+        "value": 1.2,
+        "unit": "V",
+        "limit": {
+          "sst001": 500,
+          "sst002": 0,
+          "sst003": 1000
+        }
+      },
+      "coordinates": {
+        "lat": 21.164558,
+        "lng": 72.782799,
+        "dynamic": false
+      },
+      "updated": 1518244200000,
+      "created": 1518244200000
+    },
+    "s004": {
+      "id": "s004",
+      "parentId": "l010",
+      "category": {
+        "id": "c003",
+        "name": "Sensor"
+      },
+      "name": "MQ-135 Sensor",
+      "address": "Computer Department, SVNIT Campus, Athwa, Surat, Gujarat 395007",
+      "type": {
+        "id": "st006",
+        "name": "Gas-Sensor"
+      },
+      "photo": "assets/img/other/default-photo.png",
+      "description": "",
+      "leafNode": true,
+      "display": true,
+      "zoom": 21,
+      "boundary": null,
+      "disasterId": "dt001",
+      "disasterScore": {
+        "sst001": 0,
+        "sst002": 0,
+        "sst003": 20
+      },
+      "displayReading": true,
+      "reading": {
+        "value": 1.2,
+        "unit": "V",
+        "limit": {
+          "sst001": 500,
+          "sst002": 0,
+          "sst003": 1000
+        }
+      },
+      "coordinates": {
+        "lat": 21.164595,
+        "lng": 72.782869,
+        "dynamic": false
+      },
+      "updated": 1518244200000,
+      "created": 1518244200000
+    },
+    "s005": {
+      "id": "s005",
       "parentId": "l011",
       "category": {
         "id": "c003",
         "name": "Sensor"
       },
-      "name": "Sensor B",
+      "name": "Sensor A",
       "address": "Mother Teresa Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
       "type": {
         "id": "st002",
@@ -9017,14 +9133,14 @@
       "updated": 1518244200000,
       "created": 1518244200000
     },
-    "s003": {
-      "id": "s003",
+    "s006": {
+      "id": "s006",
       "parentId": "l012",
       "category": {
         "id": "c003",
         "name": "Sensor"
       },
-      "name": "Sensor C",
+      "name": "Sensor B",
       "address": "Swami Vivekanand Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
       "type": {
         "id": "st002",

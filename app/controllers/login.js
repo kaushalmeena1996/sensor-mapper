@@ -1,4 +1,4 @@
-var app = angular.module('sensorApp');
+var app = angular.module('app');
 
 app.controller('LoginController', function ($scope, $location, AUTH_EVENTS, STATUS_CODES, AuthService) {
     $scope.credentials = {

@@ -1,4 +1,4 @@
-var app = angular.module('sensorApp');
+var app = angular.module('app');
 
 app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_ROUTES, DataService) {
     var routeService = {};

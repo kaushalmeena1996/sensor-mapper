@@ -1,4 +1,4 @@
-var app = angular.module('sensorApp');
+var app = angular.module('app');
 
 app.controller('SearchController', function ($scope, $location, $filter, MAP_CATEGORIES, CATEGORY_TYPES, CENTRE_TYPES, LOCATION_TYPES, SENSOR_TYPES, CENTRE_STATUS_TYPES, LOCATION_STATUS_TYPES, SENSOR_STATUS_TYPES, STATUS_CODES, PLOT_CODES, SERVICE_EVENTS, DataService) {
     $scope.tableData = [];

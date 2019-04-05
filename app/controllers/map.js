@@ -1,4 +1,4 @@
-var app = angular.module('sensorApp');
+var app = angular.module('app');
 
 app.controller('MapController', function ($scope, $location, $filter, $mdSidenav, MAP_CATEGORIES, MAP_CENTRES, STATUS_CODES, SIDEBAR_DATA, SIDEBAR_MODES, PLOT_CODES, SERVICE_EVENTS, RouteService, DataService) {
     $scope.tableData = [];
@@ -6,6 +6,8 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
     $scope.mapData = {};
 
     $scope.markerData = {};
+
+    $scope.trackedSensorIds = [];
 
     $scope.routeData = {
         r001: [],
@@ -77,11 +79,13 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
     $scope.updateMap = function (updatedNodeIds) {
         var statusCountData = $scope.statusCountData,
+            tableData = $scope.tableData,
             toastMessages = [],
             routeGenerationRequired = false,
             nodeItem,
             oldStatusId,
             newStatusId,
+            nodeIndex,
             i;
 
         for (i = 0; i < updatedNodeIds.length; i++) {
@@ -108,12 +112,6 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                         }
                     }
                 }
-
-                if ($scope.sidebarActiveData.nodeItem.id == nodeItem.parentId) {
-                    $scope.$parent.safeApply(function () {
-                        $scope.tableData = DataService.getNodeChildren(nodeItem.id);
-                    });
-                }
             }
 
             if (nodeItem.coordinates.dynamic) {
@@ -136,6 +134,16 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                 });
 
                 $scope.markerData[nodeItem.id].statusId = newStatusId;
+
+                nodeIndex = tableData.findIndex(
+                    function (tableItem) {
+                        return tableItem.id == updatedNodeIds[i];
+                    }
+                );
+
+                if (nodeIndex > -1) {
+                    tableData[nodeIndex] = nodeItem;
+                }
 
                 if (nodeItem.category.id == 'c003') {
                     routeGenerationRequired = true;
@@ -164,7 +172,6 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
             if (emergencyRouteData.length > 0) {
                 $scope.generateRouteRequests(emergencyRouteData);
-                $scope.fitMapBoundsTo(emergencyRouteData[0]);
             }
 
             if (hospitalRouteData.length > 0) {
@@ -178,6 +185,9 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
         $scope.$parent.safeApply(function () {
             $scope.statusCountData = statusCountData;
+        });
+        $scope.$parent.safeApply(function () {
+            $scope.tableData = tableData;
         });
     };
 
@@ -210,7 +220,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                 return function () {
                     scope.$parent.safeApply(function () {
                         scope.sidebarActiveData.nodeId = marker.id;
-                        scope.openSidebar('sd005');
+                        scope.openSidebar('sd006');
                     });
                 };
             })(marker, $scope));
@@ -254,7 +264,6 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
                     if (emergencyRouteData.length > 0) {
                         $scope.generateRouteRequests(emergencyRouteData);
-                        $scope.fitMapBoundsTo(emergencyRouteData[0]);
                     }
 
                     if (hospitalRouteData.length > 0) {
@@ -272,14 +281,10 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                             $scope.moveMapTo(item, true);
                             break;
                         case PLOT_CODES.route:
-                            var customRouteData = [];
-
                             if (RouteService.getCustomRouteStep() == 3) {
-                                customRouteData = RouteService.getCustomRouteData();
+                                var customRouteData = RouteService.getCustomRouteData();
 
                                 $scope.generateRouteRequests(customRouteData);
-
-                                $scope.fitMapBoundsTo(customRouteData[0]);
 
                                 RouteService.setCustomCentreData([]);
                                 RouteService.setCustomSensorData([]);
@@ -346,7 +351,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                     return function () {
                         scope.$parent.safeApply(function () {
                             scope.sidebarActiveData.nodeId = marker.id;
-                            scope.openSidebar('sd005');
+                            scope.openSidebar('sd006');
                         });
                     };
                 })(marker, $scope));
@@ -401,7 +406,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
                 renderer.setDirections(result);
 
-                if (routes[counter].information.type.id == 'r001' || routes[counter].information.type.id == 'r003') {
+                if (routes[counter].information.type.id == 'r001' || routes[counter].information.type.id == 'rxxx') {
                     renderer.setMap($scope.mapData);
                 }
 
@@ -420,6 +425,10 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                 $scope.$parent.safeApply(function () {
                     $scope.routeData = routeData;
                 });
+
+                if (routes[0].information.type.id == 'r001' || routes[0].information.type.id == 'rxxx') {
+                    $scope.fitMapBoundsTo(routes[0]);
+                }
 
                 return;
             }
@@ -462,6 +471,9 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
     $scope.openSidebar = function (charmBarId) {
         var mapData = $scope.mapData,
             routeData = $scope.routeData,
+            trackedSensorIds = $scope.trackedSensorIds,
+            tableData = [],
+            nodeItem,
             i;
 
         $scope.$parent.safeApply(function () {
@@ -482,6 +494,16 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                 break;
             case SIDEBAR_MODES.markerInformation:
                 $scope.setNodeItem();
+                break;
+            case SIDEBAR_MODES.trackedSensorList:
+                for (i = 0; i < trackedSensorIds.length; i++) {
+                    nodeItem = DataService.getNodeItem(trackedSensorIds[i]);
+                    tableData.push(nodeItem);
+                }
+
+                $scope.$parent.safeApply(function () {
+                    $scope.tableData = tableData;
+                });
                 break;
             case SIDEBAR_MODES.hospitalRouteList:
                 for (i = 0; i < routeData.r001.length; i++) {
@@ -556,7 +578,6 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
         $scope.chartDialogVisible = false;
     };
 
-
     $scope.applyFilter = function () {
         var nodeData = DataService.getNodeData();
 
@@ -585,6 +606,27 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
         $scope.tableData = nodeData;
     };
 
+    $scope.appendTrackedSensorId = function () {
+        var sensorId = $scope.sidebarActiveData.nodeItem.id;
+
+        $scope.$parent.safeApply(function () {
+            $scope.trackedSensorIds.push(sensorId);
+        });
+    };
+
+    $scope.removeTrackedSensorId = function () {
+        var sensorId = $scope.sidebarActiveData.nodeItem.id;
+
+        $scope.$parent.safeApply(function () {
+            $scope.trackedSensorIds.splice($scope.trackedSensorIds.indexOf(sensorId), 1);
+        });
+    };
+
+    $scope.isSensorTracked = function () {
+        var sensorId = $scope.sidebarActiveData.nodeItem.id;
+
+        return $scope.trackedSensorIds.includes(sensorId);
+    };
 
     $scope.showNodeItem = function () {
         var nodeId = $scope.sidebarActiveData.nodeItem.id,
