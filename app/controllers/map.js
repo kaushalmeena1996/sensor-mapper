@@ -1,6 +1,6 @@
 var app = angular.module('app');
 
-app.controller('MapController', function ($scope, $location, $filter, $mdSidenav, MAP_CATEGORIES, MAP_CENTRES, STATUS_CODES, SIDEBAR_DATA, SIDEBAR_MODES, PLOT_CODES, SERVICE_EVENTS, RouteService, DataService) {
+app.controller('MapController', function ($scope, $location, $filter, $mdSidenav, MAP_CATEGORIES, MAP_CENTRES, STATUS_CODES, SIDEBAR_DATA, SIDEBAR_MODES, PLOT_CODES, MAP_GRAPHS, SERVICE_EVENTS, RouteService, DataService) {
     $scope.tableData = [];
 
     $scope.mapData = {};
@@ -12,7 +12,24 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
     $scope.routeData = {
         r001: [],
         r002: [],
-        rxxx: []
+        r003: []
+    };
+
+    $scope.graphData = {
+        g001: [],
+        g002: [],
+        g003: [],
+        g004: [],
+        g005: [],
+        g006: [],
+        g007: []
+    }
+
+    $scope.selectedGraph = {
+        id: "g001",
+        name: "Emergency Route - Google Maps",
+        color: "#ce352c",
+        icon: "timeline"
     }
 
     $scope.statusCountData = {
@@ -46,6 +63,8 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
     $scope.sidebarData = SIDEBAR_DATA;
     $scope.sidebarModes = SIDEBAR_MODES;
+
+    $scope.mapGraphs = MAP_GRAPHS;
 
     $scope.getNodeData = function () {
         $scope.$parent.showLoadingOverlay();
@@ -154,29 +173,8 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
         }
 
         if (routeGenerationRequired) {
-            var emergencyRouteData = RouteService.getEmergencyRouteData(),
-                hospitalRouteData = RouteService.getHospitalRouteData(),
-                routeData = $scope.routeData,
-                j;
-
-            for (j = 0; j < routeData.r001.length; j++) {
-                routeData.r001[j].renderer.setMap(null);
-            }
-
-            for (j = 0; j < routeData.r002.length; j++) {
-                routeData.r002[j].renderer.setMap(null);
-            }
-
-            routeData.r001 = [];
-            routeData.r002 = [];
-
-            if (emergencyRouteData.length > 0) {
-                $scope.generateRouteRequests(emergencyRouteData);
-            }
-
-            if (hospitalRouteData.length > 0) {
-                $scope.generateRouteRequests(hospitalRouteData);
-            }
+            $scope.plotGraph('g002', true);
+            $scope.plotGraph('g001', true);
         }
 
         if (toastMessages.length > 0) {
@@ -245,7 +243,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                 }
             }
 
-            if (nodeData[counter].category.id == 'c003') {
+            if (nodeData[counter].category.id == 'c003' && (nodeData[counter].status.id == 'sst002' || nodeData[counter].status.id == 'sst003')) {
                 routeGenerationRequired = true;
             }
 
@@ -259,16 +257,8 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
             if (counter >= nodeData.length) {
                 if (routeGenerationRequired) {
-                    var emergencyRouteData = RouteService.getEmergencyRouteData(),
-                        hospitalRouteData = RouteService.getHospitalRouteData();
-
-                    if (emergencyRouteData.length > 0) {
-                        $scope.generateRouteRequests(emergencyRouteData);
-                    }
-
-                    if (hospitalRouteData.length > 0) {
-                        $scope.generateRouteRequests(hospitalRouteData);
-                    }
+                    $scope.plotGraph('g002', true);
+                    $scope.plotGraph('g001', true);
                 }
 
                 if ('plot_code' in $location.search()) {
@@ -282,9 +272,9 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                             break;
                         case PLOT_CODES.route:
                             if (RouteService.getCustomRouteStep() == 3) {
-                                var customRouteData = RouteService.getCustomRouteData();
-
-                                $scope.generateRouteRequests(customRouteData);
+                                if (routeGenerationRequired) {
+                                    $scope.plotGraph('gxxx', true);
+                                }
 
                                 RouteService.setCustomCentreData([]);
                                 RouteService.setCustomSensorData([]);
@@ -376,14 +366,17 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
             requests.push(requestObject);
         }
 
-        $scope.processRouteRequests(requests, routes);
+        if (requests.length > 0) {
+            $scope.processRouteRequests(requests, routes);
+        }
     };
 
     $scope.processRouteRequests = function (requests, routes) {
         var directionsService = new google.maps.DirectionsService(),
-            routeData = $scope.routeData,
-            counter = 0,
-            i;
+            graphData = $scope.graphData,
+            selectedGraphId = $scope.selectedGraph.id,
+            mapData = $scope.mapData,
+            counter = 0;
 
         function submitRequest() {
             directionsService.route(requests[counter], directionCallback);
@@ -400,19 +393,15 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                     polylineOptions: {
                         strokeWeight: 4,
                         strokeOpacity: 0.8,
-                        strokeColor: routes[counter].information.type.color
+                        strokeColor: routes[counter].info.type.color
                     }
                 });
 
                 renderer.setDirections(result);
 
-                if (routes[counter].information.type.id == 'r001' || routes[counter].information.type.id == 'rxxx') {
-                    renderer.setMap($scope.mapData);
-                }
+                renderer.setMap(mapData);
 
-                routes[counter].renderer = renderer;
-
-                routeData[routes[counter].information.type.id].push(routes[counter]);
+                graphData[selectedGraphId].push(renderer);
 
                 nextRequest();
             }
@@ -422,11 +411,7 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
             counter++;
 
             if (counter >= requests.length) {
-                $scope.$parent.safeApply(function () {
-                    $scope.routeData = routeData;
-                });
-
-                if (routes[0].information.type.id == 'r001' || routes[0].information.type.id == 'rxxx') {
+                if (routes[0].info.type.id == 'r001' || routes[0].info.type.id == 'rxxx') {
                     $scope.fitMapBoundsTo(routes[0]);
                 }
 
@@ -468,26 +453,24 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
         }
     };
 
-    $scope.openSidebar = function (charmBarId) {
-        var mapData = $scope.mapData,
-            routeData = $scope.routeData,
-            trackedSensorIds = $scope.trackedSensorIds,
+    $scope.openSidebar = function (sidebarDataId) {
+        var trackedSensorIds = $scope.trackedSensorIds,
             tableData = [],
             nodeItem,
             i;
 
         $scope.$parent.safeApply(function () {
-            $scope.sidebarActiveData.mode = SIDEBAR_DATA[charmBarId].mode;
+            $scope.sidebarActiveData.mode = SIDEBAR_DATA[sidebarDataId].mode;
         });
 
         switch ($scope.sidebarActiveData.mode) {
             case SIDEBAR_MODES.markerList:
-                if (SIDEBAR_DATA[charmBarId].filter1) {
-                    $scope.filter1 = SIDEBAR_DATA[charmBarId].filter1;
+                if (SIDEBAR_DATA[sidebarDataId].filter1) {
+                    $scope.filter1 = SIDEBAR_DATA[sidebarDataId].filter1;
                 }
 
-                if (SIDEBAR_DATA[charmBarId].filter2) {
-                    $scope.filter2 = SIDEBAR_DATA[charmBarId].filter2;
+                if (SIDEBAR_DATA[sidebarDataId].filter2) {
+                    $scope.filter2 = SIDEBAR_DATA[sidebarDataId].filter2;
                 }
 
                 $scope.applyFilter();
@@ -505,27 +488,15 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                     $scope.tableData = tableData;
                 });
                 break;
-            case SIDEBAR_MODES.hospitalRouteList:
-                for (i = 0; i < routeData.r001.length; i++) {
-                    routeData.r001[i].renderer.setMap(null);
-                }
-
-                for (i = 0; i < routeData.r002.length; i++) {
-                    routeData.r002[i].renderer.setMap(mapData);
-                }
-                break;
             case SIDEBAR_MODES.emergencyRouteList:
-                for (i = 0; i < routeData.r001.length; i++) {
-                    routeData.r001[i].renderer.setMap(mapData);
-                }
-
-                for (i = 0; i < routeData.r002.length; i++) {
-                    routeData.r002[i].renderer.setMap(null);
-                }
+                $scope.plotGraph('g001', false);
+                break;
+            case SIDEBAR_MODES.hospitalRouteList:
+                $scope.plotGraph('g002', false);
                 break;
         }
 
-        $scope.sidebarActiveData.title = SIDEBAR_DATA[charmBarId].title;
+        $scope.sidebarActiveData.title = SIDEBAR_DATA[sidebarDataId].title;
 
         $mdSidenav("map-sidebar").open();
     };
@@ -576,6 +547,125 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
 
     $scope.hideChartDialog = function () {
         $scope.chartDialogVisible = false;
+    };
+
+    $scope.plotGraph = function (newGraphId, forceUpdation) {
+        var mapData = $scope.mapData,
+            graphData = $scope.graphData,
+            oldGraphId = $scope.selectedGraph.id,
+            disasterReliefRouteData,
+            medicalReliefRouteData,
+            customRouteData,
+            coordinateData = [],
+            i,
+            j;
+
+        for (i = 0; i < graphData[oldGraphId].length; i++) {
+            graphData[oldGraphId][i].setMap(null);
+        }
+
+        $scope.selectedGraph = MAP_GRAPHS[newGraphId];
+
+        if (forceUpdation == true || graphData[newGraphId].length == 0) {
+            switch (newGraphId) {
+                case 'g001':
+                    disasterReliefRouteData = RouteService.getDisasterReliefRouteData();
+
+                    if (disasterReliefRouteData.length > 0) {
+                        $scope.generateRouteRequests(disasterReliefRouteData);
+                    }
+
+                    $scope.routeData.r001 = disasterReliefRouteData;
+                    break;
+                case 'g002':
+                    disasterReliefRouteData = RouteService.getDisasterReliefRouteData();
+
+                    if (disasterReliefRouteData.length > 0) {
+                        for (i = 0; i < disasterReliefRouteData.length; i++) {
+                            coordinateData = [];
+
+                            for (j = 0; j < disasterReliefRouteData[i].path.length; j++) {
+                                coordinateData.push({
+                                    lat: disasterReliefRouteData[i].path[j].coordinates.lat,
+                                    lng: disasterReliefRouteData[i].path[j].coordinates.lng
+                                });
+                            }
+
+                            var polyline = new google.maps.Polyline({
+                                path: coordinateData,
+                                geodesic: true,
+                                strokeColor: MAP_GRAPHS.g003.color,
+                                strokeWeight: 4,
+                                strokeOpacity: 0.8,
+                                map: mapData
+                            });
+
+                            graphData.g002.push(polyline);
+                        }
+                    }
+
+                    $scope.routeData.r001 = disasterReliefRouteData;
+                    break;
+
+                case 'g003':
+                    medicalReliefRouteData = RouteService.getMedicalReliefRouteData();
+
+                    if (medicalReliefRouteData.length > 0) {
+                        $scope.generateRouteRequests(medicalReliefRouteData);
+                    }
+
+                    $scope.routeData.r002 = medicalReliefRouteData;
+                    break;
+                case 'g004':
+                    medicalReliefRouteData = RouteService.getMedicalReliefRouteData();
+
+                    if (medicalReliefRouteData.length > 0) {
+                        for (i = 0; i < medicalReliefRouteData.length; i++) {
+                            coordinateData = [];
+
+                            for (j = 0; j < medicalReliefRouteData[i].path.length; j++) {
+                                coordinateData.push({
+                                    lat: medicalReliefRouteData[i].path[j].coordinates.lat,
+                                    lng: medicalReliefRouteData[i].path[j].coordinates.lng
+                                });
+                            }
+
+                            var polyline = new google.maps.Polyline({
+                                path: coordinateData,
+                                geodesic: true,
+                                strokeColor: MAP_GRAPHS.g004.color,
+                                strokeWeight: 4,
+                                strokeOpacity: 0.8,
+                                map: mapData
+                            });
+
+                            graphData.g002.push(polyline);
+                        }
+                    }
+
+                    $scope.routeData.r002 = medicalReliefRouteData;
+                    break;
+                case 'g005':
+
+                    break;
+                case 'g006':
+
+                    break;
+                case 'g007':
+                    customRouteData = RouteService.getCustomRouteData();
+
+                    if (customRouteData.length > 0) {
+                        $scope.generateRouteRequests(customRouteData);
+                    }
+
+                    $scope.routeData.rxxx = customRouteData;
+                    break;
+            }
+        } else {
+            for (i = 0; i < graphData[newGraphId].length; i++) {
+                graphData[newGraphId][i].setMap(mapData);
+            }
+        }
     };
 
     $scope.applyFilter = function () {

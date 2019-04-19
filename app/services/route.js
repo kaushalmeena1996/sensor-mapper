@@ -31,50 +31,83 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
         return customSensorData;
     };
 
-    routeService.getEmergencyRouteData = function () {
+    routeService.getConnectiviyGraph = function () {
         var centreData = DataService.getCentreData(),
             disasterAffectedClusterData = DataService.getDisasterAffectedClusterData(),
-            selectedCentreData;
+            selectedCentreData,
+            tempCentreData1,
+            tempCentreData2;
 
         if (disasterAffectedClusterData.length > 0) {
-            selectedCentreData = sourceSelectionAlgorithm(
+            var tempCentreData1 = sourceSelectionAlgorithm(
                 centreData,
                 disasterAffectedClusterData,
                 MAP_ROUTES.r001
             );
 
-            return routeGenerationAlgorithm(
+            var tempCentreData2 = sourceSelectionAlgorithm(
+                centreData,
+                disasterAffectedClusterData,
+                MAP_ROUTES.r002
+            );
+
+            selectedCentreData = tempCentreData1.concat(tempCentreData2)
+
+            disasterReliefRouteData = routeGenerationAlgorithm(
                 selectedCentreData,
                 disasterAffectedClusterData,
                 LOCATION_STATUSES,
                 MAP_ROUTES.r001
             );
-        } else {
-            return [];
         }
-    };
+    }
 
-    routeService.getHospitalRouteData = function () {
-        var hospitalData = DataService.getHospitalData(),
+    routeService.getDisasterReliefRouteData = function () {
+        var disasterReliefCentreData = DataService.getDisasterReliefCentreData(),
             disasterAffectedClusterData = DataService.getDisasterAffectedClusterData(),
-            selectedHospitalData;
+            disasterReliefRouteData = [],
+            selectedCentreData;
 
         if (disasterAffectedClusterData.length > 0) {
-            selectedHospitalData = sourceSelectionAlgorithm(
-                hospitalData,
+            selectedCentreData = sourceSelectionAlgorithm(
+                disasterReliefCentreData,
+                disasterAffectedClusterData,
+                MAP_ROUTES.r001
+            );
+
+            disasterReliefRouteData = routeGenerationAlgorithm(
+                selectedCentreData,
+                disasterAffectedClusterData,
+                LOCATION_STATUSES,
+                MAP_ROUTES.r001
+            );
+        }
+
+        return disasterReliefRouteData;
+    };
+
+    routeService.getMedicalReliefRouteData = function () {
+        var medicalReliefCentreData = DataService.getMedicalReliefCentreData(),
+            disasterAffectedClusterData = DataService.getDisasterAffectedClusterData(),
+            medicalReliefRouteData = [],
+            selectedCentreData;
+
+        if (disasterAffectedClusterData.length > 0) {
+            selectedCentreData = sourceSelectionAlgorithm(
+                medicalReliefCentreData,
                 disasterAffectedClusterData,
                 MAP_ROUTES.r002
             );
 
-            return routeGenerationAlgorithm(
-                selectedHospitalData,
+            medicalReliefRouteData = routeGenerationAlgorithm(
+                selectedCentreData,
                 disasterAffectedClusterData,
                 LOCATION_STATUSES,
                 MAP_ROUTES.r002
             );
-        } else {
-            return [];
         }
+
+        return medicalReliefRouteData;
     };
 
     routeService.getCustomRouteData = function () {
@@ -105,7 +138,7 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
             for (i = 0; i < waypointData.length; i++) {
                 for (j = 0; j < sourceData.length; j++) {
                     if (visitedIndexes.includes(j) == false) {
-                        if ((routeType.id == 'r001' && sourceData[j].type.id != waypointData[i].disaster.centreTypeId) || (routeType.id == 'r002' && waypointData[i].disaster.hospitalRequired == false)) {
+                        if ((routeType.id == 'r001' && sourceData[j].type.id != waypointData[i].disaster.disasterReliefCentreTypeId) || (routeType.id == 'r002' && waypointData[i].disaster.medicalReliefRequired == false)) {
                             continue;
                         }
 
@@ -143,7 +176,7 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
     function routeGenerationAlgorithm(sourceData, waypointData, statusData, routeType) {
         var visitedIndexes = [],
             previousIndexes = [],
-            routeData = [],
+            graphData = [],
             distance,
             priority,
             rating,
@@ -157,8 +190,8 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
             j;
 
         for (i = 0; i < sourceData.length; i++) {
-            routeData.push({
-                information: {
+            graphData.push({
+                info: {
                     type: routeType,
                     origin: sourceData[i].name,
                     destination: null,
@@ -183,7 +216,7 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
             for (i = 0; i < sourceData.length; i++) {
                 for (j = 0; j < waypointData.length; j++) {
                     if (visitedIndexes.includes(j) == false) {
-                        if ((routeType.id == 'r001' && sourceData[i].type.id != waypointData[j].disaster.centreTypeId) || (routeType.id == 'r002' && waypointData[j].disaster.hospitalRequired == false)) {
+                        if ((routeType.id == 'r001' && sourceData[i].type.id != waypointData[j].disaster.disasterReliefCentreTypeId) || (routeType.id == 'r002' && waypointData[j].disaster.medicalReliefRequired == false)) {
                             continue;
                         }
 
@@ -209,7 +242,7 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
 
                         routeScore = (rating * priority) / (distance);
 
-                        totalRouteScore = routeData[i].information.totalRouteScore;
+                        totalRouteScore = graphData[i].info.totalRouteScore;
 
                         if (maxRouteScore + totalRouteScore < routeScore + totalRouteScore) {
                             maxRouteScore = routeScore;
@@ -225,28 +258,28 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
                 break;
             }
 
-            routeData[selectedSourceIndex].information.destination = waypointData[selectedWaypointIndex].name;
-            routeData[selectedSourceIndex].information.totalDistance += minDistance;
-            routeData[selectedSourceIndex].information.totalRouteScore += maxRouteScore;
-            routeData[selectedSourceIndex].information.totalNodes += 1;
+            graphData[selectedSourceIndex].info.destination = waypointData[selectedWaypointIndex].name;
+            graphData[selectedSourceIndex].info.totalDistance += minDistance;
+            graphData[selectedSourceIndex].info.totalRouteScore += maxRouteScore;
+            graphData[selectedSourceIndex].info.totalNodes += 1;
 
-            routeData[selectedSourceIndex].path.push(waypointData[selectedWaypointIndex]);
+            graphData[selectedSourceIndex].path.push(waypointData[selectedWaypointIndex]);
 
             previousIndexes[selectedSourceIndex] = selectedWaypointIndex;
 
             visitedIndexes.push(selectedWaypointIndex);
         }
 
-        routeData = routeData.filter(function (routeItem) {
-            return routeItem.information.totalNodes > 1;
+        graphData = graphData.filter(function (routeItem) {
+            return routeItem.info.totalNodes > 1;
         });
 
-        for (i = 0; i < routeData.length; i++) {
-            routeData[i].information.totalDistance = (Math.round(routeData[i].information.totalDistance * 1000) / 1000);
-            routeData[i].information.totalRouteScore = (Math.round(routeData[i].information.totalRouteScore * 1000) / 1000);
+        for (i = 0; i < graphData.length; i++) {
+            graphData[i].info.totalDistance = (Math.round(graphData[i].info.totalDistance * 1000) / 1000);
+            graphData[i].info.totalRouteScore = (Math.round(graphData[i].info.totalRouteScore * 1000) / 1000);
         }
 
-        return routeData;
+        return graphData;
     }
 
     function computeDistance(lat1, lng1, lat2, lng2) {

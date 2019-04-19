@@ -281,7 +281,17 @@ app.factory('DataService', function ($rootScope, MAP_CENTRES, CENTRE_STATUSES, M
         return data;
     };
 
-    dataService.getHospitalData = function () {
+    dataService.getDisasterReliefCentreData = function () {
+        var data = nodeData.filter(
+            function (nodeItem) {
+                return nodeItem.category.id == 'c001' && nodeItem.type.id != 'ct004';
+            }
+        );
+
+        return data;
+    };
+
+    dataService.getMedicalReliefCentreData = function () {
         var data = nodeData.filter(
             function (nodeItem) {
                 return nodeItem.category.id == 'c001' && nodeItem.type.id == 'ct004';

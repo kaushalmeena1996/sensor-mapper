@@ -8944,7 +8944,7 @@
       },
       "displayReading": true,
       "reading": {
-        "value": 37,
+        "value": 101,
         "unit": "°C",
         "limit": {
           "sst001": 100,
@@ -9116,7 +9116,7 @@
       },
       "displayReading": true,
       "reading": {
-        "value": 37,
+        "value": 101,
         "unit": "°C",
         "boolean": false,
         "limit": {
@@ -9160,7 +9160,7 @@
       },
       "displayReading": true,
       "reading": {
-        "value": 37,
+        "value": 101,
         "unit": "°C",
         "boolean": false,
         "limit": {

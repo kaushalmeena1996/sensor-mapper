@@ -588,8 +588,8 @@ app.constant('DISASTER_TYPES', {
     dt001: {
         id: "dt001",
         name: "Fire",
-        centreTypeId: "ct002",
-        hospitalRequired: true,
+        disasterReliefCentreTypeId: "ct002",
+        medicalReliefRequired: true,
         icons: {
             lst002: "assets/img/status/location/fire-001.png",
             lst003: "assets/img/status/location/fire-002.png",
@@ -598,8 +598,8 @@ app.constant('DISASTER_TYPES', {
     dt002: {
         id: "dt002",
         name: "Flood",
-        centreTypeId: "ct001",
-        hospitalRequired: true,
+        disasterReliefCentreTypeId: "ct001",
+        medicalReliefRequired: true,
         icons: {
             lst002: "assets/img/status/location/flood-001.png",
             lst003: "assets/img/status/location/flood-002.png",
@@ -608,8 +608,8 @@ app.constant('DISASTER_TYPES', {
     dt003: {
         id: "dt003",
         name: "Cyclone",
-        centreTypeId: "ct001",
-        hospitalRequired: true,
+        disasterReliefCentreTypeId: "ct001",
+        medicalReliefRequired: true,
         icons: {
             lst002: "assets/img/status/location/cyclone-001.png",
             lst003: "assets/img/status/location/cyclone-002.png",
@@ -618,8 +618,8 @@ app.constant('DISASTER_TYPES', {
     dt004: {
         id: "dt004",
         name: "Earthquake",
-        centreTypeId: "ct001",
-        hospitalRequired: true,
+        disasterReliefCentreTypeId: "ct001",
+        medicalReliefRequired: true,
         icons: {
             lst002: "assets/img/status/location/earthquake-001.png",
             lst003: "assets/img/status/location/earthquake-002.png",
@@ -628,8 +628,8 @@ app.constant('DISASTER_TYPES', {
     dt005: {
         id: "dt005",
         name: "Burglary",
-        centreTypeId: "ct003",
-        hospitalRequired: false,
+        disasterReliefCentreTypeId: "ct003",
+        medicalReliefRequired: false,
         icons: {
             lst002: "assets/img/status/location/burglary-001.png",
             lst003: "assets/img/status/location/burglary-002.png",
@@ -638,8 +638,8 @@ app.constant('DISASTER_TYPES', {
     dt006: {
         id: "dt006",
         name: "Robbery",
-        centreTypeId: "ct003",
-        hospitalRequired: true,
+        disasterReliefCentreTypeId: "ct003",
+        medicalReliefRequired: true,
         icons: {
             lst002: "assets/img/status/location/robbery-001.png",
             lst003: "assets/img/status/location/robbery-002.png",
@@ -836,20 +836,63 @@ app.constant('MAP_ROUTES', {
     r001: {
         id: "r001",
         name: "Emergency Route",
-        color: "#ce352c",
-        icon: "assets/img/other/route-003.png"
+        color: "#ce352c"
     },
     r002: {
         id: "r002",
         name: "Hospital Route",
-        color: "#fa6800",
-        icon: "assets/img/other/route-002.png"
+        color: "#fa6800"
     },
     rxxx: {
         id: "rxxx",
         name: "Custom Route",
-        color: "#000000",
-        icon: "assets/img/other/route-001.png"
+        color: "#000000"
+    }
+});
+
+
+app.constant('MAP_GRAPHS', {
+    g001: {
+        id: "g001",
+        name: "Disaster Relief Routes (Directions API Based)",
+        description: "Show google maps generated routes between disaster relief centres and sensors.",
+        color: "#ce352c"
+    },
+    g002: {
+        id: "g002",
+        name: "Disaster Relief Routes (Line Based)",
+        description: "Show line based generated routes between disaster relief centres and sensors.",
+        color: "#ce352c"
+    },
+    g003: {
+        id: "g003",
+        name: "Medical Relief Routes (Directions API Based)",
+        description: "Show google maps based generated routes between medical relief centres and sensors.",
+        color: "#fa6800"
+    },
+    g004: {
+        id: "g004",
+        name: "Medical Relief Routes (Line Based)",
+        description: "Show google maps based generated routes between medical relief centres and sensors.",
+        color: "#fa6800"
+    },
+    g005: {
+        id: "g005",
+        name: "Connectivity Graph",
+        description: "Show conectivity graph of nodes.",
+        color: "#fa6800"
+    },
+    g006: {
+        id: "g006",
+        name: "Minimimum Spanning Tree Graph",
+        description: "Show minimimum spanning tree graph of nodes.",
+        color: "#fa6800"
+    },
+    g007: {
+        id: "g007",
+        name: "Custom Route (Directions API Based)",
+        description: "Show user generated route between relief centres and sensors.",
+        color: "#000000"
     }
 });
 
@@ -876,21 +919,26 @@ app.constant('IMAGE_DATA', {
     },
     id005: {
         id: "id005",
-        name: "Info-Image",
-        path: "assets/img/other/info.png",
+        name: "Route-Image-003",
+        path: "assets/img/other/route-003.png"
     },
     id006: {
         id: "id006",
-        name: "Login-Image",
-        path: "assets/img/other/login.png",
+        name: "Info-Image",
+        path: "assets/img/other/info.png",
     },
     id007: {
         id: "id007",
-        name: "Logout-Image",
-        path: "assets/img/other/logout.png",
+        name: "Login-Image",
+        path: "assets/img/other/login.png",
     },
     id008: {
         id: "id008",
+        name: "Logout-Image",
+        path: "assets/img/other/logout.png",
+    },
+    id009: {
+        id: "id009",
         name: "Default-Image",
         path: "assets/img/other/default-photo.png",
     }

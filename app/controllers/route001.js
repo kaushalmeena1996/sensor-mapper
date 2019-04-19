@@ -30,7 +30,7 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
             name: MAP_CENTRES.ctxxx.name
         },
         status: CENTRE_STATUSES.cst001,
-        photo: IMAGE_DATA.id008.path,
+        photo: IMAGE_DATA.id009.path,
         description: '',
         rating: 1.0,
         leafNode: true,
@@ -131,7 +131,7 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
                                     name: MAP_CENTRES.ctxxx.name
                                 },
                                 status: CENTRE_STATUSES.cst001,
-                                photo: IMAGE_DATA.id008.path,
+                                photo: IMAGE_DATA.id009.path,
                                 description: '',
                                 rating: 1.0,
                                 leafNode: true,

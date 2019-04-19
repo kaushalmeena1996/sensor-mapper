@@ -682,8 +682,8 @@ app.constant('DISASTER_TYPES', {
     dt001: {
         id: "dt001",
         name: "Fire",
-        centreTypeId: "ct002",
-        hospitalRequired: true,
+        disasterReliefCentreTypeId: "ct002",
+        medicalReliefRequired: true,
         icons: {
             lst002: "assets/img/status/location/fire-001.png",
             lst003: "assets/img/status/location/fire-002.png",
@@ -692,8 +692,8 @@ app.constant('DISASTER_TYPES', {
     dt002: {
         id: "dt002",
         name: "Flood",
-        centreTypeId: "ct001",
-        hospitalRequired: true,
+        disasterReliefCentreTypeId: "ct001",
+        medicalReliefRequired: true,
         icons: {
             lst002: "assets/img/status/location/flood-001.png",
             lst003: "assets/img/status/location/flood-002.png",
@@ -702,8 +702,8 @@ app.constant('DISASTER_TYPES', {
     dt003: {
         id: "dt003",
         name: "Cyclone",
-        centreTypeId: "ct001",
-        hospitalRequired: true,
+        disasterReliefCentreTypeId: "ct001",
+        medicalReliefRequired: true,
         icons: {
             lst002: "assets/img/status/location/cyclone-001.png",
             lst003: "assets/img/status/location/cyclone-002.png",
@@ -712,8 +712,8 @@ app.constant('DISASTER_TYPES', {
     dt004: {
         id: "dt004",
         name: "Earthquake",
-        centreTypeId: "ct001",
-        hospitalRequired: true,
+        disasterReliefCentreTypeId: "ct001",
+        medicalReliefRequired: true,
         icons: {
             lst002: "assets/img/status/location/earthquake-001.png",
             lst003: "assets/img/status/location/earthquake-002.png",
@@ -722,8 +722,8 @@ app.constant('DISASTER_TYPES', {
     dt005: {
         id: "dt005",
         name: "Burglary",
-        centreTypeId: "ct003",
-        hospitalRequired: false,
+        disasterReliefCentreTypeId: "ct003",
+        medicalReliefRequired: false,
         icons: {
             lst002: "assets/img/status/location/burglary-001.png",
             lst003: "assets/img/status/location/burglary-002.png",
@@ -732,8 +732,8 @@ app.constant('DISASTER_TYPES', {
     dt006: {
         id: "dt006",
         name: "Robbery",
-        centreTypeId: "ct003",
-        hospitalRequired: true,
+        disasterReliefCentreTypeId: "ct003",
+        medicalReliefRequired: true,
         icons: {
             lst002: "assets/img/status/location/robbery-001.png",
             lst003: "assets/img/status/location/robbery-002.png",
@@ -926,21 +926,21 @@ app.constant('SENSOR_STATUS_TYPES', [{
     }
 ]);
 
-app.constant('MAP_ROUTES', {
-    r001: {
-        id: "r001",
+app.constant('MAP_GRAPHS', {
+    g001: {
+        id: "g001",
         name: "Emergency Route",
         color: "#ce352c",
         icon: "assets/img/other/route-003.png"
     },
-    r002: {
-        id: "r002",
+    g002: {
+        id: "g002",
         name: "Hospital Route",
         color: "#fa6800",
         icon: "assets/img/other/route-002.png"
     },
-    rxxx: {
-        id: "rxxx",
+    gxxx: {
+        id: "gxxx",
         name: "Custom Route",
         color: "#000000",
         icon: "assets/img/other/route-001.png"
@@ -968,23 +968,23 @@ app.constant('IMAGE_DATA', {
         name: "Route-Image-002",
         path: "assets/img/other/route-002.png"
     },
-    id005: {
-        id: "id005",
+    id006: {
+        id: "id006",
         name: "Info-Image",
         path: "assets/img/other/info.png",
     },
-    id006: {
-        id: "id006",
+    id007: {
+        id: "id007",
         name: "Login-Image",
         path: "assets/img/other/login.png",
     },
-    id007: {
-        id: "id007",
+    id008: {
+        id: "id008",
         name: "Logout-Image",
         path: "assets/img/other/logout.png",
     },
-    id008: {
-        id: "id008",
+    id009: {
+        id: "id009",
         name: "Default-Image",
         path: "assets/img/other/default-photo.png",
     }
