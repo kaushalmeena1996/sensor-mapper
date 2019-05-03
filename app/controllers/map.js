@@ -553,10 +553,11 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
         var mapData = $scope.mapData,
             graphData = $scope.graphData,
             oldGraphId = $scope.selectedGraph.id,
+            coordinateData = [],
             disasterReliefRouteData,
             medicalReliefRouteData,
+            adjacencyList,
             customRouteData,
-            coordinateData = [],
             i,
             j;
 
@@ -646,7 +647,34 @@ app.controller('MapController', function ($scope, $location, $filter, $mdSidenav
                     $scope.routeData.r002 = medicalReliefRouteData;
                     break;
                 case 'g005':
+                    adjacencyList = RouteService.getAdjacencyListOfConnectivityGraph();
 
+                    if (adjacencyList.length > 0) {
+                        for (i = 0; i < adjacencyList.length; i++) {
+                            coordinateData = [];
+
+                            for (j = 1; j < adjacencyList[i].adjacentNodes.length; j++) {
+                                var polyline = new google.maps.Polyline({
+                                    path: [{
+                                            lat: adjacencyList[i].adjacentNodes[0].coordinates.lat,
+                                            lng: adjacencyList[i].adjacentNodes[0].coordinates.lng
+                                        },
+                                        {
+                                            lat: adjacencyList[i].adjacentNodes[j].coordinates.lat,
+                                            lng: adjacencyList[i].adjacentNodes[j].coordinates.lng
+                                        }
+                                    ],
+                                    geodesic: true,
+                                    strokeColor: MAP_GRAPHS.g005[adjacencyList[i].adjacentNodes[0].typeId],
+                                    strokeWeight: 4,
+                                    strokeOpacity: 0.8,
+                                    map: mapData
+                                });
+
+                                graphData.g005.push(polyline);
+                            }
+                        }
+                    }
                     break;
                 case 'g006':
 

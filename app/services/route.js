@@ -31,12 +31,28 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
         return customSensorData;
     };
 
-    routeService.getConnectiviyGraph = function () {
+    routeService.getCostMatrix = function (nodeData) {
+        var costMatrix = {
+                info: {
+                    nodeData: nodeData
+                },
+                data: []
+            },
+            i,
+            j;
+
+        for
+    }
+
+    routeService.getAdjacencyListOfConnectivityGraph = function () {
         var centreData = DataService.getCentreData(),
             disasterAffectedClusterData = DataService.getDisasterAffectedClusterData(),
+            adjacencyList = [],
             selectedCentreData,
             tempCentreData1,
-            tempCentreData2;
+            tempCentreData2,
+            i,
+            j;
 
         if (disasterAffectedClusterData.length > 0) {
             var tempCentreData1 = sourceSelectionAlgorithm(
@@ -53,13 +69,18 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
 
             selectedCentreData = tempCentreData1.concat(tempCentreData2)
 
-            disasterReliefRouteData = routeGenerationAlgorithm(
-                selectedCentreData,
-                disasterAffectedClusterData,
-                LOCATION_STATUSES,
-                MAP_ROUTES.r001
-            );
+            for (i = 0; i < selectedCentreData.length; i++) {
+                adjacencyList.push(selectedCentreData[i]);
+
+                adjacencyList[i].adjacentNodes = [];
+
+                for (j = 0; j < disasterAffectedClusterData.length; j++) {
+                    adjacencyList[i].adjacentNodes.push(disasterAffectedClusterData[j]);
+                }
+            }
         }
+
+        return adjacencyList;
     }
 
     routeService.getDisasterReliefRouteData = function () {

@@ -880,12 +880,15 @@ app.constant('MAP_GRAPHS', {
         id: "g005",
         name: "Connectivity Graph",
         description: "Show conectivity graph of nodes.",
-        color: "#fa6800"
+        color: {
+            ct002: "#ce352c",
+            ct004: "#fa6800"
+        }
     },
     g006: {
         id: "g006",
-        name: "Minimimum Spanning Tree Graph",
-        description: "Show minimimum spanning tree graph of nodes.",
+        name: "Minimimum Spanning Tree",
+        description: "Show minimimum spanning tree of nodes.",
         color: "#fa6800"
     },
     g007: {

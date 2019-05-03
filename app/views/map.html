@@ -21,7 +21,7 @@
                 </md-input-container>
             </div>
             <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item, false)"
-                data-ng-repeat="item in tableData track by $index">
+                data-ng-dblclick="moveMapTo(item, true)" data-ng-repeat="item in tableData track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
                         <img class="height-50" data-ng-src="{{item.icon}}" alt="Item-Icon">
@@ -41,7 +41,7 @@
         <!-- TRACKED-SENSOR-LIST-DIVISION -->
         <div data-ng-show="sidebarActiveData.mode == sidebarModes.trackedSensorList">
             <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item, false)"
-                data-ng-repeat="item in tableData track by $index">
+                data-ng-dblclick="moveMapTo(item, true)" data-ng-repeat="item in tableData track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
                         <img class="height-50" data-ng-src="{{item.icon}}" alt="Item-Icon">
