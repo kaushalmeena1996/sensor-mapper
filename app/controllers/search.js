@@ -1,6 +1,6 @@
 var app = angular.module('app');
 
-app.controller('SearchController', function ($scope, $location, $filter, MAP_CATEGORIES, CATEGORY_TYPES, CENTRE_TYPES, LOCATION_TYPES, SENSOR_TYPES, CENTRE_STATUS_TYPES, LOCATION_STATUS_TYPES, SENSOR_STATUS_TYPES, STATUS_CODES, PLOT_CODES, SERVICE_EVENTS, DataService) {
+app.controller('SearchController', function ($scope, $location, $filter, MAP_CATEGORIES, MAP_CENTRES, MAP_LOCATIONS, MAP_SENSORS, CENTRE_STATUSES, LOCATION_STATUSES, SENSOR_STATUSES, STATUS_CODES, PLOT_CODES, SERVICE_EVENTS, DataService) {
     $scope.tableData = [];
 
     $scope.query = '';
@@ -9,13 +9,13 @@ app.controller('SearchController', function ($scope, $location, $filter, MAP_CAT
     $scope.filter2 = '*';
     $scope.filter3 = '*';
 
-    $scope.categoryTypes = CATEGORY_TYPES;
-    $scope.centreTypes = CENTRE_TYPES;
-    $scope.locationTypes = LOCATION_TYPES;
-    $scope.sensorTypes = SENSOR_TYPES;
-    $scope.centreStatusTypes = CENTRE_STATUS_TYPES;
-    $scope.locationStatusTypes = LOCATION_STATUS_TYPES;
-    $scope.sensorStatusTypes = SENSOR_STATUS_TYPES;
+    $scope.mapCategories = MAP_CATEGORIES;
+    $scope.mapCentres = MAP_CENTRES;
+    $scope.mapLocations = MAP_LOCATIONS;
+    $scope.mapSensors = MAP_SENSORS;
+    $scope.centreStatuses = CENTRE_STATUSES;
+    $scope.locationStatuses = LOCATION_STATUSES;
+    $scope.sensorStatuses = SENSOR_STATUSES;
 
     $scope.getNodeData = function () {
         $scope.$parent.showLoadingOverlay();
@@ -83,19 +83,25 @@ app.controller('SearchController', function ($scope, $location, $filter, MAP_CAT
 
         if ($scope.filter1 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                category: { id: $scope.filter1 }
+                category: {
+                    id: $scope.filter1
+                }
             }, true);
         }
 
         if ($scope.filter2 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                type: { id: $scope.filter2 }
+                type: {
+                    id: $scope.filter2
+                }
             }, true);
         }
 
         if ($scope.filter3 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                status: { id: $scope.filter3 }
+                status: {
+                    id: $scope.filter3
+                }
             }, true);
         }
 

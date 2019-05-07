@@ -22,6 +22,22 @@ body {
   width: 100%;
 }
 
+table {
+  width: 100%;
+}
+
+table,
+td,
+th {
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+td,
+th {
+  padding: 10px;
+}
+
 .max-width-400 {
   max-width: 400px;
   width: 100%;
@@ -29,6 +45,11 @@ body {
 
 .height-50 {
   height: 50px;
+}
+
+.opacity-0 {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .text-align-left {
@@ -159,6 +180,10 @@ body {
   position: relative;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 .image-thumbnail {
   border: 1px solid #dddddd;
   padding: 5px;
@@ -167,6 +192,19 @@ body {
 .image-responsive {
   width: calc(100% - 10px);
   height: auto;
+}
+
+.font-color-1 {
+  color: #ce352c;
+}
+
+.font-color-2 {
+  color: #fa6800;
+
+}
+
+.font-color-3 {
+  color: #000000;
 }
 
 .map-badge {
@@ -184,14 +222,41 @@ body {
 }
 
 .map-container-1 {
+  -webkit-transition: all linear 0.2s;
+  -o-transition: all linear 0.2s;
+  transition: all linear 0.2s;
   position: absolute !important;
   width: 100%;
   height: 100%;
 }
 
 .map-container-2 {
+  -webkit-transition: all linear 0.2s;
+  -o-transition: all linear 0.2s;
+  transition: all linear 0.2s;
+  position: absolute !important;
+  bottom: 0px;
+  width: 100%;
+  height: 50%;
+  border-top: 4px solid #000000;
+}
+
+.map-container-3 {
   height: 252px;
   width: 100%;
+}
+
+.map-split-height {
+  height: calc(50% - 4px) !important;
+}
+
+.map-split-bottom {
+  bottom: calc(50% + 20px) !important;
+}
+
+.map-split-opacity {
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .map-action-menu-1 {
@@ -213,13 +278,22 @@ body {
 }
 
 .map-action-menu-4 {
+  -webkit-transition: all linear 0.2s;
+  -o-transition: all linear 0.2s;
+  transition: all linear 0.2s;
   position: absolute;
-  bottom: 10px;
+  bottom: 20px;
   left: 50%;
   transform: translate(-50%);
 }
 
-.chart-container {
+.map-action-menu-5 {
+  position: absolute;
+  bottom: 17px;
+  right: 50px;
+}
+
+.dialog-container {
   position: relative;
   margin: auto;
   width: 80vw;

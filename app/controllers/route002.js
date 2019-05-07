@@ -1,12 +1,12 @@
 var app = angular.module('app');
 
-app.controller('RouteSensorController', function ($scope, $location, $filter, MAP_CATEGORIES, SENSOR_TYPES, SENSOR_STATUS_TYPES, STATUS_CODES, SERVICE_EVENTS, RouteService, DataService) {
+app.controller('RouteSensorController', function ($scope, $location, $filter, MAP_SENSORS, SENSOR_STATUSES, STATUS_CODES, SERVICE_EVENTS, RouteService, DataService) {
     $scope.tableData = [];
 
     $scope.selectedSensors = [];
 
-    $scope.sensorTypes = SENSOR_TYPES;
-    $scope.sensorStatusTypes = SENSOR_STATUS_TYPES;
+    $scope.mapSensors = MAP_SENSORS;
+    $scope.sensorStatuses = SENSOR_STATUSES;
 
     $scope.sensorSelectorVisible = false;
 
@@ -113,13 +113,17 @@ app.controller('RouteSensorController', function ($scope, $location, $filter, MA
 
         if ($scope.filter1 !== '*') {
             sensorData = $filter('filter')(sensorData, {
-                type: { name: $scope.filter1 }
+                type: {
+                    name: $scope.filter1
+                }
             }, true);
         }
 
         if ($scope.filter2 !== '*') {
             sensorData = $filter('filter')(sensorData, {
-                status: { name: $scope.filter2 }
+                status: {
+                    name: $scope.filter2
+                }
             }, true);
         }
 

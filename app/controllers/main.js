@@ -61,9 +61,4 @@ app.controller('MainController', function ($scope, $mdToast, $mdDialog, PAGE_DAT
         }
     };
 
-    // ****************** TESTING-METHOD ****************** //
-
-    $scope.updateLocalNodeItem = function () {
-        DataService.updateLocalNodeItem();
-    };
 });

@@ -5,11 +5,10 @@
                 <div class="md-title margin-bottom-15">
                     <span>Category</span>
                 </div>
-                <md-radio-group ng-model="filter1" data-ng-change="applyFilter()">
-                    <md-radio-button data-ng-value="::item.value"
-                        data-ng-repeat="item in ::categoryTypes track by $index"
-                        data-ng-attr-aria-label="{{::item.name}}">
-                        {{::item.name}}
+                <md-radio-group data-ng-model="filter1" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::value.id" data-ng-repeat="(key, value) in ::mapCategories"
+                        data-ng-attr-aria-label="{{::value.name}}">
+                        {{::value.name}}
                     </md-radio-button>
                 </md-radio-group>
             </md-card-content>
@@ -19,10 +18,10 @@
                 <div class="md-title margin-bottom-15">
                     <span>Type</span>
                 </div>
-                <md-radio-group ng-model="filter2" data-ng-change="applyFilter()">
-                    <md-radio-button data-ng-value="::item.value" data-ng-repeat="item in ::centreTypes track by $index"
-                        data-ng-attr-aria-label="{{::item.name}}">
-                        {{::item.name}}
+                <md-radio-group data-ng-model="filter2" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::value.id" data-ng-repeat="(key, value) in ::mapCentres"
+                        data-ng-attr-aria-label="{{::value.name}}">
+                        {{::value.name}}
                     </md-radio-button>
                 </md-radio-group>
             </md-card-content>
@@ -32,11 +31,10 @@
                 <div class="md-title margin-bottom-15">
                     <span>Type</span>
                 </div>
-                <md-radio-group ng-model="filter2" data-ng-change="applyFilter()">
-                    <md-radio-button data-ng-value="::item.value"
-                        data-ng-repeat="item in ::locationTypes track by $index"
-                        data-ng-attr-aria-label="{{::item.name}}">
-                        {{::item.name}}
+                <md-radio-group data-ng-model="filter2" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::value.id" data-ng-repeat="(key, value) in ::mapLocations"
+                        data-ng-attr-aria-label="{{::value.name}}">
+                        {{::value.name}}
                     </md-radio-button>
                 </md-radio-group>
             </md-card-content>
@@ -46,10 +44,10 @@
                 <div class="md-title margin-bottom-15">
                     <span>Type</span>
                 </div>
-                <md-radio-group ng-model="filter2" data-ng-change="applyFilter()">
-                    <md-radio-button data-ng-value="::item.value" data-ng-repeat="item in ::sensorTypes track by $index"
-                        data-ng-attr-aria-label="{{::item.name}}">
-                        {{::item.name}}
+                <md-radio-group data-ng-model="filter2" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::value.id" data-ng-repeat="(key, value) in ::mapSensors"
+                        data-ng-attr-aria-label="{{::value.name}}">
+                        {{::value.name}}
                     </md-radio-button>
                 </md-radio-group>
             </md-card-content>
@@ -59,11 +57,10 @@
                 <div class="md-title margin-bottom-15">
                     <span>Status</span>
                 </div>
-                <md-radio-group ng-model="filter3" data-ng-change="applyFilter()">
-                    <md-radio-button data-ng-value="::item.value"
-                        data-ng-repeat="item in ::centreStatusTypes track by $index"
-                        data-ng-attr-aria-label="{{::item.name}}">
-                        {{::item.name}}
+                <md-radio-group data-ng-model="filter3" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::value.id" data-ng-repeat="(key, value) in ::centreStatuses"
+                        data-ng-attr-aria-label="{{::value.name}}">
+                        {{::value.name}}
                     </md-radio-button>
                 </md-radio-group>
             </md-card-content>
@@ -73,11 +70,10 @@
                 <div class="md-title margin-bottom-15">
                     <span>Status</span>
                 </div>
-                <md-radio-group ng-model="filter3" data-ng-change="applyFilter()">
-                    <md-radio-button data-ng-value="::item.value"
-                        data-ng-repeat="item in ::locationStatusTypes track by $index"
-                        data-ng-attr-aria-label="{{::item.name}}">
-                        {{::item.name}}
+                <md-radio-group data-ng-model="filter3" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::value.id" data-ng-repeat="(key, value) in ::locationStatuses"
+                        data-ng-attr-aria-label="{{::value.name}}">
+                        {{::value.name}}
                     </md-radio-button>
                 </md-radio-group>
             </md-card-content>
@@ -87,11 +83,10 @@
                 <div class="md-title margin-bottom-15">
                     <span>Status</span>
                 </div>
-                <md-radio-group ng-model="filter3" data-ng-change="applyFilter()">
-                    <md-radio-button data-ng-value="::item.value"
-                        data-ng-repeat="item in ::sensorStatusTypes track by $index"
-                        data-ng-attr-aria-label="{{::item.name}}">
-                        {{::item.name}}
+                <md-radio-group data-ng-model="filter3" data-ng-change="applyFilter()">
+                    <md-radio-button data-ng-value="::value.id" data-ng-repeat="(key, value) in ::sensorStatuses"
+                        data-ng-attr-aria-label="{{::value.name}}">
+                        {{::value.name}}
                     </md-radio-button>
                 </md-radio-group>
             </md-card-content>

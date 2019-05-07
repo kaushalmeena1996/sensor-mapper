@@ -20,8 +20,8 @@
                     <input type="search" data-ng-model="query" data-ng-change="applyFilter()">
                 </md-input-container>
             </div>
-            <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item, false)"
-                data-ng-dblclick="moveMapTo(item, true)" data-ng-repeat="item in tableData track by $index">
+            <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(1, item, false)"
+                data-ng-dblclick="moveMapTo(1, item, true)" data-ng-repeat="item in tableData track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
                         <img class="height-50" data-ng-src="{{item.icon}}" alt="Item-Icon">
@@ -40,8 +40,8 @@
 
         <!-- TRACKED-SENSOR-LIST-DIVISION -->
         <div data-ng-show="sidebarActiveData.mode == sidebarModes.trackedSensorList">
-            <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item, false)"
-                data-ng-dblclick="moveMapTo(item, true)" data-ng-repeat="item in tableData track by $index">
+            <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(1, item, false)"
+                data-ng-dblclick="moveMapTo(1, item, true)" data-ng-repeat="item in tableData track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
                         <img class="height-50" data-ng-src="{{item.icon}}" alt="Item-Icon">
@@ -64,7 +64,7 @@
 
         <!-- EMERGENCY-ROUTE-LIST-DIVISION -->
         <div data-ng-show="sidebarActiveData.mode == sidebarModes.emergencyRouteList">
-            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(item)"
+            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(1, item)"
                 data-ng-repeat="item in routeData.r001 track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
@@ -92,14 +92,14 @@
                     </div>
                 </md-card-content>
             </md-card>
-            <div class="text-align-center margin-top-15" data-ng-if="!graphData.g001.length">
+            <div class="text-align-center margin-top-15" data-ng-if="!graphData1.g001.length">
                 <span>No results to display.</span>
             </div>
         </div>
 
         <!-- HOSPITAL-ROUTE-LIST-DIVISION -->
         <div data-ng-show="sidebarActiveData.mode == sidebarModes.hospitalRouteList">
-            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(item)"
+            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(1, item)"
                 data-ng-repeat="item in routeData.r002 track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
@@ -127,15 +127,15 @@
                     </div>
                 </md-card-content>
             </md-card>
-            <div class="text-align-center margin-top-15" data-ng-if="!graphData.g002.length">
+            <div class="text-align-center margin-top-15" data-ng-if="!graphData1.g002.length">
                 <span>No results to display.</span>
             </div>
         </div>
 
         <!-- CUSTOM-ROUTE-LIST-DIVISION -->
         <div data-ng-show="sidebarActiveData.mode == sidebarModes.customRouteList">
-            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(item)"
-                data-ng-repeat="item in routeData.rxxx track by $index">
+            <md-card class="cursor-pointer fade-animation" data-ng-click="fitMapBoundsTo(1, item)"
+                data-ng-repeat="item in routeData.r003 track by $index">
                 <md-card-content layout="row" layout-xs="column">
                     <div class="padding-right-15" layout="row" layout-align="center center">
                         <img class="height-50" data-ng-src="{{imageData.id003.path}}" alt="Item-Icon">
@@ -162,7 +162,7 @@
                     </div>
                 </md-card-content>
             </md-card>
-            <div class="text-align-center margin-top-15" data-ng-if="!graphData.gxxx.length">
+            <div class="text-align-center margin-top-15" data-ng-if="!graphData1.g007.length">
                 <span>No results to display.</span>
             </div>
         </div>
@@ -211,7 +211,7 @@
                 <span data-ng-bind="sidebarActiveData.nodeItem.address"></span>
             </div>
             <div data-ng-if="!sidebarActiveData.nodeItem.leafNode">
-                <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(item, true)"
+                <md-card class="cursor-pointer fade-animation" data-ng-click="moveMapTo(1, item, true)"
                     data-ng-repeat="item in tableData track by $index">
                     <md-card-content layout="row" layout-xs="column">
                         <div class="padding-right-15" layout="row" layout-align="center center">
@@ -239,8 +239,11 @@
     </md-content>
 </md-sidenav>
 
-<!-- MAP-CONTAINER-DIVISON -->
-<div class="map-container-1"></div>
+<!-- MAP-CONTAINER-DIVISON-1 -->
+<div id="mapContainer1" data-ng-class="{'map-container-1': true, 'map-split-height': mapSplitted}"></div>
+<!-- MAP-CONTAINER-DIVISON-2 -->
+<div id="mapContainer2" data-ng-class="{'map-container-2': true, 'opacity-0': true, 'map-split-opacity': mapSplitted}">
+</div>
 
 <!-- MAIN-ACTION-MENU-DIVISION -->
 <div class="map-action-menu-1">
@@ -281,12 +284,6 @@
                 data-ng-attr-title="{{::pageData.pd012.description}}">
                 <md-icon data-ng-bind="::pageData.pd012.icon"></md-icon>
             </md-button>
-            <div class="position-relative">
-                <md-button class="md-fab md-raised md-mini" data-ng-click="updateLocalNodeItem()"
-                    data-ng-attr-aria-label="Button-Update" data-ng-attr-title="Updates local node item.">
-                    <md-icon>build</md-icon>
-                </md-button>
-            </div>
         </md-fab-actions>
     </md-fab-speed-dial>
 </div>
@@ -323,7 +320,7 @@
         <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd003.color}"
             data-ng-bind="statusCountData.sst001"></div>
     </div>
-    <div class="position-relative" data-ng-if="graphData.gxxx.length">
+    <div class="position-relative" data-ng-if="routeData.r003.length">
         <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd004')"
             data-ng-attr-aria-label="{{::sidebarData.sd004.title}}"
             data-ng-attr-title="{{::sidebarData.sd004.description}}">
@@ -331,7 +328,7 @@
             </md-icon>
         </md-button>
         <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd004.color}"
-            data-ng-bind="graphData.gxxx.length"></div>
+            data-ng-bind="routeData.r003.length"></div>
     </div>
     <div class="position-relative" data-ng-if="trackedSensorIds.length">
         <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd005')"
@@ -356,7 +353,7 @@
 <!-- EMERGENCY-ACTION-MENU-DIVISION -->
 <div class="map-action-menu-3" layout="row" layout-align="end end">
     <div layout="column">
-        <div class="position-relative" ng-if="statusCountData.cst003">
+        <div class="position-relative" data-ng-if="statusCountData.cst003">
             <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd008')"
                 data-ng-attr-aria-label="{{::sidebarData.sd008.title}}"
                 data-ng-attr-title="{{::sidebarData.sd008.description}}">
@@ -366,7 +363,7 @@
             <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd008.color}"
                 data-ng-bind="statusCountData.cst003"></div>
         </div>
-        <div class="position-relative" ng-if="statusCountData.cst002">
+        <div class="position-relative" data-ng-if="statusCountData.cst002">
             <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd007')"
                 data-ng-attr-aria-label="{{::sidebarData.sd007.title}}"
                 data-ng-attr-title="{{::sidebarData.sd007.description}}">
@@ -378,7 +375,7 @@
         </div>
     </div>
     <div layout="column">
-        <div class="position-relative" ng-if="statusCountData.lst003">
+        <div class="position-relative" data-ng-if="statusCountData.lst003">
             <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd010')"
                 data-ng-attr-aria-label="{{::sidebarData.sd010.title}}"
                 data-ng-attr-title="{{::sidebarData.sd010.description}}">
@@ -388,7 +385,7 @@
             <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd010.color}"
                 data-ng-bind="statusCountData.lst003"></div>
         </div>
-        <div class="position-relative" ng-if="statusCountData.lst002">
+        <div class="position-relative" data-ng-if="statusCountData.lst002">
             <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd009')"
                 data-ng-attr-aria-label="{{::sidebarData.sd009.title}}"
                 data-ng-attr-title="{{::sidebarData.sd009.description}}">
@@ -400,7 +397,7 @@
         </div>
     </div>
     <div layout="column">
-        <div class="position-relative" ng-if="statusCountData.sst003">
+        <div class="position-relative" data-ng-if="statusCountData.sst003">
             <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd012')"
                 data-ng-attr-aria-label="{{::sidebarData.sd012.title}}"
                 data-ng-attr-title="{{::sidebarData.sd012.description}}">
@@ -410,7 +407,7 @@
             <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd012.color}"
                 data-ng-bind="statusCountData.sst003"></div>
         </div>
-        <div class="position-relative" ng-if="statusCountData.sst002">
+        <div class="position-relative" data-ng-if="statusCountData.sst002">
             <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd011')"
                 data-ng-attr-aria-label="{{::sidebarData.sd011.title}}"
                 data-ng-attr-title="{{::sidebarData.sd011.description}}">
@@ -422,7 +419,7 @@
         </div>
     </div>
     <div layout="column">
-        <div class="position-relative" data-ng-if="graphData.g001.length">
+        <div class="position-relative" data-ng-if="routeData.r001.length">
             <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd014')"
                 data-ng-attr-aria-label="{{::sidebarData.sd014.title}}"
                 data-ng-attr-title="{{::sidebarData.sd014.description}}">
@@ -430,9 +427,9 @@
                 </md-icon>
             </md-button>
             <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd014.color}"
-                data-ng-bind="graphData.g001.length"></div>
+                data-ng-bind="routeData.r001.length"></div>
         </div>
-        <div class="position-relative" data-ng-if="graphData.g002.length">
+        <div class="position-relative" data-ng-if="routeData.r002.length">
             <md-button class="md-fab md-mini md-raised" data-ng-click="openSidebar('sd013')"
                 data-ng-attr-aria-label="{{::sidebarData.sd013.title}}"
                 data-ng-attr-title="{{::sidebarData.sd013.description}}">
@@ -440,53 +437,60 @@
                 </md-icon>
             </md-button>
             <div class="map-badge" data-ng-style="::{'background-color': sidebarData.sd013.color}"
-                data-ng-bind="graphData.g002.length"></div>
+                data-ng-bind="routeData.r002.length"></div>
         </div>
     </div>
 </div>
 
-<!-- MAP-GRAPH-MENU-DIVISION -->
-<div class="map-action-menu-4 text-align-center">
+<!-- MAP-GRAPH-MENU-DIVISION-1 -->
+<div id="graphMenuDivision1"
+    data-ng-class="{'map-action-menu-4': true, 'text-align-center': true, 'map-split-bottom': mapSplitted}">
     <md-menu>
-        <md-button class="md-raised" aria-label="Open graph menu." ng-click="$mdMenu.open($event)"
-            data-ng-bind="selectedGraph.name"></md-button>
+        <md-button class="md-raised" title="Open graph menu 1." aria-label="Graph-Menu-Button-1"
+            data-ng-click="$mdMenu.open($event)" data-ng-bind="selectedGraph1.name"></md-button>
         <md-menu-content>
-            <md-menu-item>
-                <md-button ng-click="plotGraph('g001', false)"
-                    data-ng-attr-aria-label="{{::mapGraphs.g001.description}}" data-ng-bind="::mapGraphs.g001.name">
-                </md-button>
-            </md-menu-item>
-            <md-menu-item>
-                <md-button ng-click="plotGraph('g002', false)"
-                    data-ng-attr-aria-label="{{::mapGraphs.g002.description}}" data-ng-bind="::mapGraphs.g002.name">
-                </md-button>
-            </md-menu-item>
-            <md-menu-item>
-                <md-button ng-click="plotGraph('g003', false)"
-                    data-ng-attr-aria-label="{{::mapGraphs.g003.description}}" data-ng-bind="::mapGraphs.g003.name">
-                </md-button>
-            </md-menu-item>
-            <md-menu-item>
-                <md-button ng-click="plotGraph('g004', false)"
-                    data-ng-attr-aria-label="{{::mapGraphs.g004.description}}" data-ng-bind="::mapGraphs.g004.name">
-                </md-button>
-            </md-menu-item>
-            <md-menu-item>
-                <md-button ng-click="plotGraph('g005', false)"
-                    data-ng-attr-aria-label="{{::mapGraphs.g005.description}}" data-ng-bind="::mapGraphs.g005.name">
+            <md-menu-item data-ng-repeat="(key, value) in ::mapGraphs">
+                <md-button data-ng-click="plotGraph(1, key, false, false)"
+                    data-ng-attr-aria-label="{{value.description}}" data-ng-bind="value.name">
                 </md-button>
             </md-menu-item>
         </md-menu-content>
     </md-menu>
-    <md-button class="md-raised" aria-label="Show distance matrix." ng-click="openDistanceMatrixDialog()">
-        Distance Matrix
+</div>
+
+<!-- MAP-GRAPH-MENU-DIVISION-2 -->
+<div id="graphMenuDivision2"
+    data-ng-class="{'map-action-menu-4': true, 'opacity-0': true, 'map-split-opacity': mapSplitted}">
+    <md-menu>
+        <md-button class="md-raised" title="Open graph menu 2." aria-label="Graph-Menu-Button-2"
+            data-ng-click="$mdMenu.open($event)" data-ng-bind="selectedGraph2.name"></md-button>
+        <md-menu-content>
+            <md-menu-item data-ng-repeat="(key, value) in ::mapGraphs">
+                <md-button data-ng-click="plotGraph(2, key, false, false)"
+                    data-ng-attr-aria-label="{{value.description}}" data-ng-bind="value.name">
+                </md-button>
+            </md-menu-item>
+        </md-menu-content>
+    </md-menu>
+</div>
+
+<!-- MAP-SPLIT-MENU-DIVISION -->
+<div id="splitMenuDivision" class="map-action-menu-5 text-align-center" layout="column">
+    <md-button class="md-raised" title="Display distance matrix." aria-label="Distance-Matrix-Button"
+        data-ng-click="showDistanceMatrixDialog()">
+        <md-icon>grid_on</md-icon>
+    </md-button>
+    <md-button class="md-raised" title="Toogle spliting of map." aria-label="Split-Button"
+        data-ng-click="toogleMapSplit()">
+        <md-icon data-ng-if="!mapSplitted">view_agenda</md-icon>
+        <md-icon data-ng-if="mapSplitted">call_to_action</md-icon>
     </md-button>
 </div>
 
 <!-- CHART-DIALOG-DIVISION -->
-<div class="fade-toogle fixed-background-2" ng-show="chartDialogVisible">
+<div class="fade-toogle fixed-background-2" data-ng-show="chartDialogVisible">
     <div class="position-center">
-        <md-card class="chart-container">
+        <md-card class="dialog-container">
             <md-card-content>
                 <div class="text-align-right">
                     <md-button class="md-icon-button" aria-label="Close-Button" data-ng-click="hideChartDialog()">
@@ -495,6 +499,41 @@
                 </div>
                 <div class="text-align-center">
                     <canvas class="chart-canvas"></canvas>
+                </div>
+            </md-card-content>
+        </md-card>
+    </div>
+</div>
+
+<!-- DISTANCE-MATRIX-DIALOG-DIVISION -->
+<div class="fade-toogle fixed-background-2" data-ng-show="distanceMatrixDialogVisible">
+    <div class="position-center">
+        <md-card class="dialog-container">
+            <md-card-content>
+                <div layout="row" layout-align="space-between center">
+                    <span>Note : Distances are in km.</span>
+                    <md-button class="md-icon-button" aria-label="Close-Button"
+                        data-ng-click="hideDistanceMatrixDialog()">
+                        <md-icon>close</md-icon>
+                    </md-button>
+                </div>
+                <div class="text-align-center overflow-auto">
+                    <table>
+                        <tr>
+                            <td></td>
+                            <td data-ng-repeat="item in distanceMatrixData.info.nodeData track by $index">
+                                <strong data-ng-bind="item.name"></strong><br>
+                                <small data-ng-bind="item.category.name"></small>
+                            </td>
+                        </tr>
+                        <tr data-ng-repeat="itemData in distanceMatrixData.data track by $index">
+                            <td>
+                                <strong data-ng-bind="distanceMatrixData.info.nodeData[$index].name"></strong><br>
+                                <small data-ng-bind="distanceMatrixData.info.nodeData[$index].category.name"></small>
+                            </td>
+                            <td data-ng-repeat="item in itemData track by $index" data-ng-bind="item"></td>
+                        </tr>
+                    </table>
                 </div>
             </md-card-content>
         </md-card>

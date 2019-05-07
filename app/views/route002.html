@@ -9,13 +9,13 @@
             </div>
         </div>
         <div flex flex-gt-xs="50" layout="column">
-            <md-switch ng-model="sensorSelectorVisible" aria-label="Sensor-Switch">
+            <md-switch data-ng-model="sensorSelectorVisible" aria-label="Sensor-Switch">
                 <md-title>Sensor Selector</md-title>
             </md-switch>
         </div>
     </div>
     <md-divider class="margin-top-15"></md-divider>
-    <div class="md-margin" ng-show="sensorSelectorVisible">
+    <div class="md-margin" data-ng-show="sensorSelectorVisible">
         <md-toolbar class="border-top-left-radius-4 border-top-right-radius-4">
             <div class="md-toolbar-tools">
                 <span>Sensor Selector</span>
@@ -29,11 +29,10 @@
                         <div class="md-title margin-bottom-15">
                             <span>Type</span>
                         </div>
-                        <md-radio-group ng-model="filter1" ng-change="applyFilter()">
-                            <md-radio-button data-ng-value="::item.value"
-                                data-ng-repeat="item in ::sensorTypes track by $index"
-                                data-ng-attr-aria-label="{{::item.name}}">
-                                {{::item.name}}
+                        <md-radio-group data-ng-model="filter1" data-ng-change="applyFilter()">
+                            <md-radio-button data-ng-value="::value.id" data-ng-repeat="(key, value) in ::mapSensors"
+                                data-ng-attr-aria-label="{{::value.name}}">
+                                {{::value.name}}
                             </md-radio-button>
                         </md-radio-group>
                     </md-card-content>
@@ -43,11 +42,11 @@
                         <div class="md-title margin-bottom-15">
                             <span>Status</span>
                         </div>
-                        <md-radio-group ng-model="filter2" ng-change="applyFilter()">
-                            <md-radio-button data-ng-value="::item.value"
-                                data-ng-repeat="item in ::sensorStatusTypes track by $index"
-                                data-ng-attr-aria-label="{{::item.name}}">
-                                {{::item.name}}
+                        <md-radio-group data-ng-model="filter2" data-ng-change="applyFilter()">
+                            <md-radio-button data-ng-value="::value.id"
+                                data-ng-repeat="(key, value) in ::sensorStatuses"
+                                data-ng-attr-aria-label="{{::value.name}}">
+                                {{::value.name}}
                             </md-radio-button>
                         </md-radio-group>
                     </md-card-content>

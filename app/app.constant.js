@@ -326,26 +326,12 @@ app.constant('MAP_CATEGORIES', {
     c003: {
         id: "c003",
         name: "Sensor"
+    },
+    cxxx: {
+        id: "*",
+        name: "All"
     }
 });
-
-app.constant('CATEGORY_TYPES', [{
-        name: "Centre",
-        value: "c001"
-    },
-    {
-        name: "Location",
-        value: "c002"
-    },
-    {
-        name: "Sensor",
-        value: "c003"
-    },
-    {
-        name: "All",
-        value: "*"
-    }
-]);
 
 app.constant('MAP_CENTRES', {
     ct001: {
@@ -384,34 +370,20 @@ app.constant('MAP_CENTRES', {
             cst003: "assets/img/marker/centre/hospital-003.png",
         }
     },
-    ctxxx: {
-        id: "ctxxx",
+    ct005: {
+        id: "ct005",
         name: "Custom Centre",
         icons: {
             cst001: "assets/img/marker/centre/custom-centre-001.png",
             cst002: "assets/img/marker/centre/custom-centre-002.png",
             cst003: "assets/img/marker/centre/custom-centre-003.png",
         }
+    },
+    ctxxx: {
+        id: "*",
+        name: "All"
     }
 });
-
-app.constant('CENTRE_TYPES', [{
-        name: "Fire Station",
-        value: "ct002"
-    },
-    {
-        name: "Police Station",
-        value: "ct003"
-    },
-    {
-        name: "Hospital",
-        value: "ct004"
-    },
-    {
-        name: "All",
-        value: "*"
-    }
-]);
 
 app.constant('CENTRE_STATUSES', {
     cst001: {
@@ -428,26 +400,12 @@ app.constant('CENTRE_STATUSES', {
         id: "cst003",
         name: "Closed",
         icon: "assets/img/status/centre/closed.png"
+    },
+    cstxxx: {
+        id: "*",
+        name: "All"
     }
 });
-
-app.constant('CENTRE_STATUS_TYPES', [{
-        name: "Open",
-        value: "cst001"
-    },
-    {
-        name: "Busy",
-        value: "cst002"
-    },
-    {
-        name: "Closed",
-        value: "cst003"
-    },
-    {
-        name: "All",
-        value: "*"
-    }
-]);
 
 app.constant('MAP_LOCATIONS', {
     lt001: {
@@ -539,50 +497,12 @@ app.constant('MAP_LOCATIONS', {
             lst002: "assets/img/marker/location/store-002.png",
             lst003: "assets/img/marker/location/store-003.png"
         }
+    },
+    ltxxx: {
+        id: "*",
+        name: "All"
     }
 });
-
-app.constant('LOCATION_TYPES', [{
-        name: "City",
-        value: "lt002"
-    },
-    {
-        name: "Zone",
-        value: "lt003"
-    },
-    {
-        name: "Cluster",
-        value: "lt004"
-    },
-    {
-        name: "College",
-        value: "lt005"
-    },
-    {
-        name: "Factory",
-        value: "lt006"
-    },
-    {
-        name: "Bank",
-        value: "lt007"
-    },
-    {
-        name: "Hotel",
-        value: "lt008"
-    },
-    {
-        name: "Restaurant",
-        value: "lt009"
-    },
-    {
-        name: "Store",
-        value: "lt010"
-    },
-    {
-        name: "All",
-        value: "*"
-    }
-]);
 
 app.constant('DISASTER_TYPES', {
     dt001: {
@@ -663,26 +583,12 @@ app.constant('LOCATION_STATUSES', {
         id: "lst003",
         name: "Extreme",
         priority: 10
+    },
+    lstxxx: {
+        id: "*",
+        name: "All"
     }
 });
-
-app.constant('LOCATION_STATUS_TYPES', [{
-        name: "Normal",
-        value: "lst001"
-    },
-    {
-        name: "Serious",
-        value: "lst002"
-    },
-    {
-        name: "Extreme",
-        value: "lst003"
-    },
-    {
-        name: "All",
-        value: "*"
-    }
-]);
 
 app.constant('MAP_SENSORS', {
     st001: {
@@ -756,42 +662,12 @@ app.constant('MAP_SENSORS', {
             sst002: "assets/img/marker/sensor/alarm-002.png",
             sst003: "assets/img/marker/sensor/alarm-003.png"
         }
+    },
+    stxxx: {
+        id: "*",
+        name: "All"
     }
 });
-
-app.constant('SENSOR_TYPES', [{
-        name: "Thermometer",
-        value: "st002"
-    },
-    {
-        name: "Hygrometer",
-        value: "st003"
-    },
-    {
-        name: "Udometer",
-        value: "st004"
-    },
-    {
-        name: "Anemometer",
-        value: "st005"
-    },
-    {
-        name: "Gas-Sensor",
-        value: "st006"
-    },
-    {
-        name: "Motion-Sensor",
-        value: "st007"
-    },
-    {
-        name: "Alarm",
-        value: "st008"
-    },
-    {
-        name: "All",
-        value: "*"
-    }
-]);
 
 app.constant('SENSOR_STATUSES', {
     sst001: {
@@ -811,26 +687,12 @@ app.constant('SENSOR_STATUSES', {
         name: "Abnormal",
         priority: 10,
         icon: "assets/img/status/sensor/abnormal.png"
+    },
+    sstxxx: {
+        id: "*",
+        name: "All"
     }
 });
-
-app.constant('SENSOR_STATUS_TYPES', [{
-        name: "Normal",
-        value: "sst001"
-    },
-    {
-        name: "Failure",
-        value: "sst002"
-    },
-    {
-        name: "Abnormal",
-        value: "sst003"
-    },
-    {
-        name: "All",
-        value: "*"
-    }
-]);
 
 app.constant('MAP_ROUTES', {
     r001: {
@@ -843,8 +705,8 @@ app.constant('MAP_ROUTES', {
         name: "Hospital Route",
         color: "#fa6800"
     },
-    rxxx: {
-        id: "rxxx",
+    r003: {
+        id: "r003",
         name: "Custom Route",
         color: "#000000"
     }
@@ -854,48 +716,58 @@ app.constant('MAP_ROUTES', {
 app.constant('MAP_GRAPHS', {
     g001: {
         id: "g001",
-        name: "Disaster Relief Routes (Directions API Based)",
-        description: "Show google maps generated routes between disaster relief centres and sensors.",
+        name: "[ NO GRAPH SELECTED ]",
+        description: "Default choice for graph menu.",
         color: "#ce352c"
     },
     g002: {
         id: "g002",
-        name: "Disaster Relief Routes (Line Based)",
-        description: "Show line based generated routes between disaster relief centres and sensors.",
+        name: "Disaster Relief Routes (Directions API Based)",
+        description: "Show directions API based generated routes between disaster relief centres and sensors.",
         color: "#ce352c"
     },
     g003: {
         id: "g003",
-        name: "Medical Relief Routes (Directions API Based)",
-        description: "Show google maps based generated routes between medical relief centres and sensors.",
-        color: "#fa6800"
+        name: "Disaster Relief Routes (Line Based)",
+        description: "Show line based generated routes between disaster relief centres and sensors.",
+        color: "#ce352c"
     },
     g004: {
         id: "g004",
-        name: "Medical Relief Routes (Line Based)",
-        description: "Show google maps based generated routes between medical relief centres and sensors.",
+        name: "Medical Relief Routes (Directions API Based)",
+        description: "Show directions API based generated routes between medical relief centres and sensors.",
         color: "#fa6800"
     },
     g005: {
         id: "g005",
-        name: "Connectivity Graph",
-        description: "Show conectivity graph of nodes.",
-        color: {
-            ct002: "#ce352c",
-            ct004: "#fa6800"
-        }
+        name: "Medical Relief Routes (Line Based)",
+        description: "Show line based generated routes between medical relief centres and sensors.",
+        color: "#fa6800"
     },
     g006: {
         id: "g006",
-        name: "Minimimum Spanning Tree",
-        description: "Show minimimum spanning tree of nodes.",
-        color: "#fa6800"
+        name: "Custom Routes (Directions API Based)",
+        description: "Show directions API based user generated route between relief centres and sensors.",
+        color: "#000000"
     },
     g007: {
         id: "g007",
-        name: "Custom Route (Directions API Based)",
-        description: "Show user generated route between relief centres and sensors.",
+        name: "Custom Routes (Line Based)",
+        description: "Show line based user generated route between relief centres and sensors.",
         color: "#000000"
+    },
+    g008: {
+        id: "g008",
+        name: "Connectivity Graph",
+        description: "Show conectivity graph of nodes.",
+        color: "#000000"
+    },
+    g009: {
+        id: "g009",
+        name: "Minimimum Spanning Tree",
+        description: "Show minimimum spanning tree of nodes.",
+        color: "#000000"
+
     }
 });
 

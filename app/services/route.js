@@ -31,28 +31,18 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
         return customSensorData;
     };
 
-    routeService.getCostMatrix = function (nodeData) {
-        var costMatrix = {
+    routeService.getDistanceMatrixData = function () {
+        var distanceMatrixData = {
                 info: {
-                    nodeData: nodeData
+                    nodeData: []
                 },
                 data: []
             },
-            i,
-            j;
-
-        for
-    }
-
-    routeService.getAdjacencyListOfConnectivityGraph = function () {
-        var centreData = DataService.getCentreData(),
+            centreData = DataService.getCentreData(),
             disasterAffectedClusterData = DataService.getDisasterAffectedClusterData(),
-            adjacencyList = [],
-            selectedCentreData,
+            selectedNodeData,
             tempCentreData1,
-            tempCentreData2,
-            i,
-            j;
+            tempCentreData2;
 
         if (disasterAffectedClusterData.length > 0) {
             var tempCentreData1 = sourceSelectionAlgorithm(
@@ -67,20 +57,104 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
                 MAP_ROUTES.r002
             );
 
-            selectedCentreData = tempCentreData1.concat(tempCentreData2)
+            selectedNodeData = disasterAffectedClusterData.concat(tempCentreData1, tempCentreData2);
 
-            for (i = 0; i < selectedCentreData.length; i++) {
-                adjacencyList.push(selectedCentreData[i]);
+            distanceMatrixData = generateDistanceMatrixData(selectedNodeData);
+        }
 
-                adjacencyList[i].adjacentNodes = [];
+        return distanceMatrixData;
+    }
 
-                for (j = 0; j < disasterAffectedClusterData.length; j++) {
-                    adjacencyList[i].adjacentNodes.push(disasterAffectedClusterData[j]);
+    routeService.getConnectivityGraphAdjacencyMatrixData = function () {
+        var adjacencyMatrixData = {
+                info: {
+                    nodeData: []
+                },
+                data: []
+            },
+            selectedNodeData,
+            distanceMatrixData,
+            i,
+            j;
+
+        distanceMatrixData = routeService.getDistanceMatrixData();
+
+        if (distanceMatrixData.info.nodeData.length > 0) {
+            selectedNodeData = distanceMatrixData.info.nodeData;
+
+            adjacencyMatrixData.info.nodeData = selectedNodeData;
+
+            adjacencyMatrixData.data = Array(selectedNodeData.length).fill().map(() => Array(selectedNodeData.length).fill(0));
+
+            for (i = 0; i < selectedNodeData.length; i++) {
+                for (j = 0; j < selectedNodeData.length; j++) {
+                    if ((i > j) && (selectedNodeData[i].category.id != 'c001' || selectedNodeData[j].category.id != 'c001')) {
+                        adjacencyMatrixData.data[i][j] = 1;
+                    }
                 }
             }
         }
 
-        return adjacencyList;
+        return adjacencyMatrixData;
+    }
+
+    routeService.getSpanningTreeAdjacencyMatrixData = function () {
+        var adjacencyMatrixData = {
+                info: {
+                    nodeData: []
+                },
+                data: []
+            },
+            selectedIndexes = [],
+            count = 0,
+            selectedNodeData,
+            iIndex,
+            jIndex,
+            minDistance,
+            i,
+            j;
+
+        distanceMatrixData = routeService.getDistanceMatrixData();
+
+        if (distanceMatrixData.info.nodeData.length > 0) {
+            selectedNodeData = distanceMatrixData.info.nodeData;
+
+            adjacencyMatrixData.info.nodeData = selectedNodeData;
+
+            adjacencyMatrixData.data = Array(selectedNodeData.length).fill().map(() => Array(selectedNodeData.length).fill(0));
+
+            selectedIndexes = Array(selectedNodeData.length).fill(0);
+
+            selectedIndexes[0] = 1;
+
+            while (count < selectedNodeData.length - 1) {
+                minDistance = Number.POSITIVE_INFINITY;
+                iIndex = -1;
+                jIndex = -1;
+
+                for (i = 0; i < selectedNodeData.length; i++) {
+                    if (selectedIndexes[i] == 1) {
+                        for (j = 0; j < selectedNodeData.length; j++) {
+                            if (selectedIndexes[j] == 0 && minDistance > distanceMatrixData.data[i][j] && (selectedNodeData[i].category.id != 'c001' || selectedNodeData[j].category.id != 'c001')) {
+                                minDistance = distanceMatrixData.data[i][j];
+                                iIndex = i;
+                                jIndex = j
+                            }
+                        }
+                    }
+                }
+
+                if (iIndex != -1 && jIndex != -1) {
+                    adjacencyMatrixData.data[iIndex][jIndex] = 1;
+                    selectedIndexes[jIndex] = 1;
+                }
+
+                count = count + 1;
+            }
+
+        }
+
+        return adjacencyMatrixData;
     }
 
     routeService.getDisasterReliefRouteData = function () {
@@ -136,21 +210,64 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
             customCentreData,
             customSensorData,
             SENSOR_STATUSES,
-            MAP_ROUTES.rxxx
+            MAP_ROUTES.r003
         );
     };
+
+    function generateDistanceMatrixData(nodeData) {
+        var distanceMatrixData = {
+                info: {
+                    nodeData: [],
+                    mapping: {}
+                },
+                data: []
+            },
+            distance,
+            i,
+            j;
+
+        distanceMatrixData.info.nodeData = nodeData;
+
+        for (i = 0; i < nodeData.length; i++) {
+            distanceMatrixData.data.push([]);
+            distanceMatrixData.info.mapping[nodeData[i].id] = i;
+
+            for (j = 0; j < nodeData.length; j++) {
+                distance = computeDistance(
+                    nodeData[i].coordinates.lat,
+                    nodeData[i].coordinates.lng,
+                    nodeData[j].coordinates.lat,
+                    nodeData[j].coordinates.lng,
+                );
+
+                distance = (Math.round(distance * 1000) / 1000)
+
+                distanceMatrixData.data[i].push(distance);
+            }
+        }
+
+        return distanceMatrixData;
+    }
 
     function sourceSelectionAlgorithm(sourceData, waypointData, routeType) {
         var selectedSourceData = [],
             selectedSourceLimit = waypointData.length,
             visitedIndexes = [],
+            selectedNodeData,
+            sourceIndex,
+            waypointIndex,
             distance,
+            distanceMatrixData,
             rating,
             routeScore,
             selectedSourceIndex,
             maxRouteScore,
             i,
             j;
+
+        selectedNodeData = sourceData.concat(waypointData);
+
+        distanceMatrixData = generateDistanceMatrixData(selectedNodeData);
 
         while (1) {
             maxRouteScore = 0;
@@ -163,12 +280,10 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
                             continue;
                         }
 
-                        distance = computeDistance(
-                            waypointData[i].coordinates.lat,
-                            waypointData[i].coordinates.lng,
-                            sourceData[j].coordinates.lat,
-                            sourceData[j].coordinates.lng,
-                        );
+                        waypointIndex = distanceMatrixData.info.mapping[waypointData[i].id];
+                        sourceIndex = distanceMatrixData.info.mapping[sourceData[j].id];
+
+                        distance = distanceMatrixData.data[waypointIndex][sourceIndex];
 
                         rating = sourceData[j].rating;
 
@@ -198,7 +313,11 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
         var visitedIndexes = [],
             previousIndexes = [],
             graphData = [],
+            selectedNodeData,
+            sourceIndex,
+            waypointIndex,
             distance,
+            distanceMatrixData,
             priority,
             rating,
             routeScore,
@@ -209,6 +328,10 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
             minDistance,
             i,
             j;
+
+        selectedNodeData = sourceData.concat(waypointData);
+
+        distanceMatrixData = generateDistanceMatrixData(selectedNodeData);
 
         for (i = 0; i < sourceData.length; i++) {
             graphData.push({
@@ -242,20 +365,14 @@ app.factory('RouteService', function (LOCATION_STATUSES, SENSOR_STATUSES, MAP_RO
                         }
 
                         if (previousIndexes[i] == -1) {
-                            distance = computeDistance(
-                                sourceData[i].coordinates.lat,
-                                sourceData[i].coordinates.lng,
-                                waypointData[j].coordinates.lat,
-                                waypointData[j].coordinates.lng
-                            );
+                            sourceIndex = distanceMatrixData.info.mapping[sourceData[i].id];
                         } else {
-                            distance = computeDistance(
-                                waypointData[previousIndexes[i]].coordinates.lat,
-                                waypointData[previousIndexes[i]].coordinates.lng,
-                                waypointData[j].coordinates.lat,
-                                waypointData[j].coordinates.lng,
-                            );
+                            sourceIndex = distanceMatrixData.info.mapping[waypointData[previousIndexes[i]].id];
                         }
+
+                        waypointIndex = distanceMatrixData.info.mapping[waypointData[j].id];
+
+                        distance = distanceMatrixData.data[sourceIndex][waypointIndex];
 
                         priority = statusData[waypointData[j].status.id].priority;
 

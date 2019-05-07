@@ -6,7 +6,7 @@
   "main": "index.html",
   "scripts": {
     "start": "live-server --host=localhost --port=8080 app/",
-    "generate-docs": "jsdoc app -d docs -t node_modules/docdash -R README.md"
+    "generate-docs": "jsdoc app -d docs -c node_modules/angular-jsdoc/common/conf.json -t node_modules/angular-jsdoc/angular-template -R README.md"
   },
   "keywords": [
     "mapmysensor",
@@ -20,8 +20,8 @@
   "author": "Kaushal Meena",
   "license": "ISC",
   "devDependencies": {
-    "docdash": "^1.0.3",
-    "jsdoc": "^3.5.5",
+    "angular-jsdoc": "^1.5.1",
+    "jsdoc": "^3.6.1",
     "live-server": "^1.2.1"
   }
 }

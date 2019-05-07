@@ -8924,7 +8924,7 @@
         "id": "c003",
         "name": "Sensor"
       },
-      "name": "DHT11 Sensor",
+      "name": "DHT11 Sensor-1",
       "address": "Computer Department, SVNIT Campus, Athwa, Surat, Gujarat 395007",
       "type": {
         "id": "st002",
@@ -8934,7 +8934,7 @@
       "description": "",
       "leafNode": true,
       "display": true,
-      "zoom": 21,
+      "zoom": 27,
       "boundary": null,
       "disasterId": "dt001",
       "disasterScore": {
@@ -8944,7 +8944,7 @@
       },
       "displayReading": true,
       "reading": {
-        "value": 101,
+        "value": 31,
         "unit": "°C",
         "limit": {
           "sst001": 100,
@@ -8953,8 +8953,8 @@
         }
       },
       "coordinates": {
-        "lat": 21.164525,
-        "lng": 72.782879,
+        "lat": 21.164558,
+        "lng": 72.782799,
         "dynamic": false
       },
       "updated": 1518244200000,
@@ -8967,7 +8967,7 @@
         "id": "c003",
         "name": "Sensor"
       },
-      "name": "MQ-5 Sensor",
+      "name": "MQ-5 Sensor-1",
       "address": "Computer Department, SVNIT Campus, Athwa, Surat, Gujarat 395007",
       "type": {
         "id": "st006",
@@ -8987,8 +8987,8 @@
       },
       "displayReading": true,
       "reading": {
-        "value": 1.2,
-        "unit": "V",
+        "value": 200,
+        "unit": "PPM",
         "limit": {
           "sst001": 500,
           "sst002": 0,
@@ -9010,7 +9010,7 @@
         "id": "c003",
         "name": "Sensor"
       },
-      "name": "MQ-9 Sensor",
+      "name": "MQ-135 Sensor-1",
       "address": "Computer Department, SVNIT Campus, Athwa, Surat, Gujarat 395007",
       "type": {
         "id": "st006",
@@ -9030,8 +9030,8 @@
       },
       "displayReading": true,
       "reading": {
-        "value": 1.2,
-        "unit": "V",
+        "value": 200,
+        "unit": "PPM",
         "limit": {
           "sst001": 500,
           "sst002": 0,
@@ -9039,8 +9039,8 @@
         }
       },
       "coordinates": {
-        "lat": 21.164558,
-        "lng": 72.782799,
+        "lat": 21.164587,
+        "lng": 72.782857,
         "dynamic": false
       },
       "updated": 1518244200000,
@@ -9048,55 +9048,12 @@
     },
     "s004": {
       "id": "s004",
-      "parentId": "l010",
-      "category": {
-        "id": "c003",
-        "name": "Sensor"
-      },
-      "name": "MQ-135 Sensor",
-      "address": "Computer Department, SVNIT Campus, Athwa, Surat, Gujarat 395007",
-      "type": {
-        "id": "st006",
-        "name": "Gas-Sensor"
-      },
-      "photo": "assets/img/other/default-photo.png",
-      "description": "",
-      "leafNode": true,
-      "display": true,
-      "zoom": 21,
-      "boundary": null,
-      "disasterId": "dt001",
-      "disasterScore": {
-        "sst001": 0,
-        "sst002": 0,
-        "sst003": 20
-      },
-      "displayReading": true,
-      "reading": {
-        "value": 1.2,
-        "unit": "V",
-        "limit": {
-          "sst001": 500,
-          "sst002": 0,
-          "sst003": 1000
-        }
-      },
-      "coordinates": {
-        "lat": 21.164595,
-        "lng": 72.782869,
-        "dynamic": false
-      },
-      "updated": 1518244200000,
-      "created": 1518244200000
-    },
-    "s005": {
-      "id": "s005",
       "parentId": "l011",
       "category": {
         "id": "c003",
         "name": "Sensor"
       },
-      "name": "Sensor A",
+      "name": "DHT11 Sensor-2",
       "address": "Mother Teresa Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
       "type": {
         "id": "st002",
@@ -9106,7 +9063,7 @@
       "description": "",
       "leafNode": true,
       "display": true,
-      "zoom": 19,
+      "zoom": 27,
       "boundary": null,
       "disasterId": "dt001",
       "disasterScore": {
@@ -9116,9 +9073,8 @@
       },
       "displayReading": true,
       "reading": {
-        "value": 101,
+        "value": 31,
         "unit": "°C",
-        "boolean": false,
         "limit": {
           "sst001": 100,
           "sst002": 0,
@@ -9133,24 +9089,24 @@
       "updated": 1518244200000,
       "created": 1518244200000
     },
-    "s006": {
-      "id": "s006",
-      "parentId": "l012",
+    "s005": {
+      "id": "s005",
+      "parentId": "l011",
       "category": {
         "id": "c003",
         "name": "Sensor"
       },
-      "name": "Sensor B",
-      "address": "Swami Vivekanand Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
+      "name": "MQ-5 Sensor-2",
+      "address": "Mother Teresa Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
       "type": {
-        "id": "st002",
-        "name": "Thermometer"
+        "id": "st006",
+        "name": "Gas-Sensor"
       },
       "photo": "assets/img/other/default-photo.png",
       "description": "",
       "leafNode": true,
       "display": true,
-      "zoom": 19,
+      "zoom": 21,
       "boundary": null,
       "disasterId": "dt001",
       "disasterScore": {
@@ -9160,9 +9116,94 @@
       },
       "displayReading": true,
       "reading": {
-        "value": 101,
+        "value": 200,
+        "unit": "PPM",
+        "limit": {
+          "sst001": 500,
+          "sst002": 0,
+          "sst003": 1000
+        }
+      },
+      "coordinates": {
+        "lat": 21.167576,
+        "lng": 72.786911,
+        "dynamic": false
+      },
+      "updated": 1518244200000,
+      "created": 1518244200000
+    },
+    "s006": {
+      "id": "s006s",
+      "parentId": "l011",
+      "category": {
+        "id": "c003",
+        "name": "Sensor"
+      },
+      "name": "MQ-135 Sensor-2",
+      "address": "Mother Teresa Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
+      "type": {
+        "id": "st006",
+        "name": "Gas-Sensor"
+      },
+      "photo": "assets/img/other/default-photo.png",
+      "description": "",
+      "leafNode": true,
+      "display": true,
+      "zoom": 21,
+      "boundary": null,
+      "disasterId": "dt001",
+      "disasterScore": {
+        "sst001": 0,
+        "sst002": 0,
+        "sst003": 20
+      },
+      "displayReading": true,
+      "reading": {
+        "value": 200,
+        "unit": "PPM",
+        "limit": {
+          "sst001": 500,
+          "sst002": 0,
+          "sst003": 1000
+        }
+      },
+      "coordinates": {
+        "lat": 21.167594,
+        "lng": 72.787101,
+        "dynamic": false
+      },
+      "updated": 1518244200000,
+      "created": 1518244200000
+    },
+    "s007": {
+      "id": "s007",
+      "parentId": "l012",
+      "category": {
+        "id": "c003",
+        "name": "Sensor"
+      },
+      "name": "DHT11 Sensor-3",
+      "address": "Swami Vivekanand Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
+      "type": {
+        "id": "st002",
+        "name": "Thermometer"
+      },
+      "photo": "assets/img/other/default-photo.png",
+      "description": "",
+      "leafNode": true,
+      "display": true,
+      "zoom": 27,
+      "boundary": null,
+      "disasterId": "dt001",
+      "disasterScore": {
+        "sst001": 0,
+        "sst002": 0,
+        "sst003": 20
+      },
+      "displayReading": true,
+      "reading": {
+        "value": 31,
         "unit": "°C",
-        "boolean": false,
         "limit": {
           "sst001": 100,
           "sst002": 0,
@@ -9172,6 +9213,92 @@
       "coordinates": {
         "lat": 21.162866,
         "lng": 72.790458,
+        "dynamic": false
+      },
+      "updated": 1518244200000,
+      "created": 1518244200000
+    },
+    "s008": {
+      "id": "s008",
+      "parentId": "l012",
+      "category": {
+        "id": "c003",
+        "name": "Sensor"
+      },
+      "name": "MQ-5 Sensor-3",
+      "address": "Swami Vivekanand Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
+      "type": {
+        "id": "st006",
+        "name": "Gas-Sensor"
+      },
+      "photo": "assets/img/other/default-photo.png",
+      "description": "",
+      "leafNode": true,
+      "display": true,
+      "zoom": 21,
+      "boundary": null,
+      "disasterId": "dt001",
+      "disasterScore": {
+        "sst001": 0,
+        "sst002": 0,
+        "sst003": 20
+      },
+      "displayReading": true,
+      "reading": {
+        "value": 200,
+        "unit": "PPM",
+        "limit": {
+          "sst001": 500,
+          "sst002": 0,
+          "sst003": 1000
+        }
+      },
+      "coordinates": {
+        "lat": 21.162913,
+        "lng": 72.790388,
+        "dynamic": false
+      },
+      "updated": 1518244200000,
+      "created": 1518244200000
+    },
+    "s009": {
+      "id": "s009",
+      "parentId": "l012",
+      "category": {
+        "id": "c003",
+        "name": "Sensor"
+      },
+      "name": "MQ-135 Sensor-3",
+      "address": "Swami Vivekanand Bhavan, SVNIT Campus, Athwa, Surat, Gujarat 395007",
+      "type": {
+        "id": "st006",
+        "name": "Gas-Sensor"
+      },
+      "photo": "assets/img/other/default-photo.png",
+      "description": "",
+      "leafNode": true,
+      "display": true,
+      "zoom": 21,
+      "boundary": null,
+      "disasterId": "dt001",
+      "disasterScore": {
+        "sst001": 0,
+        "sst002": 0,
+        "sst003": 20
+      },
+      "displayReading": true,
+      "reading": {
+        "value": 200,
+        "unit": "PPM",
+        "limit": {
+          "sst001": 500,
+          "sst002": 0,
+          "sst003": 1000
+        }
+      },
+      "coordinates": {
+        "lat": 21.162993,
+        "lng": 72.790400,
         "dynamic": false
       },
       "updated": 1518244200000,

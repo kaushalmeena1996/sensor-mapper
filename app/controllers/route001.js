@@ -2,13 +2,13 @@ var app = angular.module('app');
 var map,
     markerObject = null;
 
-app.controller('RouteCentreController', function ($scope, $location, $filter, MAP_CATEGORIES, MAP_CENTRES, CENTRE_TYPES, CENTRE_STATUSES, CENTRE_STATUS_TYPES, STATUS_CODES, SERVICE_EVENTS, IMAGE_DATA, RouteService, DataService) {
+app.controller('RouteCentreController', function ($scope, $location, $filter, MAP_CATEGORIES, MAP_CENTRES, CENTRE_STATUSES, STATUS_CODES, SERVICE_EVENTS, IMAGE_DATA, RouteService, DataService) {
     $scope.tableData = [];
 
     $scope.selectedCentres = [];
 
-    $scope.centreTypes = CENTRE_TYPES;
-    $scope.centreStatusTypes = CENTRE_STATUS_TYPES;
+    $scope.mapCentres = MAP_CENTRES;
+    $scope.centreStatuses = CENTRE_STATUSES;
 
     $scope.centreSelectorVisible = false;
     $scope.customCentreSelectorVisible = false;
@@ -24,10 +24,10 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
         category: MAP_CATEGORIES.c001,
         name: '',
         address: '',
-        icon: MAP_CENTRES.ctxxx.icons.cst001,
+        icon: MAP_CENTRES.ct005.icons.cst001,
         type: {
-            id: MAP_CENTRES.ctxxx.id,
-            name: MAP_CENTRES.ctxxx.name
+            id: MAP_CENTRES.ct005.id,
+            name: MAP_CENTRES.ct005.name
         },
         status: CENTRE_STATUSES.cst001,
         photo: IMAGE_DATA.id009.path,
@@ -111,7 +111,12 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
 
             var geocoder = new google.maps.Geocoder();
 
-            geocoder.geocode({ "location": { lat: $scope.customCentre.coordinates.lat, lng: $scope.customCentre.coordinates.lng } }, function (results, status) {
+            geocoder.geocode({
+                "location": {
+                    lat: $scope.customCentre.coordinates.lat,
+                    lng: $scope.customCentre.coordinates.lng
+                }
+            }, function (results, status) {
                 if (status === 'OK') {
                     if (results[0]) {
                         $scope.$parent.safeApply(function () {
@@ -125,10 +130,10 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
                                 category: 'c001',
                                 name: '',
                                 address: '',
-                                icon: MAP_CENTRES.ctxxx.icons.cst001,
+                                icon: MAP_CENTRES.ct005.icons.cst001,
                                 type: {
-                                    id: MAP_CENTRES.ctxxx.id,
-                                    name: MAP_CENTRES.ctxxx.name
+                                    id: MAP_CENTRES.ct005.id,
+                                    name: MAP_CENTRES.ct005.name
                                 },
                                 status: CENTRE_STATUSES.cst001,
                                 photo: IMAGE_DATA.id009.path,
@@ -200,13 +205,17 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
 
         if ($scope.filter1 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                type: { id: $scope.filter1 }
+                type: {
+                    id: $scope.filter1
+                }
             }, true);
         }
 
         if ($scope.filter2 !== '*') {
             nodeData = $filter('filter')(nodeData, {
-                status: { id: $scope.filter2 }
+                status: {
+                    id: $scope.filter2
+                }
             }, true);
         }
 
@@ -226,7 +235,7 @@ app.controller('RouteCentreController', function ($scope, $location, $filter, MA
     };
 
     $scope.$on('$viewContentLoaded', function () {
-        map = new google.maps.Map(document.querySelector(".map-container-2"), {
+        map = new google.maps.Map(document.querySelector(".map-container-3"), {
             center: {
                 lat: 21.1654031,
                 lng: 72.7833882
